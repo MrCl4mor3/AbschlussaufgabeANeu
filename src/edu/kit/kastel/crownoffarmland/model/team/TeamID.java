@@ -9,7 +9,13 @@ package edu.kit.kastel.crownoffarmland.model.team;
  * @author ucgdi
  */
 public enum TeamID {
+    /**
+     * Represents the first team in the game.
+     */
     TEAM_1,
+    /**
+     * Represents the second team in the game.
+     */
     TEAM_2;
 
 

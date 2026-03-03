@@ -25,7 +25,21 @@ public class Game {
 
     private boolean winner;
 
-
+    /**
+     * Constructs a new Game instance with the specified teams and random generator. The constructor initializes the game board, sets up
+     * the teams, and establishes the initial turn order. The first team (Team 1) is set to take the first turn. The random generator is
+     * stored for use in any random events that may occur during the game, such as dice rolls or random unit spawns. The constructor also
+     * initializes the winner variable to false, indicating that there is no winner at the start of the game. This setup allows for a
+     * structured
+     * @param team1 the first team participating in the game, which will take the first turn. This team is added to the teams map with
+     *              the key TeamID.TEAM_1.
+     * @param team2 the second team participating in the game, which will take the second turn. This team is added to the teams map with
+     *              the key TeamID.TEAM_2.
+     * @param generator the random generator to be used in the game for any random events that may occur during gameplay. This generator
+     *                  is stored in the Game instance for use in methods that require randomization, such as dice rolls or random unit
+     *                  spawns. The generator allows for consistent and controlled random behavior throughout the game, ensuring that all
+     *                  random events are generated using the same source of randomness.
+     */
     public Game(Team team1, Team team2, RandomGenerator generator) {
         board = new Board();
         teams = new HashMap<>();

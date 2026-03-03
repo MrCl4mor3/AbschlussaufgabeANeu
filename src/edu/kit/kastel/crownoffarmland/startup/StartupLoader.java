@@ -16,8 +16,18 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class is responsible for loading the game configuration and initializing the GameHandler based on the provided command line
+ * arguments. It parses the arguments, validates them, and creates the necessary game components such as teams, decks, and units. The
+ * class also handles error cases by returning appropriate error messages when the arguments are invalid or when required arguments are
+ * missing. The main method in this class is createGameHandler, which takes the command line arguments as input and returns a
+ * StartupResult containing either a successfully created GameHandler or an error message describing what went wrong during the startup
+ * process.
+ *
+ * @author ucgdi
+ */
 public final class StartupLoader {
-    private static final String Utility_CLASS_CONSTRUCTOR_MESSAGES = "Utility classes cannot be instantiated";
+    private static final String UTILITY_CLASS_CONSTRUCTOR_MESSAGES = "Utility classes cannot be instantiated";
     private static final int DECK_SIZE_REQUIRED = 40;
     private static final int MAX_TEAMNAME_LENGTH = 14;
     private static final int BOARD_SYMBOL_COUNT = 29;
@@ -32,8 +42,8 @@ public final class StartupLoader {
     private static final String DUPLICATE_ARGUMENT_ERROR = "Duplicate argument(s) found: %s. Each argument should be unique.";
     private static final String MISSING_MANDATORY_ARGUMENT_ERROR = "Missing required argument(s): %s.";
     private static final String UNKNOWN_ARGUMENT_ERROR = "Unknown argument key: '%s'.";
-    private static final String INVALID_DECK_CONFIG_ERROR = "Invalid deck configuration. Use either deck=... OR deck1=... and deck2=... " +
-            "(not both). Given: %s.";
+    private static final String INVALID_DECK_CONFIG_ERROR = "Invalid deck configuration. Use either deck=... OR deck1=... and deck2=... "
+            + "(not both). Given: %s.";
     private static final String INVALID_VERBOSITY_ERROR = "Invalid verbosity: '%s'. Allowed values: all, compact.";
     private static final String INVALID_SEED_ERROR = "Invalid seed: '%s'. Expected a signed 64-bit integer.";
     private static final String FILE_NOT_FOUND_ERROR = "File not found: '%s'";
@@ -42,11 +52,19 @@ public final class StartupLoader {
     private static final String FILE_IS_EMPTY_ERROR = "File '%s' is empty!";
     private static final String INVALID_UNIT_LINE = "Invalid unit line: '%s'.";
 
-
     private StartupLoader() {
-        throw new UnsupportedOperationException(Utility_CLASS_CONSTRUCTOR_MESSAGES);
+        throw new UnsupportedOperationException(UTILITY_CLASS_CONSTRUCTOR_MESSAGES);
     }
 
+    /**
+     * This method creates a GameHandler based on the provided command line arguments. It parses the arguments, validates them, and
+     * initializes the game components accordingly. If any errors occur during the parsing or validation process, an appropriate error
+     * message is returned instead.
+     * @param args the command line arguments provided at the start of the program, expected in the format key=value
+     * @return a StartupResult containing either a successfully created GameHandler or an error message describing what went wrong during
+     *     the startup process.
+     * @author ucgdi
+     */
     public static StartupResult<GameHandler> createGameHandler(String[] args) {
 
         StartupResult<Map<StartupKey, String>> raw = parseRawArgs(args);
@@ -88,9 +106,9 @@ public final class StartupLoader {
 
         //ToDo: Nun die Decks entsprechend der Deckconfig erstellen --> Teams erstellen und dann das Game final erstellen (siehe hier als
         // Bsp) --> Defaultnamen, falls nichts angegeben
-        Team team1 = new Team(null,null,null,null);
-        Team team2 = new Team(null,null,null,null);
-        Game game = new Game(team1,team2, generator);
+        Team team1 = new Team(null, null, null, null);
+        Team team2 = new Team(null, null, null, null);
+        Game game = new Game(team1, team2, generator);
         return StartupResult.success(new GameHandler(game));
     }
 
@@ -213,7 +231,7 @@ public final class StartupLoader {
 
     private static StartupResult<List<UnitTemplate>> parseUnits(String path) {
         String rawFileContent = readFileSafe(path).getValue();
-        if(rawFileContent.isEmpty()) {
+        if (rawFileContent.isEmpty()) {
             return StartupResult.error(ERROR_PREFIX + String.format(FILE_IS_EMPTY_ERROR, rawFileContent));
         }
 

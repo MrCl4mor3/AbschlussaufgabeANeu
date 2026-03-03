@@ -14,11 +14,15 @@ import java.util.List;
  * @author ucgdi
  */
 public class Hand {
-    private static final int MAX_HAND_Size = 5;
+    private static final int MAX_HAND_SIZE = 5;
 
     private final List<Unit> cards;
 
 
+    /**
+     * Constructs a new Hand instance with an empty list of units. The hand is initialized to hold a maximum of MAX_HAND_SIZE units, and
+     * the cards list is created to store the units added to the hand.
+     */
     public Hand() {
         cards = new ArrayList<>();
     }
@@ -52,7 +56,7 @@ public class Hand {
      * @return true if the hand is full, false otherwise
      */
     public boolean isFull() {
-        return cards.size() == MAX_HAND_Size;
+        return cards.size() == MAX_HAND_SIZE;
     }
 
     /**

@@ -15,6 +15,10 @@ import java.util.Random;
 public final class RandomGenerator {
     private final Random rnd;
 
+    /**
+     * Constructor for creating a RandomGenerator object with the specified seed.
+     * @param seed the seed for the random generator, used to ensure reproducibility of the random sequences
+     */
     public RandomGenerator(long seed) {
         this.rnd = new Random(seed);
     }

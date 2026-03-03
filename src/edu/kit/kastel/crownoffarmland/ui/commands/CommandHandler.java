@@ -10,7 +10,7 @@ import java.util.Scanner;
 /**
  * Implement the command handler in a similar fashion as on earlier tasks.
  *
- * @author Programmieren-Team, ucgdi
+ * @author Programmieren-Team
  */
 public class CommandHandler {
     private static final String COMMAND_ERROR_PRAEFIX = "Error: ";

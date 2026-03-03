@@ -5,6 +5,14 @@ import edu.kit.kastel.crownoffarmland.model.units.Unit;
 import edu.kit.kastel.crownoffarmland.model.units.UnitName;
 
 
+/**
+ * The UnitMerger class is responsible for determining whether two units can be merged based on their attributes and, if so, creating a
+ * new merged unit with combined attributes. The merging process considers various conditions such as symbiosis, alignment, and prime
+ * compatibility, which are determined by the attack and defense values of the units. The result of the merging attempt is encapsulated
+ * in a MergeResult object, which indicates the type of merge that occurred (if any) and the resulting merged unit.
+ *
+ * @author ucgdi
+ */
 public class UnitMerger {
 
     private static final String QUALIFICATOR_DELIMITER = " ";
@@ -12,6 +20,16 @@ public class UnitMerger {
     private static final int PRIME_DIVISOR = 100;
 
 
+    /**
+     * Tries to merge two units based on their attributes. The method checks for various merging conditions such as symbiosis, alignment,
+     * and prime compatibility, and returns a MergeResult indicating the outcome of the merging attempt. If the units are incompatible,
+     * the result will indicate that as well. The merged unit, if created, will have combined attributes based on the merging rules
+     * defined in the method.
+     * @param incoming the unit that is attempting to merge with the target unit
+     * @param target the unit that is being targeted for merging with the incoming unit
+     * @return a MergeResult object that indicates the type of merge that occurred (if any) and the resulting merged unit, or null if the
+     *     units are incompatible
+     */
     public MergeResult tryMerge(Unit incoming, Unit target) {
 
         if (incoming == null || target == null) {

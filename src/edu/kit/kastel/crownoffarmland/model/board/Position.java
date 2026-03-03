@@ -11,7 +11,11 @@ public class Position {
     private final int row;
     private final char column;
 
-
+    /**
+     * Constructor for creating a Position object with the specified row and column.
+     * @param row the row of the position as an integer.
+     * @param column the column of the position as a character.
+     */
     public Position(int row, char column) {
         this.row = row;
         this.column = column;

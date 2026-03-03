@@ -22,6 +22,14 @@ public class Team {
     private final FarmerKing king;
 
 
+    /**
+     * Constructor for creating a Team object with the specified name, team ID, hand of cards, and draw pile. The team starts with a
+     * predefined amount of life points and a Farmer King unit that represents the team's leader.
+     * @param name the name of the team
+     * @param teamId the unique identifier of the team
+     * @param hand the hand of cards that the team has at the start of the game
+     * @param drawPile the draw pile from which the team can draw cards during the game
+     */
     public Team(String name, TeamID teamId, Hand hand, DrawPile drawPile) {
         this.name = name;
         this.teamID = teamId;

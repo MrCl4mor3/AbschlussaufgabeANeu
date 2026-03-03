@@ -13,6 +13,13 @@ public class Unit extends BoardEntity {
 
     private boolean blocking;
 
+    /**
+     * Constructor for creating a Unit object with the specified team ID, name, and status values. The unit is initially hidden and
+     * unblocked.
+     * @param teamId the unique identifier of the team to which the unit belongs
+     * @param name the name of the unit, which is hidden until the unit is revealed
+     * @param statusValue the status values of the unit, including attack and defense, which are hidden until the unit is revealed
+     */
     public Unit(TeamID teamId, UnitName name, StatusValue statusValue) {
         super(name, teamId, false);
         this.statusValue = statusValue;
@@ -31,7 +38,7 @@ public class Unit extends BoardEntity {
      * Once revealed, the unit's information cannot be hidden again.
      */
     public void reveale() {
-        this.setRevealed(true);
+        this.setRevealed();
     }
 
     /**

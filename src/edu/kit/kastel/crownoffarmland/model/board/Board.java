@@ -14,7 +14,9 @@ public class Board {
     private static final char START_COLUMN_NAME = 'A';
     private final Field[][] grid;
 
-
+    /**
+     * Constructs a new Board and initializes its fields with their corresponding positions.
+     */
     public Board() {
         grid = new Field[BOARD_SIZE][BOARD_SIZE];
         initializeFields();

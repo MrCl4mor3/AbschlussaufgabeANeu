@@ -15,6 +15,11 @@ public class Field {
     private BoardEntity occupant;
 
 
+    /**
+     * Constructs a new Field with the specified position. The field is initialized as empty (no occupant).
+     * @param position the Position object representing the location of this field on the game board. The position is fixed and cannot be
+     *               changed after construction.
+     */
     public Field(Position position) {
         this.position = position;
     }

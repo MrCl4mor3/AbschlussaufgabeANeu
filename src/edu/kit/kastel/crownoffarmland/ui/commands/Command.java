@@ -7,7 +7,7 @@ import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
  * This implements the command class the same way/in a similar way than it was implemented by the Programmieren-Team
  * in previous excercises.
  *
- * @author Programmieren-Team, ucgdi
+ * @author Programmieren-Team
  */
 public abstract class Command {
     protected final CommandHandler commandHandler;

@@ -18,6 +18,11 @@ import java.util.List;
 public final class DrawPile {
     private final Deque<Unit> deck;
 
+    /**
+     * Initializes the draw pile with a collection of units. The units are added to the pile in the order they are provided in the
+     * collection.
+     * @param initialCards the collection of units to initialize the draw pile with
+     */
     public DrawPile(Collection<Unit> initialCards) {
         this.deck = new ArrayDeque<>(initialCards);
     }

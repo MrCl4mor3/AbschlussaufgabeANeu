@@ -15,6 +15,14 @@ public abstract class BoardEntity {
     private boolean revealed;
 
 
+    /**
+     * Constructs a new BoardEntity with the specified name, team ID, and revealed status. This constructor is protected to allow only
+     * subclasses to create instances of BoardEntity, ensuring that it cannot be instantiated directly.
+     * @param name the UnitName of this board entity, which includes its role and qualificator
+     * @param teamId the TeamID of the team to which this board entity belongs
+     * @param revealed true if this board entity is revealed to the enemy player, false if it is hidden; this status can be changed later
+     *                using the setRevealed method
+     */
     protected BoardEntity(UnitName name, TeamID teamId, boolean revealed) {
         this.name = name;
         this.teamId = teamId;
@@ -25,18 +33,29 @@ public abstract class BoardEntity {
      * Returns the team ID associated with this board entity.
      * @return the team ID of this board entity
      */
-    public TeamID getTeamId() { return teamId; }
+    public TeamID getTeamId() {
+        return teamId;
+    }
     /**
      * Indicates whether this board entity has been revealed to the enemy player.
      * @return true if the entity is revealed, false otherwise
      */
-    public boolean isRevealed() { return revealed; }
+    public boolean isRevealed() {
+        return revealed;
+    }
     /**
      * Returns the name of this board entity, which includes its role and qualificator.
      * @return the UnitName of this board entity
      */
-    public UnitName getName() { return name; }
+    public UnitName getName() {
+        return name;
+    }
+    /**
+     * Returns the role of this board entity, which indicates its primary function or type in the game (e.g., "Knight", "Archer").
+     * @return the role of this board entity
+     */
     public String getRole() {
+
         return name.getRole();
     }
     /**
@@ -49,10 +68,11 @@ public abstract class BoardEntity {
 
     /**
      * Sets the revealed status of this board entity. This method is protected to allow subclasses to control when an entity becomes
-     * revealed.
-     * @param revealed true to mark the entity as revealed, false to mark it as hidden
+     * revealed. Once an entity is revealed, it cannot be hidden again, so this method only allows changing the status from false to true.
      */
-    protected void setRevealed(boolean revealed) { this.revealed = revealed; }
+    protected void setRevealed() {
+        this.revealed = true;
+    }
 
     /**
      * Indicates whether this board entity is the Farmer King, which is a special unit in the game. This method must be implemented by

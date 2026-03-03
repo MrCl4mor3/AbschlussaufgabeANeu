@@ -11,6 +11,11 @@ public class StatusValue {
     private final int atk;
 
 
+    /**
+     * Constructor for creating a StatusValue object with the specified attack and defense values.
+     * @param atk the attack value of the unit, which will be set to 0 if a negative value is provided
+     * @param def the defense value of the unit, which will be set to 0 if a negative value is provided
+     */
     public StatusValue(int atk, int def) {
         this.def = Math.max(def, 0);
         this.atk = Math.max(atk, 0);
