@@ -7,7 +7,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-
+/**
+ * Implement the command handler in a similar fashion as on earlier tasks.
+ *
+ * @author Programmieren-Team, ucgdi
+ */
 public class CommandHandler {
     private static final String COMMAND_ERROR_PRAEFIX = "Error: ";
     private static final String COMMAND_NOT_FOUND_ERROR = "Command '%S' not recognised by any pattern%n";
@@ -19,6 +23,10 @@ public class CommandHandler {
     private boolean running = false;
 
 
+    /**
+     * Creates a new command handler object and initisalizes its program.commands.
+     * @param gameHandler the game handler to execute the commands on
+     */
     public CommandHandler(GameHandler gameHandler) {
         this.gameHandler = gameHandler;
         commands = new HashMap<>();
@@ -26,6 +34,10 @@ public class CommandHandler {
     }
 
 
+    /**
+     * This method handles the input of the user.
+     * The input is taken so long, as this (command handler) was not stopped by the quit command.
+     */
     public void handleUserInput() {
         this.running = true;
 
@@ -35,7 +47,9 @@ public class CommandHandler {
             }
         }
     }
-
+    /**
+     * Ends the program.
+     */
     public void quit() {
         this.running = false;
     }

@@ -8,6 +8,13 @@ import java.util.Collection;
 import java.util.Deque;
 import java.util.List;
 
+/**
+ * Represents the draw pile of a team, which contains the units that can be drawn during the game.
+ * The draw pile is initialized with a collection of units and provides methods to draw the top unit and shuffle the pile.
+ *
+ *
+ * @author ucgdi
+ */
 public final class DrawPile {
     private final Deque<Unit> deck;
 
@@ -15,15 +22,27 @@ public final class DrawPile {
         this.deck = new ArrayDeque<>(initialCards);
     }
 
+    /**
+     * Returns the number of units currently in the draw pile.
+     * @return the size of the draw pile
+     */
     public int size() {
         return deck.size();
     }
 
+    /**
+     * Draws the top unit from the draw pile. If the pile is empty, it returns null.
+     * @return the unit drawn from the top of the pile, or null if the pile is empty
+     */
     public Unit drawTop() {
         Unit unit = deck.pollFirst();
         return unit;
     }
 
+    /**
+     * Shuffles the draw pile by randomizing the order of the units in the pile.
+     * This method creates a temporary list of the units, shuffles it, and then repopulates the draw pile with the shuffled units.
+     */
     public void shuffle() {
         List<Unit> toShuffle = new ArrayList<>(deck);
 
