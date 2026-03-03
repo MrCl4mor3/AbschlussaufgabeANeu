@@ -99,14 +99,14 @@ public class UnitMerger {
     }
 
     private int ggT(int a, int b) {
-        a = Math.abs(a);
-        b = Math.abs(b);
-        while (b != 0) {
-            int temp = a % b;
-            a = b;
-            b = temp;
+        int absA = Math.abs(a);
+        int absB = Math.abs(b);
+        while (absB != 0) {
+            int temp = absA % absB;
+            absA = absB;
+            absB = temp;
         }
-        return a;
+        return absA;
     }
 
     private boolean isPrimeCompatible(int atkA, int defA, int atkB, int defB) {
