@@ -33,7 +33,7 @@ public final class StartupLoader {
     private static final int MAX_TEAM_NAME_LENGTH = 14;
     private static final String STANDARD_TEAM1_NAME = "Player";
     private static final String STANDARD_TEAM2_NAME = "Enemy";
-    private static final String INVALID_TEAMNAME_ERROR = "Invalid team name(s): '%s', '%s'. Team names must be at most %d characters long."
+    private static final String INVALID_TEAMNAME_ERROR = "Invalid team name(s): '%s', '%s'. Team names must be at most %d characters long.";
     private final RawArgsParser argsParser;
     private final SeedParser seedParser;
     private final BoardSymbolParser boardSymbolParser;
