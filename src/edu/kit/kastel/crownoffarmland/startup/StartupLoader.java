@@ -37,7 +37,7 @@ public final class StartupLoader {
     private static final String STANDARD_TEAM2_NAME = "Enemy";
     private static final String INVALID_TEAMNAME_ERROR = "Invalid team name(s): '%s', '%s'. Team names must be at most %d characters long.";
     private static final String STANDARD_BOARD_SYMBOLS = "abcd";
-    public static final String INVALID_VERBOSITY_NAME = "Invalid verbosity level: '%s'. Valid options are: 'all', 'compact'.";
+    private static final String INVALID_VERBOSITY_NAME = "Invalid verbosity level: '%s'. Valid options are: 'all', 'compact'.";
 
 
     private final RawArgsParser argsParser;
