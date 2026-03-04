@@ -1,10 +1,10 @@
 package edu.kit.kastel.crownoffarmland;
 
+
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 import edu.kit.kastel.crownoffarmland.startup.StartupLoader;
 import edu.kit.kastel.crownoffarmland.startup.StartupResult;
 import edu.kit.kastel.crownoffarmland.ui.commands.CommandHandler;
-
 
 /**
  * This is the main entry class for the program.
@@ -14,11 +14,11 @@ import edu.kit.kastel.crownoffarmland.ui.commands.CommandHandler;
 public final class Application {
     private static final String UTILITY_CLASS_CONSTRUCTOR_MESSAGES = "Utility classes cannot be instantiated";
 
+    private static final String EMPTY_ARGUMENTS_ERROR = "No arguments found.";
+
     private Application() {
         throw  new UnsupportedOperationException(UTILITY_CLASS_CONSTRUCTOR_MESSAGES);
     }
-
-
 
 
     /**
@@ -27,15 +27,19 @@ public final class Application {
      * @param args The command line arguments given at the start of the program
      */
     public static void main(String[] args) {
-        StartupResult<GameHandler> result = StartupLoader.createGameHandler(args);
-
-        if (!result.isSuccess()) {
-            System.err.println(result.getErrorMessage());
+        if  (args.length == 0) {
+            System.err.println(EMPTY_ARGUMENTS_ERROR);
             return;
         }
 
-        GameHandler gameHandler = result.getValue();
-        CommandHandler handler = new CommandHandler(gameHandler);
+        StartupLoader loader = new StartupLoader();
+        StartupResult<GameHandler> result = loader.createGameHandler(args);
+
+        if (result.isError()) {
+            System.err.println(result.getErrorMessage());
+            return;
+        }
+        CommandHandler handler = new CommandHandler(result.getValue());
         handler.handleUserInput();
     }
 }

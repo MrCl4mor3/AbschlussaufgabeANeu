@@ -1,4 +1,4 @@
-package edu.kit.kastel.crownoffarmland.startup;
+package edu.kit.kastel.crownoffarmland.startup.config;
 
 import java.util.EnumSet;
 import java.util.Set;

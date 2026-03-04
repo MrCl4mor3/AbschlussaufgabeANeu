@@ -10,13 +10,11 @@ package edu.kit.kastel.crownoffarmland.startup;
  */
 public final class StartupResult<T> {
 
-    private final boolean success;
     private final T value;
     private final String errorMessage;
 
 
     private StartupResult(boolean success, T value, String errorMessage) {
-        this.success = success;
         this.value = value;
         this.errorMessage = errorMessage;
     }
@@ -47,7 +45,14 @@ public final class StartupResult<T> {
      * @return true if the startup operation was successful, false otherwise
      */
     public boolean isSuccess() {
-        return success;
+        return errorMessage == null;
+    }
+    /**
+     * Indicates whether the startup operation resulted in an error.
+     * @return true if the startup operation resulted in an error, false otherwise
+     */
+    public boolean isError() {
+        return errorMessage != null;
     }
 
     /**

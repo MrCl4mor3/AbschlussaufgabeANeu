@@ -1,4 +1,4 @@
-package edu.kit.kastel.crownoffarmland.startup;
+package edu.kit.kastel.crownoffarmland.startup.config;
 
 /**
  * This enum represents the different modes for deck configuration during the startup process.
