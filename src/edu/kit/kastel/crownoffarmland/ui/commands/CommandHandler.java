@@ -3,8 +3,10 @@ package edu.kit.kastel.crownoffarmland.ui.commands;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidCommandArgumentException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 /**
@@ -41,7 +43,7 @@ public class CommandHandler {
      */
     public void handleUserInput() {
         this.running = true;
-        System.out.printf(HELP_COMMAND);
+        System.out.println(startHelpMessage());
         try (Scanner scanner = new Scanner(System.in)) {
             while (this.running) {
                 executeCommand(scanner.nextLine());
@@ -74,6 +76,18 @@ public class CommandHandler {
         System.out.printf(COMMAND_NOT_FOUND_ERROR, inputString);
     }
 
+    private String startHelpMessage() {
+        return String.format(HELP_COMMAND, String.join(", ", getCommandNames()));
+    }
+
+
+    private List<String> getCommandNames() {
+        List<String> commandNames = new ArrayList<>();
+        for (Command command : commands.values()) {
+            commandNames.add(command.getCommandName());
+        }
+        return commandNames;
+    }
 
 
 
