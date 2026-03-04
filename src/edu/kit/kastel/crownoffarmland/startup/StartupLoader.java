@@ -36,10 +36,14 @@ public final class StartupLoader {
     private static final String STANDARD_TEAM1_NAME = "Player";
     private static final String STANDARD_TEAM2_NAME = "Enemy";
     private static final String INVALID_TEAMNAME_ERROR = "Invalid team name(s): '%s', '%s'. Team names must be at most %d characters long.";
+    private static final String STANDARD_BOARD_SYMBOLS = "abcd";
+
+
     private final RawArgsParser argsParser;
     private final SeedParser seedParser;
     private final BoardSymbolParser boardSymbolParser;
     private final UnitFileParser unitFileParser;
+
 
     /**
      * Constructs a new StartupLoader instance and initializes the necessary parsers for processing the startup configuration.
@@ -134,6 +138,12 @@ public final class StartupLoader {
     //ToDo StandardSymbolset, falls "board" nicht angegeben ist --> wird hier nicht abgefangen
     private StartupResult<StartupContext> stepBoard(Map<StartupKey, String> arguments, StartupContext container) {
         String rawBoardPath = arguments.get(StartupKey.BOARD);
+
+        if (rawBoardPath == null || rawBoardPath.isEmpty()) {
+            return StartupResult.success(container.withBoardSymbols(STANDARD_BOARD_SYMBOLS));
+        }
+
+
         StartupResult<String> fileContentResult = readFileContent(rawBoardPath);
         if (fileContentResult.isError()) {
             return StartupError.error(fileContentResult.getErrorMessage());
