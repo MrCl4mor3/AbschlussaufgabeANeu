@@ -10,12 +10,17 @@ import edu.kit.kastel.crownoffarmland.startup.parser.DeckFileParser;
 import edu.kit.kastel.crownoffarmland.startup.parser.RawArgsParser;
 import edu.kit.kastel.crownoffarmland.startup.parser.SeedParser;
 import edu.kit.kastel.crownoffarmland.startup.parser.UnitFileParser;
-import edu.kit.kastel.crownoffarmland.util.FileLoader;
 
 
-
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * The StartupLoader class is responsible for processing the command-line arguments provided at the start of the program and creating a
@@ -229,10 +234,11 @@ public final class StartupLoader {
 
     private StartupResult<String> readFileContent(String filePath) {
         try {
-            String content = FileLoader.readFileFromPath(filePath);
+            byte[] encoded = Files.readAllBytes(Paths.get(filePath));
+            String content = new String(encoded, StandardCharsets.UTF_8);
             System.out.println(content);
             return StartupResult.success(content);
-        } catch (Exception e) {
+        } catch (IOException e) {
             return StartupError.error(FILE_NOT_FOUND_ERROR, filePath);
         }
     }
