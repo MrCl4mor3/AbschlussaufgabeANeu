@@ -1,5 +1,7 @@
 package edu.kit.kastel.crownoffarmland.startup.config;
 
+import java.util.List;
+
 /**
  * This enum represents the different verbosity levels that can be configured during the startup process.
  * It defines two levels: ALL and COMPACT.
@@ -22,5 +24,17 @@ public enum Verbosity {
 
     Verbosity(String raw) {
         this.raw = raw;
+    }
+
+    /**
+     * Returns the string representation of the verbosity level.
+     */
+    public static Verbosity fromString(String rawKey) {
+        for (Verbosity verbosity : Verbosity.values()) {
+            if (verbosity.raw.equalsIgnoreCase(rawKey)) {
+                return verbosity;
+            }
+        }
+        return null;
     }
 }

@@ -37,6 +37,7 @@ public final class StartupLoader {
     private static final String STANDARD_TEAM2_NAME = "Enemy";
     private static final String INVALID_TEAMNAME_ERROR = "Invalid team name(s): '%s', '%s'. Team names must be at most %d characters long.";
     private static final String STANDARD_BOARD_SYMBOLS = "abcd";
+    public static final String INVALID_VERBOSITY_NAME = "Invalid verbosity level: '%s'. Valid options are: 'all', 'compact'.";
 
 
     private final RawArgsParser argsParser;
@@ -231,12 +232,16 @@ public final class StartupLoader {
         return StartupResult.success(container.withTeams(team1Name, team2Name));
     }
 
+    //ToDO Verbosity Check
     private StartupResult<StartupContext> stepVerbosity(Map<StartupKey, String> arguments, StartupContext container) {
         String rawVerbosity = arguments.get(StartupKey.VERBOSITY);
         if (rawVerbosity == null || rawVerbosity.isEmpty()) {
             return StartupResult.success(container.withVerbosity(Verbosity.ALL));
         }
-        return null;
+        if (Verbosity.fromString(rawVerbosity) == null) {
+            return StartupError.error(INVALID_VERBOSITY_NAME, rawVerbosity);
+        }
+        return StartupResult.success(container.withVerbosity(Verbosity.fromString(rawVerbosity)));
     }
 
     private StartupResult<String> readFileContent(String filePath) {
