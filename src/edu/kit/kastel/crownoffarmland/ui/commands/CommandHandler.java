@@ -41,7 +41,7 @@ public class CommandHandler {
      */
     public void handleUserInput() {
         this.running = true;
-
+        System.out.printf(HELP_COMMAND);
         try (Scanner scanner = new Scanner(System.in)) {
             while (this.running) {
                 executeCommand(scanner.nextLine());

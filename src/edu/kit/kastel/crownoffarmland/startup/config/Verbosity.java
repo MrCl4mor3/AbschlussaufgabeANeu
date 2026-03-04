@@ -1,6 +1,6 @@
 package edu.kit.kastel.crownoffarmland.startup.config;
 
-import java.util.List;
+
 
 /**
  * This enum represents the different verbosity levels that can be configured during the startup process.
@@ -28,6 +28,9 @@ public enum Verbosity {
 
     /**
      * Returns the string representation of the verbosity level.
+     *
+     * @param rawKey the string representation of the verbosity level
+     * @return the corresponding Verbosity enum value, or null if no match is found
      */
     public static Verbosity fromString(String rawKey) {
         for (Verbosity verbosity : Verbosity.values()) {
