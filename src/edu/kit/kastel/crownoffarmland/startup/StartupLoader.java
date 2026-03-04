@@ -18,9 +18,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 /**
  * The StartupLoader class is responsible for processing the command-line arguments provided at the start of the program and creating a
