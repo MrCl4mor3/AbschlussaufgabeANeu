@@ -17,6 +17,7 @@ public class CommandHandler {
     private static final String COMMAND_NOT_FOUND_ERROR = "Command '%S' not recognised by any pattern%n";
     private static final String COMMAND_DELIMITER_REGEX = "\\s+";
     private static final String COMMAND_DELIMITER_REPLACEMENT = " ";
+    private static final String HELP_COMMAND = "Use one of the following commands: %s.";
 
     private final Map<String, Command> commands;
     private final GameHandler gameHandler;

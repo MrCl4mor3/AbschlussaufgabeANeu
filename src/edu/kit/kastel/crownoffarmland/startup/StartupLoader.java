@@ -2,8 +2,6 @@ package edu.kit.kastel.crownoffarmland.startup;
 
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 import edu.kit.kastel.crownoffarmland.model.RandomGenerator;
-import edu.kit.kastel.crownoffarmland.model.team.Team;
-import edu.kit.kastel.crownoffarmland.model.units.Unit;
 import edu.kit.kastel.crownoffarmland.model.units.UnitTemplate;
 import edu.kit.kastel.crownoffarmland.startup.config.StartupKey;
 import edu.kit.kastel.crownoffarmland.startup.config.Verbosity;
@@ -15,12 +13,17 @@ import edu.kit.kastel.crownoffarmland.startup.parser.UnitFileParser;
 import edu.kit.kastel.crownoffarmland.util.FileLoader;
 
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
 
 /**
- * Test.
+ * The StartupLoader class is responsible for processing the command-line arguments provided at the start of the program and creating a
+ * GameHandler instance based on those arguments. It follows a multi-step process to parse and validate the arguments, ensuring that all
+ * necessary configurations are correctly set up before initializing the game. The StartupLoader uses various parsers to handle different
+ * aspects of the configuration, such as the random seed, board symbols, unit templates, and deck configurations. If any step of the
+ * parsing or validation process fails, the StartupLoader returns an appropriate error message, allowing the user to understand what went
+ * wrong and how to fix it.
  *
  * @author ucgdi
  */
@@ -30,13 +33,17 @@ public final class StartupLoader {
     private static final int MAX_TEAM_NAME_LENGTH = 14;
     private static final String STANDARD_TEAM1_NAME = "Player";
     private static final String STANDARD_TEAM2_NAME = "Enemy";
-    private static final String INVALID_TEAMNAME_ERROR = "Invalid team name(s): '%s', '%s'. Team names must be at most %d characters long" +
-            ".";
+    private static final String INVALID_TEAMNAME_ERROR = "Invalid team name(s): '%s', '%s'. Team names must be at most %d characters long."
     private final RawArgsParser argsParser;
     private final SeedParser seedParser;
     private final BoardSymbolParser boardSymbolParser;
     private final UnitFileParser unitFileParser;
 
+    /**
+     * Constructs a new StartupLoader instance and initializes the necessary parsers for processing the startup configuration.
+     *
+     * @author ucgdi
+     */
     public StartupLoader() {
         argsParser = new RawArgsParser();
         seedParser = new SeedParser();

@@ -15,8 +15,6 @@ import edu.kit.kastel.crownoffarmland.model.board.Position;
  * @author ucgdi
  */
 public class GameHandler {
-    private static final String HELP_COMMAND = "Use one of the following commands: select, board, move, flip, block, hand, place, show, "
-            + "yield, state, quit";
     private static final Position TEAM1_KING_START = new Position(1, 'D');
     private static final Position TEAM2_KING_START = new Position(7, 'D');
 
