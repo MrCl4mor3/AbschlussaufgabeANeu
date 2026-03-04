@@ -33,4 +33,22 @@ public final class UnitTemplate {
         this.unit = unitName;
         this.stats = stats;
     }
+
+    /**
+     * Returns the StatusValue representing the stats of the unit that this template will create. The StatusValue is a key component of the
+     * UnitTemplate, as it defines the attributes and capabilities of the unit that will be created based on this template. The
+     * StatusValue can include information such as the unit's health.
+     * @return wewdwd
+     */
+    public StatusValue getStats() {
+        return stats;
+    }
+
+    /**
+     * winwnd.
+     * @return wdwodmowd
+     */
+    public UnitName getName() {
+        return unit;
+    }
 }

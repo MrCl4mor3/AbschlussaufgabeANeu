@@ -1,6 +1,9 @@
 package edu.kit.kastel.crownoffarmland.model.team;
 
 import edu.kit.kastel.crownoffarmland.model.units.FarmerKing;
+import edu.kit.kastel.crownoffarmland.model.units.Unit;
+
+import java.util.List;
 
 /**
  * Represents a team in the game, containing information about the team's name, ID, life points, hand of cards, draw pile, and the Farmer
@@ -27,14 +30,13 @@ public class Team {
      * predefined amount of life points and a Farmer King unit that represents the team's leader.
      * @param name the name of the team
      * @param teamId the unique identifier of the team
-     * @param hand the hand of cards that the team has at the start of the game
      * @param drawPile the draw pile from which the team can draw cards during the game
      */
-    public Team(String name, TeamID teamId, Hand hand, DrawPile drawPile) {
+    public Team(String name, TeamID teamId, List<Unit> drawPile) {
         this.name = name;
         this.teamID = teamId;
-        this.hand = hand;
-        this.drawPile = drawPile;
+        this.hand = new Hand();
+        this.drawPile = new DrawPile(drawPile);
         this.lifePoints = START_LP;
         this.king = new FarmerKing(this.teamID);
     }

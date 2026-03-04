@@ -29,9 +29,18 @@ public final class StartupError {
      * @param <T> the type of the StartupResult
      */
     public static <T> StartupResult<T> error(String format, Object... args) {
-        return StartupResult.error(PREFIX + String.format(format, args));
+        return StartupResult.error(String.format(format, args));
     }
 
+    /**
+     * Formats an error message with the given format and arguments, and returns the formatted error message as a String with a prefix.
+     * @param format the format string for the error message
+     * @param args the arguments to be formatted into the error message
+     * @return the formatted error message as a String with a prefix
+     */
+    public static String formatErrorMessage(String format, Object... args) {
+        return PREFIX + String.format(format, args);
+    }
     /**
      * Joins the keys of the given iterable of StartupKey objects into a single string, separated by a comma and a space.
      * @param keys the iterable of StartupKey objects whose keys are to be joined

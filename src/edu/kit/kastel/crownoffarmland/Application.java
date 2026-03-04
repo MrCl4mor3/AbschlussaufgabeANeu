@@ -2,6 +2,7 @@ package edu.kit.kastel.crownoffarmland;
 
 
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
+import edu.kit.kastel.crownoffarmland.startup.StartupError;
 import edu.kit.kastel.crownoffarmland.startup.StartupLoader;
 import edu.kit.kastel.crownoffarmland.startup.StartupResult;
 import edu.kit.kastel.crownoffarmland.ui.commands.CommandHandler;
@@ -36,9 +37,10 @@ public final class Application {
         StartupResult<GameHandler> result = loader.createGameHandler(args);
 
         if (result.isError()) {
-            System.err.println(result.getErrorMessage());
+            System.err.println(StartupError.formatErrorMessage(result.getErrorMessage()));
             return;
         }
+
         CommandHandler handler = new CommandHandler(result.getValue());
         handler.handleUserInput();
     }

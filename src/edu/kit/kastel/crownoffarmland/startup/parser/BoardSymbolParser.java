@@ -43,7 +43,7 @@ public class BoardSymbolParser implements ContentParser<String> {
 
 
     private boolean containsLineBreak(String content) {
-        //ToDO: Konstanen für Zeilenumbrüche definieren und hier verwenden
+        //ToDO: Konstanten für Zeilenumbrüche definieren und hier verwenden
         return content.contains("\n") || content.contains("\r");
     }
 }

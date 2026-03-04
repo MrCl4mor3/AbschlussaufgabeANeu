@@ -13,6 +13,10 @@ public class Unit extends BoardEntity {
 
     private boolean blocking;
 
+
+    public Unit( TeamID teamId, UnitTemplate template) {
+        this(teamId, template.getName(), template.getStats());
+    }
     /**
      * Constructor for creating a Unit object with the specified team ID, name, and status values. The unit is initially hidden and
      * unblocked.
