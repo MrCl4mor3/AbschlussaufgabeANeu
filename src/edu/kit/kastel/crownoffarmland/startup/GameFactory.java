@@ -66,6 +66,7 @@ public final class GameFactory {
 
         Game game = new Game(team1, team2, container.getRandomGenerator());
         return new GameHandler(game);
+        //ToDo: Verbosity muss noch weiter gegeben werden, evtl auch Deckconfig
     }
 
 
