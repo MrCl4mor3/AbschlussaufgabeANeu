@@ -76,64 +76,85 @@ public class CustomBoardSymbolSet extends BoardSymbolSet {
     public char getJunctionIcon(JunctionType type, SelectedRelative relative) {
         return switch (type) {
             case TOP_LEFT_CORNER ->
-                (relative == SelectedRelative.NONE) ? symbols[IDX_TL_CORNER] : symbols[IDX_TL_CORNER_SELECTED];
+                getCornerIcon(relative, IDX_TL_CORNER, IDX_TL_CORNER_SELECTED);
             case TOP_RIGHT_CORNER ->
-                (relative == SelectedRelative.NONE) ? symbols[IDX_TR_CORNER] : symbols[IDX_TR_CORNER_SELECTED];
+                getCornerIcon(relative, IDX_TR_CORNER, IDX_TR_CORNER_SELECTED);
             case BOTTOM_LEFT_CORNER ->
-                (relative == SelectedRelative.NONE) ? symbols[IDX_BL_CORNER] : symbols[IDX_BL_CORNER_SELECTED];
+                getCornerIcon(relative, IDX_BL_CORNER, IDX_BL_CORNER_SELECTED);
             case BOTTOM_RIGHT_CORNER ->
-                (relative == SelectedRelative.NONE) ? symbols[IDX_BR_CORNER] : symbols[IDX_BR_CORNER_SELECTED];
-            case TOP_BORDER -> {
-                if (relative == SelectedRelative.LEFT) {
-                    yield symbols[IDX_TOP_BORDER_SELECTED_LEFT];
-                }
-                if (relative == SelectedRelative.RIGHT) {
-                    yield symbols[IDX_TOP_BORDER_SELECTED_RIGHT];
-                }
-                yield symbols[IDX_TOP_BORDER];
-            }
-            case RIGHT_BORDER -> {
-                if (relative == SelectedRelative.TOP) {
-                    yield symbols[IDX_RIGHT_BORDER_SELECTED_TOP];
-                }
-                if (relative == SelectedRelative.BOTTOM) {
-                    yield symbols[IDX_RIGHT_BORDER_SELECTED_BOTTOM];
-                }
-                yield symbols[IDX_RIGHT_BORDER];
-            }
-            case BOTTOM_BORDER -> {
-                if (relative == SelectedRelative.LEFT) {
-                    yield symbols[IDX_BOTTOM_BORDER_SELECTED_LEFT];
-                }
-                if (relative == SelectedRelative.RIGHT) {
-                    yield symbols[IDX_BOTTOM_BORDER_SELECTED_RIGHT];
-                }
-                yield symbols[IDX_BOTTOM_BORDER];
-            }
-            case LEFT_BORDER -> {
-                if (relative == SelectedRelative.TOP) {
-                    yield symbols[IDX_LEFT_BORDER_SELECTED_TOP];
-                }
-                if (relative == SelectedRelative.BOTTOM) {
-                    yield symbols[IDX_LEFT_BORDER_SELECTED_BOTTOM];
-                }
-                yield symbols[IDX_LEFT_BORDER];
-            }
-            case CENTER -> {
-                if (relative == SelectedRelative.TOP_LEFT) {
-                    yield symbols[IDX_CENTER_SELECTED_TL];
-                }
-                if (relative == SelectedRelative.TOP_RIGHT) {
-                    yield symbols[IDX_CENTER_SELECTED_TR];
-                }
-                if (relative == SelectedRelative.BOTTOM_LEFT) {
-                    yield symbols[IDX_CENTER_SELECTED_BL];
-                }
-                if (relative == SelectedRelative.BOTTOM_RIGHT) {
-                    yield symbols[IDX_CENTER_SELECTED_BR];
-                }
-                yield symbols[IDX_CENTER];
-            }
+                getCornerIcon(relative, IDX_BR_CORNER, IDX_BR_CORNER_SELECTED);
+            case TOP_BORDER ->
+                getTopBorderIcon(relative);
+            case RIGHT_BORDER ->
+                getRightBorderIcon(relative);
+            case BOTTOM_BORDER ->
+                getBottomBorderIcon(relative);
+            case LEFT_BORDER ->
+                getLeftBorderIcon(relative);
+            case CENTER ->
+                getCenterIcon(relative);
         };
     }
+
+
+    private char getCornerIcon(SelectedRelative relative, int normalIndex, int selectedIndex) {
+        return relative == SelectedRelative.NONE ? symbols[normalIndex] : symbols[selectedIndex];
+    }
+
+    private char getTopBorderIcon(SelectedRelative relative) {
+        if (relative == SelectedRelative.LEFT) {
+            return symbols[IDX_TOP_BORDER_SELECTED_LEFT];
+        }
+        if (relative == SelectedRelative.RIGHT) {
+            return symbols[IDX_TOP_BORDER_SELECTED_RIGHT];
+        }
+        return symbols[IDX_TOP_BORDER];
+    }
+
+    private char getRightBorderIcon(SelectedRelative relative) {
+        if (relative == SelectedRelative.TOP) {
+            return symbols[IDX_RIGHT_BORDER_SELECTED_TOP];
+        }
+        if (relative == SelectedRelative.BOTTOM) {
+            return symbols[IDX_RIGHT_BORDER_SELECTED_BOTTOM];
+        }
+        return symbols[IDX_RIGHT_BORDER];
+    }
+
+    private char getBottomBorderIcon(SelectedRelative relative) {
+        if (relative == SelectedRelative.LEFT) {
+            return symbols[IDX_BOTTOM_BORDER_SELECTED_LEFT];
+        }
+        if (relative == SelectedRelative.RIGHT) {
+            return symbols[IDX_BOTTOM_BORDER_SELECTED_RIGHT];
+        }
+        return symbols[IDX_BOTTOM_BORDER];
+    }
+
+    private char getLeftBorderIcon(SelectedRelative relative) {
+        if (relative == SelectedRelative.TOP) {
+            return symbols[IDX_LEFT_BORDER_SELECTED_TOP];
+        }
+        if (relative == SelectedRelative.BOTTOM) {
+            return symbols[IDX_LEFT_BORDER_SELECTED_BOTTOM];
+        }
+        return symbols[IDX_LEFT_BORDER];
+    }
+
+    private char getCenterIcon(SelectedRelative relative) {
+        if (relative == SelectedRelative.TOP_LEFT) {
+            return symbols[IDX_CENTER_SELECTED_TL];
+        }
+        if (relative == SelectedRelative.TOP_RIGHT) {
+            return symbols[IDX_CENTER_SELECTED_TR];
+        }
+        if (relative == SelectedRelative.BOTTOM_LEFT) {
+            return symbols[IDX_CENTER_SELECTED_BL];
+        }
+        if (relative == SelectedRelative.BOTTOM_RIGHT) {
+            return symbols[IDX_CENTER_SELECTED_BR];
+        }
+        return symbols[IDX_CENTER];
+    }
+
 }

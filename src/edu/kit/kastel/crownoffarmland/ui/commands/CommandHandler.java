@@ -96,7 +96,7 @@ public class CommandHandler {
 
     private void initCommands() {
         //addCommand(new BlockCommand(this, gameHandler));
-        addCommand(new BoardCommand(this, gameHandler));
+        //addCommand(new BoardCommand(this, gameHandler));
         //addCommand(new FlipCommand(this, gameHandler));
         //addCommand(new HandCommand(this, gameHandler));
         //addCommand(new MoveCommand(this, gameHandler));
