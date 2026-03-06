@@ -42,11 +42,5 @@ public class GameHandler {
         this.game = game;
         this.duelManager = duelManager;
         this.unitMerger = unitMerger;
-
-        initializeGame();
-    }
-
-    private void initializeGame() {
-
     }
 }

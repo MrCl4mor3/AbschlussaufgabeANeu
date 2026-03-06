@@ -15,11 +15,13 @@ import java.util.Scanner;
  * @author Programmieren-Team
  */
 public class CommandHandler {
-    private static final String COMMAND_ERROR_PRAEFIX = "Error: ";
+    private static final String COMMAND_ERROR_PREFIX = "Error: ";
     private static final String COMMAND_NOT_FOUND_ERROR = "Command '%S' not recognised by any pattern%n";
     private static final String COMMAND_DELIMITER_REGEX = "\\s+";
     private static final String COMMAND_DELIMITER_REPLACEMENT = " ";
-    private static final String HELP_COMMAND = "Use one of the following commands: %s.";
+    private static final String HELP_COMMANDS = "Use one of the following commands: %s .";
+    private static final String HELP_COMMAND = "Use one of the following commands: select, board, move, flip, block, hand, place, show, "
+            + "yield, state, quit.";
 
     private final Map<String, Command> commands;
     private final GameHandler gameHandler;
@@ -43,7 +45,8 @@ public class CommandHandler {
      */
     public void handleUserInput() {
         this.running = true;
-        System.out.println(startHelpMessage());
+        //System.out.println(startHelpMessage());
+        System.out.println(HELP_COMMAND);
         try (Scanner scanner = new Scanner(System.in)) {
             while (this.running) {
                 executeCommand(scanner.nextLine());
@@ -68,7 +71,7 @@ public class CommandHandler {
                 try {
                     command.execute(commandArguments);
                 } catch (InvalidCommandArgumentException e) {
-                    System.err.println(COMMAND_ERROR_PRAEFIX + COMMAND_NOT_FOUND_ERROR + e.getMessage());
+                    System.err.println(COMMAND_ERROR_PREFIX + COMMAND_NOT_FOUND_ERROR + e.getMessage());
                 }
                 return;
             }
@@ -92,17 +95,17 @@ public class CommandHandler {
 
 
     private void initCommands() {
-        //addCommand(new BlockCommand(this, game));
-        //addCommand(new BoardCommand(this, game));
-        //addCommand(new FlipCommand(this, game));
-        //addCommand(new HandCommand(this, game));
-        //addCommand(new MoveCommand(this, game));
-        //addCommand(new PlaceCommand(this, game));
+        //addCommand(new BlockCommand(this, gameHandler));
+        addCommand(new BoardCommand(this, gameHandler));
+        //addCommand(new FlipCommand(this, gameHandler));
+        //addCommand(new HandCommand(this, gameHandler));
+        //addCommand(new MoveCommand(this, gameHandler));
+        //addCommand(new PlaceCommand(this, gameHandler));
         addCommand(new QuitCommand(this, gameHandler));
-        //addCommand(new SelectCommand(this, game));
-        //addCommand(new ShowCommand(this, game));
-        //addCommand(new StateCommand(this, game));
-        //addCommand(new YieldCommand(this, game));
+        //addCommand(new SelectCommand(this, gameHandler));
+        //addCommand(new ShowCommand(this, gameHandler));
+        //addCommand(new StateCommand(this, gameHandler));
+        //addCommand(new YieldCommand(this, gameHandler));
     }
 
 

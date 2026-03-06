@@ -11,30 +11,32 @@ import edu.kit.kastel.crownoffarmland.model.team.TeamID;
  */
 public abstract class BoardEntity {
     private final UnitName name;
-    private final TeamID teamId;
+    private final TeamID teamID;
     private boolean revealed;
+    protected boolean blocking;
 
 
     /**
      * Constructs a new BoardEntity with the specified name, team ID, and revealed status. This constructor is protected to allow only
      * subclasses to create instances of BoardEntity, ensuring that it cannot be instantiated directly.
      * @param name the UnitName of this board entity, which includes its role and qualificator
-     * @param teamId the TeamID of the team to which this board entity belongs
+     * @param teamID the TeamID of the team to which this board entity belongs
      * @param revealed true if this board entity is revealed to the enemy player, false if it is hidden; this status can be changed later
      *                using the setRevealed method
      */
-    protected BoardEntity(UnitName name, TeamID teamId, boolean revealed) {
+    protected BoardEntity(UnitName name, TeamID teamID, boolean revealed) {
         this.name = name;
-        this.teamId = teamId;
+        this.teamID = teamID;
         this.revealed = revealed;
+        this.blocking = false;
     }
 
     /**
      * Returns the team ID associated with this board entity.
      * @return the team ID of this board entity
      */
-    public TeamID getTeamId() {
-        return teamId;
+    public TeamID getTeamID() {
+        return teamID;
     }
     /**
      * Indicates whether this board entity has been revealed to the enemy player.
@@ -81,4 +83,11 @@ public abstract class BoardEntity {
      */
     public abstract boolean isFarmerKing();
 
+    /**
+     * Returns whether the unit is currently blocked. A blocked unit cannot perform actions until it is unblocked.
+     * @return true if the unit is blocked, false otherwise
+     */
+    public boolean isBlocked() {
+        return blocking;
+    }
 }

@@ -11,7 +11,6 @@ import edu.kit.kastel.crownoffarmland.model.team.TeamID;
 public class Unit extends BoardEntity {
     private final StatusValue statusValue;
 
-    private boolean blocking;
 
 
     /**
@@ -35,13 +34,6 @@ public class Unit extends BoardEntity {
         this.statusValue = statusValue;
     }
 
-    /**
-     * Returns whether the unit is currently blocked. A blocked unit cannot perform actions until it is unblocked.
-     * @return true if the unit is blocked, false otherwise
-     */
-    public boolean isBlocked() {
-        return blocking;
-    }
 
     /**
      * Reveals the unit, making its name and status values visible to all players.
@@ -76,6 +68,13 @@ public class Unit extends BoardEntity {
     @Override
     public boolean isFarmerKing() {
         return false;
+    }
+
+    /**
+     * Blocks the unit, preventing it from performing any actions until it is unblocked. A blocked unit cannot move, attack, or be attacked.
+     */
+    public void block() {
+        this.blocking = true;
     }
 
 }
