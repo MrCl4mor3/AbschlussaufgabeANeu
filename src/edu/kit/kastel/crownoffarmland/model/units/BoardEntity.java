@@ -10,10 +10,10 @@ import edu.kit.kastel.crownoffarmland.model.team.TeamID;
  * @author ucgdi
  */
 public abstract class BoardEntity {
+    protected boolean blocking;
     private final UnitName name;
     private final TeamID teamID;
     private boolean revealed;
-    protected boolean blocking;
 
 
     /**

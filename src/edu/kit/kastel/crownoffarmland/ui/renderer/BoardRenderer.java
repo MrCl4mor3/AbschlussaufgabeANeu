@@ -89,8 +89,6 @@ public class BoardRenderer {
 
         return output.toString();
     }
-
-
     private void appendConnectionRow(StringBuilder output, int junctionRow, int boardSize, int selectedRow, int selectedColumn) {
         appendRepeated(output, SPACE, ROW_LABEL_WIDTH);
         for (int junctionColumn = 0; junctionColumn <= boardSize; junctionColumn++) {
@@ -107,7 +105,6 @@ public class BoardRenderer {
         }
         output.append(System.lineSeparator());
     }
-
     private void appendFieldRow(StringBuilder output, Board board, int rowIndex, int selectedRow, int selectedColumn, TeamID currentTeam,
                                 Set<BoardEntity> moveableUnits) {
         output.append(board.getBoardSize() - rowIndex).append(SPACE);
@@ -126,9 +123,6 @@ public class BoardRenderer {
         }
         output.append(System.lineSeparator());
     }
-
-
-
     private void appendColumnLabels(StringBuilder output, Board board) {
         appendRepeated(output, SPACE, ROW_LABEL_WIDTH + 1 + CELL_WIDTH / 2);
 
@@ -139,25 +133,21 @@ public class BoardRenderer {
             output.append((char) (board.getStartColumnName() + columnIndex));
         }
     }
-
     private void appendRepeated(StringBuilder output, char symbol, int count) {
         output.append(String.valueOf(symbol).repeat(Math.max(0, count)));
     }
-
     private boolean isHorizontalSelected(int junctionRow, int junctionColumn, int selectedRow, int selectedColumn) {
         if (selectedRow == NO_FIELD_SELECTED || selectedColumn == NO_FIELD_SELECTED) {
             return false;
         }
         return junctionColumn == selectedColumn && (junctionRow == selectedRow || junctionRow == selectedRow + 1);
     }
-
     private boolean isVerticalSelected(int junctionRow, int junctionColumn, int selectedRow, int selectedColumn) {
         if (selectedRow == NO_FIELD_SELECTED || selectedColumn == NO_FIELD_SELECTED) {
             return false;
         }
         return junctionRow == selectedRow && (junctionColumn == selectedColumn || junctionColumn == selectedColumn + 1);
     }
-
     private JunctionType determineJunctionType(int junctionRow, int junctionColumn, int boardSize) {
         if (junctionRow == 0 && junctionColumn == 0) {
             return JunctionType.TOP_LEFT_CORNER;
@@ -179,8 +169,8 @@ public class BoardRenderer {
             return JunctionType.CENTER;
         }
     }
-
-    private SelectedRelative determineSelectedRelative(int junctionRow, int junctionColumn, int boardSize, int selectedRow, int selectedColumn) {
+    private SelectedRelative determineSelectedRelative(int junctionRow, int junctionColumn, int boardSize, int selectedRow,
+                                                        int selectedColumn) {
         if (selectedRow == NO_FIELD_SELECTED || selectedColumn == NO_FIELD_SELECTED) {
             return SelectedRelative.NONE;
         }

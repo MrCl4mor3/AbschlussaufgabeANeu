@@ -76,38 +76,62 @@ public class CustomBoardSymbolSet extends BoardSymbolSet {
     public char getJunctionIcon(JunctionType type, SelectedRelative relative) {
         return switch (type) {
             case TOP_LEFT_CORNER ->
-                    (relative == SelectedRelative.NONE) ? symbols[IDX_TL_CORNER] : symbols[IDX_TL_CORNER_SELECTED];
+                (relative == SelectedRelative.NONE) ? symbols[IDX_TL_CORNER] : symbols[IDX_TL_CORNER_SELECTED];
             case TOP_RIGHT_CORNER ->
-                    (relative == SelectedRelative.NONE) ? symbols[IDX_TR_CORNER] : symbols[IDX_TR_CORNER_SELECTED];
+                (relative == SelectedRelative.NONE) ? symbols[IDX_TR_CORNER] : symbols[IDX_TR_CORNER_SELECTED];
             case BOTTOM_LEFT_CORNER ->
-                    (relative == SelectedRelative.NONE) ? symbols[IDX_BL_CORNER] : symbols[IDX_BL_CORNER_SELECTED];
+                (relative == SelectedRelative.NONE) ? symbols[IDX_BL_CORNER] : symbols[IDX_BL_CORNER_SELECTED];
             case BOTTOM_RIGHT_CORNER ->
-                    (relative == SelectedRelative.NONE) ? symbols[IDX_BR_CORNER] : symbols[IDX_BR_CORNER_SELECTED];
+                (relative == SelectedRelative.NONE) ? symbols[IDX_BR_CORNER] : symbols[IDX_BR_CORNER_SELECTED];
             case TOP_BORDER -> {
-                if (relative == SelectedRelative.LEFT) yield symbols[IDX_TOP_BORDER_SELECTED_LEFT];
-                if (relative == SelectedRelative.RIGHT) yield symbols[IDX_TOP_BORDER_SELECTED_RIGHT];
+                if (relative == SelectedRelative.LEFT) {
+                    yield symbols[IDX_TOP_BORDER_SELECTED_LEFT];
+                }
+                if (relative == SelectedRelative.RIGHT) {
+                    yield symbols[IDX_TOP_BORDER_SELECTED_RIGHT];
+                }
                 yield symbols[IDX_TOP_BORDER];
             }
             case RIGHT_BORDER -> {
-                if (relative == SelectedRelative.TOP) yield symbols[IDX_RIGHT_BORDER_SELECTED_TOP];
-                if (relative == SelectedRelative.BOTTOM) yield symbols[IDX_RIGHT_BORDER_SELECTED_BOTTOM];
+                if (relative == SelectedRelative.TOP) {
+                    yield symbols[IDX_RIGHT_BORDER_SELECTED_TOP];
+                }
+                if (relative == SelectedRelative.BOTTOM) {
+                    yield symbols[IDX_RIGHT_BORDER_SELECTED_BOTTOM];
+                }
                 yield symbols[IDX_RIGHT_BORDER];
             }
             case BOTTOM_BORDER -> {
-                if (relative == SelectedRelative.LEFT) yield symbols[IDX_BOTTOM_BORDER_SELECTED_LEFT];
-                if (relative == SelectedRelative.RIGHT) yield symbols[IDX_BOTTOM_BORDER_SELECTED_RIGHT];
+                if (relative == SelectedRelative.LEFT) {
+                    yield symbols[IDX_BOTTOM_BORDER_SELECTED_LEFT];
+                }
+                if (relative == SelectedRelative.RIGHT) {
+                    yield symbols[IDX_BOTTOM_BORDER_SELECTED_RIGHT];
+                }
                 yield symbols[IDX_BOTTOM_BORDER];
             }
             case LEFT_BORDER -> {
-                if (relative == SelectedRelative.TOP) yield symbols[IDX_LEFT_BORDER_SELECTED_TOP];
-                if (relative == SelectedRelative.BOTTOM) yield symbols[IDX_LEFT_BORDER_SELECTED_BOTTOM];
+                if (relative == SelectedRelative.TOP) {
+                    yield symbols[IDX_LEFT_BORDER_SELECTED_TOP];
+                }
+                if (relative == SelectedRelative.BOTTOM) {
+                    yield symbols[IDX_LEFT_BORDER_SELECTED_BOTTOM];
+                }
                 yield symbols[IDX_LEFT_BORDER];
             }
             case CENTER -> {
-                if (relative == SelectedRelative.TOP_LEFT) yield symbols[IDX_CENTER_SELECTED_TL];
-                if (relative == SelectedRelative.TOP_RIGHT) yield symbols[IDX_CENTER_SELECTED_TR];
-                if (relative == SelectedRelative.BOTTOM_LEFT) yield symbols[IDX_CENTER_SELECTED_BL];
-                if (relative == SelectedRelative.BOTTOM_RIGHT) yield symbols[IDX_CENTER_SELECTED_BR];
+                if (relative == SelectedRelative.TOP_LEFT) {
+                    yield symbols[IDX_CENTER_SELECTED_TL];
+                }
+                if (relative == SelectedRelative.TOP_RIGHT) {
+                    yield symbols[IDX_CENTER_SELECTED_TR];
+                }
+                if (relative == SelectedRelative.BOTTOM_LEFT) {
+                    yield symbols[IDX_CENTER_SELECTED_BL];
+                }
+                if (relative == SelectedRelative.BOTTOM_RIGHT) {
+                    yield symbols[IDX_CENTER_SELECTED_BR];
+                }
                 yield symbols[IDX_CENTER];
             }
         };

@@ -108,4 +108,9 @@ public class Board {
     public boolean isFieldEmpty(Position position) {
         return getField(position).isEmpty();
     }
+
+    //ToDO Test
+    public void setOccupant(Position position, BoardEntity occupant) {
+        getField(position).setOccupant(occupant);
+    }
 }
