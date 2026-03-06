@@ -1,0 +1,40 @@
+* [33mcecbf1a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Checksytle korrekturen
+* [33me998d94[m BoardRendering komplett implementiert mit allen Funktionalitäten
+* [33mce86756[m Starthelper Output
+* [33m100b9ac[m Checkstyle Korrektur
+* [33m8285dc9[m Sichtbarkeit auf Private setzen bei einer Konstante in StartupLoader
+* [33md688c52[m Hotfix NullpointerException durch fehlendes Verbosity Argumente
+* [33mb7e9870[m Hotfix NullpointerException durch fehlendes Boardargument
+* [33m8dab06e[m Checkstyle
+* [33ma00b154[m IOException bei Filereader angepasst
+* [33m5e67217[m Checkstyleanapssungen
+* [33m09db57e[m Semikolon vergessen
+* [33med0bd54[m Checkstyle Fix
+* [33m1db8101[m GameFactory erstellt, fertig gestellt von InitGame
+* [33mbe17f52[m GameFactory erstellt, fertig gestellt von InitGame
+* [33m84f6f08[m JavaDoc hinzugefügt, Startup Parser implementiert, Config erstellt für Startup.
+* [33mc713c3b[m JavaDoc hinzugefügt
+* [33m989b0e6[m JavaDoc hinzugefügt
+* [33m0e1b7ae[m JavaDoc hinzugefügt
+* [33m3aa25dc[m Beispiel TXT angehängt; AB eingefügt
+* [33m02c4467[m Init Projekt
+* [33m42c43db[m Set up template for exercise
+* [33m5e8a393[m[33m ([m[1;31mgithub/main[m[33m)[m Baord und Units prinzipiell initialisert/ geparst und validiert
+* [33m61a05b1[m Anpasen des RandomGenerator in die Modelpackage. Seed wird bereits validiert und ein Generator wird richtigerweise erstellt.
+* [33m335967f[m Seed parsen und RandomGenerator mit passendem Seed initialisieren
+* [33m10f7abe[m Mandatory keys und Deckconfig Abfrage in Hilfsmethoden ausgelagert, Deckconfig als Enum abgespeichert
+* [33m3de5d15[m Javaargumente parsen --> Startup Phase angefangen zu implementieren
+* [33m75e303a[m CommandHandler hat nun einen GamHandler statt direkt das Modell Game
+* [33mc8ae8e8[m CommandHandler hat nun einen GamHandler statt direkt das Modell Game
+* [33me4b9e91[m Aufsetzen eines GameHandlers
+* [33mc53f8bd[m Duellmanager fertig implementiert
+* [33m07c1471[m Zusammenschluss Bugs behoben, gameplay ordner aus model Paket entfernt
+* [33m7cc64fe[m Zusammenschluss von Einheiten implementiert
+* [33m0f7ffc3[m FileLoader implementiert; Randomklasse Utility Class Exception angepasst
+* [33m146c5b2[m CommandHandler soweit fertig gebaut, in Application Testlaut implementiert und den Quitcommand implementiert
+* [33m5848bd7[m Implementierung des CommandPatterns
+* [33m5a399f6[m Beginn der Implementierung vom Game
+* [33m64981ab[m Weitere Anpassungen und Bug Fixes von Board
+* [33mcf54513[m Implementierung vom Board
+* [33mdbeb325[m Implementierung von Team, Unit und Random
+* [33m147412f[m Setup der Klassen und Ordnerstruktur

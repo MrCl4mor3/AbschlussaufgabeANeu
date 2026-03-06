@@ -169,12 +169,34 @@ public class BoardRenderer {
             return JunctionType.CENTER;
         }
     }
-    private SelectedRelative determineSelectedRelative(int junctionRow, int junctionColumn, int boardSize, int selectedRow,
-                                                        int selectedColumn) {
+    private SelectedRelative determineSelectedRelative(int junctionRow, int junctionColumn, int boardSize,
+                                                       int selectedRow, int selectedColumn) {
         if (selectedRow == NO_FIELD_SELECTED || selectedColumn == NO_FIELD_SELECTED) {
             return SelectedRelative.NONE;
         }
 
+        if (isCorner(junctionRow, junctionColumn, boardSize)) {
+            return determineCornerRelative(junctionRow, junctionColumn, boardSize, selectedRow, selectedColumn);
+        }
+
+        if (junctionRow == 0 || junctionRow == boardSize) {
+            return determineHorizontalBorderRelative(junctionRow, junctionColumn, boardSize, selectedRow, selectedColumn);
+        }
+
+        if (junctionColumn == 0 || junctionColumn == boardSize) {
+            return determineVerticalBorderRelative(junctionRow, junctionColumn, boardSize, selectedRow, selectedColumn);
+        }
+
+        return determineCenterRelative(junctionRow, junctionColumn, selectedRow, selectedColumn);
+    }
+
+    private boolean isCorner(int junctionRow, int junctionColumn, int boardSize) {
+        return (junctionRow == 0 || junctionRow == boardSize)
+                && (junctionColumn == 0 || junctionColumn == boardSize);
+    }
+
+    private SelectedRelative determineCornerRelative(int junctionRow, int junctionColumn, int boardSize,
+                                                     int selectedRow, int selectedColumn) {
         if (junctionRow == 0 && junctionColumn == 0) {
             return selectedRow == 0 && selectedColumn == 0
                     ? SelectedRelative.TOP_LEFT : SelectedRelative.NONE;
@@ -187,11 +209,11 @@ public class BoardRenderer {
             return selectedRow == boardSize - 1 && selectedColumn == 0
                     ? SelectedRelative.BOTTOM_LEFT : SelectedRelative.NONE;
         }
-        if (junctionRow == boardSize && junctionColumn == boardSize) {
-            return selectedRow == boardSize - 1 && selectedColumn == boardSize - 1
-                    ? SelectedRelative.BOTTOM_RIGHT : SelectedRelative.NONE;
-        }
-
+        return selectedRow == boardSize - 1 && selectedColumn == boardSize - 1
+                ? SelectedRelative.BOTTOM_RIGHT : SelectedRelative.NONE;
+    }
+    private SelectedRelative determineHorizontalBorderRelative(int junctionRow, int junctionColumn, int boardSize,
+                                                               int selectedRow, int selectedColumn) {
         if (junctionRow == 0) {
             if (selectedRow == 0 && selectedColumn == junctionColumn - 1) {
                 return SelectedRelative.LEFT;
@@ -202,16 +224,16 @@ public class BoardRenderer {
             return SelectedRelative.NONE;
         }
 
-        if (junctionRow == boardSize) {
-            if (selectedRow == boardSize - 1 && selectedColumn == junctionColumn - 1) {
-                return SelectedRelative.LEFT;
-            }
-            if (selectedRow == boardSize - 1 && selectedColumn == junctionColumn) {
-                return SelectedRelative.RIGHT;
-            }
-            return SelectedRelative.NONE;
+        if (selectedRow == boardSize - 1 && selectedColumn == junctionColumn - 1) {
+            return SelectedRelative.LEFT;
         }
-
+        if (selectedRow == boardSize - 1 && selectedColumn == junctionColumn) {
+            return SelectedRelative.RIGHT;
+        }
+        return SelectedRelative.NONE;
+    }
+    private SelectedRelative determineVerticalBorderRelative(int junctionRow, int junctionColumn, int boardSize,
+                                                             int selectedRow, int selectedColumn) {
         if (junctionColumn == 0) {
             if (selectedColumn == 0 && selectedRow == junctionRow - 1) {
                 return SelectedRelative.TOP;
@@ -222,16 +244,16 @@ public class BoardRenderer {
             return SelectedRelative.NONE;
         }
 
-        if (junctionColumn == boardSize) {
-            if (selectedColumn == boardSize - 1 && selectedRow == junctionRow - 1) {
-                return SelectedRelative.TOP;
-            }
-            if (selectedColumn == boardSize - 1 && selectedRow == junctionRow) {
-                return SelectedRelative.BOTTOM;
-            }
-            return SelectedRelative.NONE;
+        if (selectedColumn == boardSize - 1 && selectedRow == junctionRow - 1) {
+            return SelectedRelative.TOP;
         }
-
+        if (selectedColumn == boardSize - 1 && selectedRow == junctionRow) {
+            return SelectedRelative.BOTTOM;
+        }
+        return SelectedRelative.NONE;
+    }
+    private SelectedRelative determineCenterRelative(int junctionRow, int junctionColumn,
+                                                     int selectedRow, int selectedColumn) {
         if (selectedRow == junctionRow - 1 && selectedColumn == junctionColumn - 1) {
             return SelectedRelative.TOP_LEFT;
         }
@@ -244,7 +266,6 @@ public class BoardRenderer {
         if (selectedRow == junctionRow && selectedColumn == junctionColumn) {
             return SelectedRelative.BOTTOM_RIGHT;
         }
-
         return SelectedRelative.NONE;
     }
 }
