@@ -13,6 +13,7 @@ public class YieldCommand extends  Command {
     private static final int EXPECTED_NUMBER_OF_ARGUMENTS = 1;
     private static final String SUCCESSFULLY_ENDED_TURN_MESSAGE = "It is %s turn!%n";
     private static final String DISCARDING_CARD_MESSAGE = "%s discarded %s.%n";
+    private static final String NO_CARD_LEFT_MESSAGE = "%s has no cards left in the deck!%n";
 
     public YieldCommand(CommandHandler commandHandler, GameHandler gameHandler) {
         super(COMMAND_NAME, commandHandler, gameHandler);
@@ -45,7 +46,10 @@ public class YieldCommand extends  Command {
             System.out.printf(DISCARDING_CARD_MESSAGE, discardedCard.getTeamName(),
                     commandHandler.getEntityFormatter().formatEntitySummary(discardedCard));
         }
-        System.out.format(SUCCESSFULLY_ENDED_TURN_MESSAGE, gameHandler.getCurrentTeamName());
+        System.out.printf(SUCCESSFULLY_ENDED_TURN_MESSAGE, gameHandler.getCurrentTeamName());
+        if (gameHandler.isGameOver()) {
+            System.out.printf(NO_CARD_LEFT_MESSAGE, gameHandler.getCurrentTeamName());
+        }
     }
 
 

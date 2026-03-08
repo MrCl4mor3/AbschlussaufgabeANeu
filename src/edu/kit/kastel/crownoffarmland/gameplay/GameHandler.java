@@ -3,6 +3,7 @@ package edu.kit.kastel.crownoffarmland.gameplay;
 import edu.kit.kastel.crownoffarmland.exceptions.EmptySelectedFieldException;
 import edu.kit.kastel.crownoffarmland.exceptions.EnemyUnitSelectedException;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
+import edu.kit.kastel.crownoffarmland.exceptions.InvalidHandException;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidPositionException;
 import edu.kit.kastel.crownoffarmland.exceptions.KingCannotBlockedException;
 import edu.kit.kastel.crownoffarmland.exceptions.NoSelectionException;
@@ -16,7 +17,6 @@ import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.UnitMerger;
 
 import edu.kit.kastel.crownoffarmland.model.Game;
 import edu.kit.kastel.crownoffarmland.model.board.Position;
-import edu.kit.kastel.crownoffarmland.model.team.Team;
 import edu.kit.kastel.crownoffarmland.model.team.TeamID;
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
 import edu.kit.kastel.crownoffarmland.model.units.StatusValue;
@@ -47,6 +47,7 @@ import java.util.Set;
 public class GameHandler {
     private static final Position TEAM1_KING_START = new Position(1, 'D');
     private static final Position TEAM2_KING_START = new Position(7, 'D');
+    private static final int HAND_INDEX_OFFSET = 1;
 
     private static final int OPENING_HAND_SIZE = 4;
     private static final int MAX_MOVE_DISTANCE = 1;
@@ -307,11 +308,14 @@ public class GameHandler {
             throw new YieldException(game.getTeamName(game.getCurrentTeamID()));
         } else {
             int handSize = game.getHandSize(game.getCurrentTeamID());
-            if (index < 0 || index >= handSize) {
-                throw new InvalidGameStateException("Invalid hand index: " + index);
+
+            int internalIndex = parseToInternalHandIndex(index);
+
+            if (internalIndex < 0 || internalIndex >= handSize) {
+                throw new InvalidHandException("Invalid hand index: " + index);
             }
 
-            Unit discardedCard = game.removeHandCardAt(getCurrentTeamID(), index);
+            Unit discardedCard = game.removeHandCardAt(getCurrentTeamID(), internalIndex);
             if (discardedCard == null) {
                 throw new InvalidGameStateException("Cannot discard from an empty hand.");
             }
@@ -338,7 +342,20 @@ public class GameHandler {
         return game.getWinner() != null;
     }
 
-    public TeamID getWinner() {
-        return game.getWinner();
+    public String getWinner() {
+        if (isGameOver()) {
+            return game.getTeamName(game.getWinner());
+        }
+        return null;
+    }
+
+    private int parseToInternalHandIndex(int userIndex) throws InvalidHandException {
+        int internalIndex = userIndex - HAND_INDEX_OFFSET;
+        int handSize = game.getHandSize(getCurrentTeamID());
+
+        if (internalIndex < 0 || internalIndex >= handSize) {
+            throw new InvalidHandException(String.valueOf(userIndex));
+        }
+        return internalIndex;
     }
 }

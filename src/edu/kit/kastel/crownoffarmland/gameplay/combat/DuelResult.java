@@ -28,7 +28,7 @@ public class DuelResult {
      * @param damageToDefenderTeam the amount of damage dealt to the defender's team as a result of the duel
      */
     public DuelResult(DuelType duelType, boolean attackerEliminated, boolean defenderEliminated, int damageToAttackerTeam,
-                      int damageToDefenderTeam) {
+        int damageToDefenderTeam) {
         this.duelType = duelType;
         this.attackerEliminated = attackerEliminated;
         this.defenderEliminated = defenderEliminated;

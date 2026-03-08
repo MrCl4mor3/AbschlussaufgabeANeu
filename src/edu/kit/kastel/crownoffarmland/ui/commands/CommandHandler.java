@@ -27,6 +27,7 @@ public class CommandHandler {
     private static final String COMMAND_DELIMITER_REPLACEMENT = " ";
     private static final String HELP_COMMAND = "Use one of the following commands: %s.";
     private static final String COMMAND_NOT_ALLOWED_AFTER_YIELD = "Cannot execute the command '%s', you must discard!%n";
+    private static final String WINNER_MESSAGE = "%s wins!";
 
 
     private final Map<String, Command> commands;
@@ -101,7 +102,7 @@ public class CommandHandler {
         }
 
         // After tried yield command, only allow yield, hand and quit command until the next turn starts
-        if (gameHandler.isYieldRestrictionActive() && command.isAllowedDuringYieldRestriction()) {
+        if (gameHandler.isYieldRestrictionActive() && !command.isAllowedDuringYieldRestriction()) {
             System.err.printf(COMMAND_ERROR_PREFIX + COMMAND_NOT_ALLOWED_AFTER_YIELD, commandName);
             return;
         }
@@ -112,6 +113,7 @@ public class CommandHandler {
 
 
             if (gameHandler.isGameOver()) {
+                System.out.printf(WINNER_MESSAGE, gameHandler.getWinner());
                 quit();
             }
 
