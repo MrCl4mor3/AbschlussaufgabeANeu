@@ -103,6 +103,10 @@ public class Game {
 
     public void dealDamage(TeamID teamID, int amount) {
         teams.get(teamID).takeDamage(amount);
+
+        if (teams.get(teamID).getLifePoints() == 0 & winner == null) {
+            winner = teamID.getNext();
+        }
     }
 
     public FarmerKing getKing(TeamID teamID) {

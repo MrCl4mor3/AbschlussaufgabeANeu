@@ -109,6 +109,12 @@ public class CommandHandler {
 
         try {
             command.execute(commandArguments);
+
+
+            if (gameHandler.isGameOver()) {
+                quit();
+            }
+
         } catch (CrownOfFarmlandException e) {
             System.err.println(COMMAND_ERROR_PREFIX + e.getMessage());
         }

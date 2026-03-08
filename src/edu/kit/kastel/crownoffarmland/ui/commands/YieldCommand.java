@@ -49,7 +49,8 @@ public class YieldCommand extends  Command {
     }
 
 
-    protected boolean isAllowDuringYieldRestriction() {
+    @Override
+    protected boolean isAllowedDuringYieldRestriction() {
         return ALLOW_EXECUTE_DURING_YIELD_RESTRICTION;
     }
 }

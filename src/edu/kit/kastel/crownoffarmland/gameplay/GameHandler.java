@@ -16,6 +16,7 @@ import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.UnitMerger;
 
 import edu.kit.kastel.crownoffarmland.model.Game;
 import edu.kit.kastel.crownoffarmland.model.board.Position;
+import edu.kit.kastel.crownoffarmland.model.team.Team;
 import edu.kit.kastel.crownoffarmland.model.team.TeamID;
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
 import edu.kit.kastel.crownoffarmland.model.units.StatusValue;
@@ -120,9 +121,15 @@ public class GameHandler {
         placedThisTurn = false;
         movedEntityThisTurn.clear();
         yieldRestrictionActive = false;
-        if (game.drawToHand(game.getCurrentTeamID()) == null) {
-            game.setWinner(game.getEnemyTeamID());
+
+        TeamID currentTeam = game.getCurrentTeamID();
+
+        if (game.isDrawPileEmpty(currentTeam)) {
+            game.setWinner(currentTeam.getNext());
+            return;
         }
+
+        game.drawToHand(currentTeam);
     }
 
 
@@ -327,11 +334,11 @@ public class GameHandler {
 
 
 
-    private boolean isGameOver() {
+    public boolean isGameOver() {
         return game.getWinner() != null;
     }
 
-     public TeamID getWinner() {
+    public TeamID getWinner() {
         return game.getWinner();
     }
 }
