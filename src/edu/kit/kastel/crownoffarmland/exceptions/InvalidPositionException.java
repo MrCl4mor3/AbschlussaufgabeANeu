@@ -4,6 +4,7 @@ package edu.kit.kastel.crownoffarmland.exceptions;
  * This exception is thrown when an invalid position is provided in the game.
  *
  * @author ucgdi
+ * @see InvalidGameStateException
  */
 public class InvalidPositionException extends InvalidGameStateException {
 

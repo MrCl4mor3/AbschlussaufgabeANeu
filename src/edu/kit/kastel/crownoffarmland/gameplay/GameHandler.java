@@ -322,6 +322,16 @@ public class GameHandler {
     private void nextRound() {
         game.nextTurn();
         startCurrentTurn();
+    }
 
+
+
+
+    private boolean isGameOver() {
+        return game.getWinner() != null;
+    }
+
+     public TeamID getWinner() {
+        return game.getWinner();
     }
 }

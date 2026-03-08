@@ -3,7 +3,7 @@ package edu.kit.kastel.crownoffarmland.exceptions;
 /**
  * This exception is thrown when the arguments of a command are invalid, for example if they don't match the required types or formats.
  *
- * @author Programmieren-Team
+ * @author ucgdi
  */
 public class InvalidCommandArgumentException extends  CrownOfFarmlandException {
 

@@ -3,7 +3,7 @@ package edu.kit.kastel.crownoffarmland.exceptions;
 /**
  * This is the base exception for all exceptions in the Crown of Farmland project.
  *
- * @author Programmieren-Team
+ * @author ucgdi
  */
 public class CrownOfFarmlandException extends Exception {
 
