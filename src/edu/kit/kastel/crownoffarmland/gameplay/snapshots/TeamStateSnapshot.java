@@ -1,4 +1,4 @@
-package edu.kit.kastel.crownoffarmland.ui.snapshots;
+package edu.kit.kastel.crownoffarmland.gameplay.snapshots;
 
 public final class TeamStateSnapshot {
     private final String teamName;

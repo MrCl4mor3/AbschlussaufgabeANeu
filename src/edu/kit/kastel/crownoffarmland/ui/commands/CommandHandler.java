@@ -1,13 +1,12 @@
 package edu.kit.kastel.crownoffarmland.ui.commands;
 
 import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
-import edu.kit.kastel.crownoffarmland.exceptions.InvalidCommandArgumentException;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 import edu.kit.kastel.crownoffarmland.ui.renderer.board.BoardRenderer;
 import edu.kit.kastel.crownoffarmland.ui.renderer.entity.EntityFormatter;
-import edu.kit.kastel.crownoffarmland.ui.snapshots.BoardSnapshot;
-import edu.kit.kastel.crownoffarmland.ui.snapshots.EntitySnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.BoardSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;

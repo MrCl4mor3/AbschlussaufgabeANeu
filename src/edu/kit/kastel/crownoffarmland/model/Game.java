@@ -1,5 +1,6 @@
 package edu.kit.kastel.crownoffarmland.model;
 
+import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidPositionException;
 import edu.kit.kastel.crownoffarmland.model.board.Board;
 import edu.kit.kastel.crownoffarmland.model.board.Position;
@@ -111,6 +112,20 @@ public class Game {
 
     public FarmerKing getKing(TeamID teamID) {
         return teams.get(teamID).getKing();
+    }
+
+    public Position getKingPosition(TeamID teamID) {
+        BoardEntity king = getKing(teamID);
+
+        for (int rowIndex = 0; rowIndex < getBoardSize(); rowIndex++) {
+            for (int columnIndex = 0; columnIndex < getBoardSize(); columnIndex++) {
+                Position position = getPositionAt(rowIndex, columnIndex);
+                if (getOccupant(position) == king) {
+                    return position;
+                }
+            }
+        }
+        return null;
     }
 
     public int getHandSize(TeamID teamID) {

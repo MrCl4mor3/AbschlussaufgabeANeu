@@ -31,4 +31,14 @@ public class MergeResult {
         this.mergeType = mergeType;
         this.unit = mergedUnit;
     }
+
+
+    public Unit getUnit() {
+        return unit;
+    }
+
+
+    public boolean isSuccessful() {
+        return this.mergeType != MergeType.INCOMPATIBLE;
+    }
 }

@@ -1,4 +1,4 @@
-package edu.kit.kastel.crownoffarmland.ui.snapshots;
+package edu.kit.kastel.crownoffarmland.gameplay.snapshots;
 
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
 import edu.kit.kastel.crownoffarmland.model.units.Unit;

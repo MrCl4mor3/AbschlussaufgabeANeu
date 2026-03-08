@@ -4,7 +4,7 @@ import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
 
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 import edu.kit.kastel.crownoffarmland.model.team.TeamID;
-import edu.kit.kastel.crownoffarmland.ui.snapshots.TeamStateSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.TeamStateSnapshot;
 
 
 public class StateCommand extends  Command {

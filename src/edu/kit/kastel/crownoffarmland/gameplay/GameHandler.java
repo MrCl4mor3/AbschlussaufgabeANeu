@@ -13,6 +13,8 @@ import edu.kit.kastel.crownoffarmland.exceptions.UnitAlreadyRevealedException;
 
 import edu.kit.kastel.crownoffarmland.exceptions.YieldException;
 import edu.kit.kastel.crownoffarmland.gameplay.combat.DuelManager;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.MergeResult;
 import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.UnitMerger;
 
 import edu.kit.kastel.crownoffarmland.model.Game;
@@ -24,13 +26,14 @@ import edu.kit.kastel.crownoffarmland.model.units.Unit;
 
 
 import edu.kit.kastel.crownoffarmland.model.units.UnitName;
-import edu.kit.kastel.crownoffarmland.ui.snapshots.BoardCellSnapshot;
-import edu.kit.kastel.crownoffarmland.ui.snapshots.BoardSnapshot;
-import edu.kit.kastel.crownoffarmland.ui.snapshots.EntitySnapshot;
-import edu.kit.kastel.crownoffarmland.ui.snapshots.TeamStateSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.BoardCellSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.BoardSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.TeamStateSnapshot;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -357,5 +360,119 @@ public class GameHandler {
             throw new InvalidHandException(String.valueOf(userIndex));
         }
         return internalIndex;
+    }
+
+    //ToDO: Exceptions noch richtig werfen!
+    private List<Integer> parseToInternalHandIndices(int[] userIndices) throws InvalidHandException {
+        List<Integer> internalIndices = new ArrayList<>();
+        Set<Integer> seenIndices = new HashSet<>();
+
+        for (int userIndex : userIndices) {
+            int internalIndex = parseToInternalHandIndex(userIndex);
+
+            if (!seenIndices.add(internalIndex)) {
+                throw new InvalidHandException("Duplicate hand index: " + userIndex);
+            }
+            internalIndices.add(internalIndex);
+        }
+        return internalIndices;
+    }
+
+    private boolean isAdjacentToKing(Position target, Position kingPosition) {
+        int rowDiff = Math.abs(target.getRow() - kingPosition.getRow());
+        int colDiff = Math.abs(target.getColumn() - kingPosition.getColumn());
+        return Math.max(rowDiff, colDiff) == MAX_MOVE_DISTANCE;
+    }
+
+    private Position getCurrentKingPosition() {
+        return game.getKingPosition(game.getCurrentTeamID());
+    }
+
+    //ToDO: Exceptions noch richtig werfen!
+    private void validatePlaceTarget() throws InvalidGameStateException {
+        if (selected == null) {
+            throw new NoSelectionException();
+        }
+        if (placedThisTurn) {
+            throw new InvalidGameStateException("You have already placed a unit this turn.");
+        }
+
+        Position kingPosition = getCurrentKingPosition();
+        Position targetPosition = selected;
+        if (!isAdjacentToKing(targetPosition, kingPosition)) {
+            throw new InvalidGameStateException("You can only place a unit adjacent to your King.");
+        }
+
+        BoardEntity occupant = game.getOccupant(targetPosition);
+        if (occupant != null && occupant.getTeamID() != game.getCurrentTeamID()) {
+            throw new InvalidGameStateException("You cannot place a an enemy occupied field.");
+        }
+    }
+
+    private List<Unit> extractUnitsFromHand(List<Integer> internalIndices) {
+        List<Unit> units = new ArrayList<>();
+
+        for (int internalIndex : internalIndices) {
+            units.add(game.getHandCardAt(getCurrentTeamID(), internalIndex));
+        }
+        return units;
+    }
+
+    private void removeHandCardsDescending(List<Integer> internalIndices) {
+        List<Integer> sortedIndices = new ArrayList<>(internalIndices);
+        sortedIndices.sort(Collections.reverseOrder());
+        for (int internalIndex : sortedIndices) {
+            game.removeHandCardAt(getCurrentTeamID(), internalIndex);
+        }
+    }
+
+    public List<PlaceStepSnapshot> placeUnits(int[] userIndices) throws InvalidGameStateException {
+        validatePlaceTarget();
+
+        List<Integer> internalIndices = parseToInternalHandIndices(userIndices);
+        List<Unit> unitsToPlace = extractUnitsFromHand(internalIndices);
+
+        removeHandCardsDescending(internalIndices);
+
+        List<PlaceStepSnapshot> results = new ArrayList<>();
+
+        for (Unit unit : unitsToPlace) {
+            results.add(placeSingleUnit(unit));
+        }
+
+        placedThisTurn = true;
+        return results;
+    }
+
+    private PlaceStepSnapshot placeSingleUnit(Unit incomingUnit) throws InvalidGameStateException {
+
+        BoardEntity occupant = game.getOccupant(selected);
+
+        if (occupant == null) {
+            game.setOccupant(selected, incomingUnit);
+            // eliminiere falls mehr als 5 Einheiten aus eigenem Team auf dem Board vorhanden sind
+            return new PlaceStepSnapshot(getCurrentTeamName(), incomingUnit.getName().toString(), null, null, selected.toString());
+        }
+
+        if (occupant.isFarmerKing()) {
+            throw new InvalidGameStateException("You cannot place a unit on top of a Farmer King.");
+        }
+
+        Unit existingUnit = (Unit) occupant;
+        String existingUnitName = existingUnit.getName().toString();
+
+
+        MergeResult result = unitMerger.tryMerge(incomingUnit, existingUnit);
+
+        if (result.isSuccessful()) {
+            Unit mergedUnit = result.getUnit();
+            game.setOccupant(selected, mergedUnit);
+            return new PlaceStepSnapshot(getCurrentTeamName(), incomingUnit.getName().toString(), existingUnitName, null,
+                    selected.toString());
+        } else  {
+            game.setOccupant(selected, incomingUnit);
+            return new PlaceStepSnapshot(getCurrentTeamName(), incomingUnit.getName().toString(), existingUnitName, existingUnitName,
+                    selected.toString());
+        }
     }
 }

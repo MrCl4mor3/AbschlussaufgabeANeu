@@ -1,6 +1,6 @@
 package edu.kit.kastel.crownoffarmland.model.board;
 
-import edu.kit.kastel.crownoffarmland.exceptions.InvalidCommandArgumentException;
+
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidPositionException;
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
 
@@ -115,7 +115,15 @@ public class Board {
     }
 
 
-
+    /**
+     * Parses a raw position string (e.g., "A1", "B3") and converts it to a Position object. The raw position must consist of a single
+     * letter (A-G) followed by a single digit (1-7). The method validates the format of the raw position and checks if it corresponds to
+     * a valid position on the board. If the raw position is invalid or does not correspond to a valid position on the board, an
+     * InvalidPositionException is thrown.
+     * @param rawPosition the raw position string to parse
+     * @return the Position object corresponding to the given raw position string
+     * @throws InvalidPositionException if the raw position string is invalid or does not correspond to a valid position on the board
+     */
     public Position parsePosition(String rawPosition) throws InvalidPositionException {
         if (rawPosition == null || rawPosition.length() != EXPECTED_POSITION_LENGTH) {
             throw new InvalidPositionException(rawPosition);
@@ -138,6 +146,16 @@ public class Board {
         return position;
     }
 
+    /**
+     * Sets the occupant of the field at the given position to the specified BoardEntity. If the position is invalid, an
+     * InvalidPositionException is thrown.
+     * @param position the position of the field to set the occupant for
+     * @param entity the BoardEntity to set as the occupant of the field
+     */
+    public void setOccupant(Position position, BoardEntity entity) {
+        getField(position).setOccupant(entity);
+    }
+
     private boolean isValidPosition(Position position) {
         if (position == null) {
             return false;
@@ -153,7 +171,5 @@ public class Board {
         return column >= START_COLUMN_NAME && column < START_COLUMN_NAME + BOARD_SIZE;
     }
 
-    public void setOccupant(Position position, BoardEntity entity) {
-        getField(position).setOccupant(entity);
-    }
+
 }

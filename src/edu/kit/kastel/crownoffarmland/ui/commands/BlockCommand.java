@@ -1,9 +1,8 @@
 package edu.kit.kastel.crownoffarmland.ui.commands;
 
 import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
-import edu.kit.kastel.crownoffarmland.exceptions.InvalidCommandArgumentException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
-import edu.kit.kastel.crownoffarmland.ui.snapshots.EntitySnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
 
 public class BlockCommand extends Command {
     private static final String COMMAND_NAME = "block";

@@ -1,6 +1,6 @@
 package edu.kit.kastel.crownoffarmland.ui.renderer.entity;
 
-import edu.kit.kastel.crownoffarmland.ui.snapshots.EntitySnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
 
 public class EntityFormatter {
     private static final String OUTPUT_NO_UNIT = "no unit";
