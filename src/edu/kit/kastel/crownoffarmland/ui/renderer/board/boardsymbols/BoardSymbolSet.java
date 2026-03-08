@@ -1,4 +1,4 @@
-package edu.kit.kastel.crownoffarmland.ui.renderer.boardsymbols;
+package edu.kit.kastel.crownoffarmland.ui.renderer.board.boardsymbols;
 
 /**
  * Represents a set of symbols used to render the game board, including icons for horizontal and vertical connections, as well as junctions.

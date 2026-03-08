@@ -1,5 +1,7 @@
 package edu.kit.kastel.crownoffarmland.model.board;
 
+import edu.kit.kastel.crownoffarmland.exceptions.InvalidCommandArgumentException;
+import edu.kit.kastel.crownoffarmland.exceptions.InvalidPositionException;
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
 
 /**
@@ -10,8 +12,11 @@ import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
  * @author ucgdi
  */
 public class Board {
+    private static final int EXPECTED_POSITION_LENGTH = 2;
     private static final int BOARD_SIZE = 7;
     private static final char START_COLUMN_NAME = 'A';
+    private static final int ROW_OFFSET = '0';
+    private static final int MIN_ROW = 1;
     private final Field[][] grid;
 
     /**
@@ -109,4 +114,46 @@ public class Board {
         return getField(position).isEmpty();
     }
 
+
+
+    public Position parsePosition(String rawPosition) throws InvalidPositionException {
+        if (rawPosition == null || rawPosition.length() != EXPECTED_POSITION_LENGTH) {
+            throw new InvalidPositionException(rawPosition);
+        }
+
+        char columnName = Character.toUpperCase(rawPosition.charAt(0));
+        char rowNumber = Character.toUpperCase(rawPosition.charAt(1));
+
+        if (!Character.isDigit(rowNumber)) {
+            throw new InvalidPositionException(rawPosition);
+        }
+
+        int row = rowNumber - ROW_OFFSET;
+        Position position = new Position(row, columnName);
+
+        if (!isValidPosition(position)) {
+            throw new InvalidPositionException(rawPosition);
+        }
+
+        return position;
+    }
+
+    private boolean isValidPosition(Position position) {
+        if (position == null) {
+            return false;
+        }
+        return isValidRow(position.getRow()) && isValidColumn(position.getColumn());
+    }
+
+    private boolean isValidRow(int row) {
+        return row >= MIN_ROW && row <= BOARD_SIZE;
+    }
+
+    private  boolean isValidColumn(int column) {
+        return column >= START_COLUMN_NAME && column < START_COLUMN_NAME + BOARD_SIZE;
+    }
+
+    public void setOccupant(Position position, BoardEntity entity) {
+        getField(position).setOccupant(entity);
+    }
 }

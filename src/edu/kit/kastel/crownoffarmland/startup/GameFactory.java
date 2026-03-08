@@ -11,74 +11,60 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The GameFactory class is responsible for creating and initializing the GameHandler instance based on the provided StartupContext. It
- * serves as a factory for constructing the GameHandler, which manages the state and flow of the game. The GameFactory takes in a
- * StartupContext during construction, which contains all the necessary configuration and parameters for setting up the game. The
- * initGame method is responsible for creating and configuring the GameHandler instance using the information from the StartupContext.
- * The getGameHandler method allows access to the initialized GameHandler instance, which can then be used to manage the game state and
- * process player commands.
+ * Factory for creating the initialized game handler from the validated startup context.
  *
  * @author ucgdi
  */
 public final class GameFactory {
-    private final StartupContext container;
-    private final GameHandler gameHandler;
+    private final StartupContext context;
 
     /**
-     * Constructs a new GameFactory instance with the specified StartupContext. The constructor initializes the GameHandler by calling
-     * the initGame method, which creates and configures the GameHandler based on the information provided in the StartupContext. The
-     * GameFactory serves as a central point for creating and managing the GameHandler instance, allowing for a clean separation of
-     * concerns between the startup configuration and the game logic. By passing the StartupContext to the GameFactory, it can access all
-     * the necessary configuration parameters and settings required to properly initialize the GameHandler, ensuring that the game is set
-     * up according to the specified configuration. The GameFactory provides a structured way to create and manage the GameHandler,
-     * allowing for flexibility and modularity in the overall design of the game application.
-     * @param container The StartupContext that contains all the necessary configuration and parameters for setting up the game. The
-     *                  GameFactory will use this context to access the required information for initializing the GameHandler, such as
-     *                  team configurations, deck settings, and verbosity levels. The StartupContext should be properly initialized with
-     *                  the necessary configuration before being passed to the GameFactory constructor, as it will be essential for the
-     *                  correct setup of the GameHandler and the overall game state. The GameFactory relies on the information provided
-     *                  in the StartupContext to ensure that the GameHandler is initialized with the correct settings and parameters,
-     *                  allowing for a smooth and consistent game experience based on the specified configuration.
+     * Constructs a new GameFactory with the given startup context.
+     *
+     * @param context the validated startup context
      */
-    public GameFactory(StartupContext container) {
-        this.container = container;
-        gameHandler = initGame();
+    public GameFactory(StartupContext context) {
+        this.context = context;
     }
 
     /**
-     * Returns the initialized GameHandler instance. This method allows access to the GameHandler that has been created and configured
-     * based on the information provided in the StartupContext.
-     * @return the initialized GameHandler instance that can be used to manage the game state and process player commands.
+     * Creates and initializes the game handler.
+     *
+     * @return the initialized game handler
      */
-    public GameHandler getGameHandler() {
+    public GameHandler createGameHandler() {
+        List<Unit> team1Deck = createDeck(
+                TeamID.TEAM_1,
+                context.getUnitTemplates(),
+                context.getDeckCountsTeam1()
+        );
+        List<Unit> team2Deck = createDeck(
+                TeamID.TEAM_2,
+                context.getUnitTemplates(),
+                context.getDeckCountsTeam2()
+        );
+
+        Team team1 = new Team(context.getTeam1Name(), TeamID.TEAM_1, team1Deck);
+        Team team2 = new Team(context.getTeam2Name(), TeamID.TEAM_2, team2Deck);
+
+        Game game = new Game(team1, team2, context.getRandomGenerator());
+        GameHandler gameHandler = new GameHandler(game);
+        gameHandler.initializeGame();
         return gameHandler;
     }
 
-    private GameHandler initGame() {
-        List<UnitTemplate> unitTemplates = container.getUnitTemplates();
-        int[] deckCounts1 = container.getDeckCountsTeam1();
-        int[] deckCounts2 = container.getDeckCountsTeam2();
-        List<Unit> team1Deck = createDeck(TeamID.TEAM_1, unitTemplates, deckCounts1);
-        List<Unit> team2Deck = createDeck(TeamID.TEAM_2, unitTemplates, deckCounts2);
-
-        Team team1 = new Team(container.getTeam1Name(), TeamID.TEAM_1, team1Deck);
-        Team team2 = new Team(container.getTeam2Name(), TeamID.TEAM_2, team2Deck);
-
-        Game game = new Game(team1, team2, container.getRandomGenerator());
-        return new GameHandler(game);
-        //ToDo: Verbosity muss noch weiter gegeben werden, evtl auch Deckconfig
-    }
-
-
     private List<Unit> createDeck(TeamID teamID, List<UnitTemplate> unitTemplates, int[] deckCounts) {
-        List<Unit> units = new ArrayList<>();
-        for (int i = 0; i < unitTemplates.size(); i++) {
-            UnitTemplate template = unitTemplates.get(i);
-            int count = deckCounts[i];
-            for (int j = 0; j < count; j++) {
-                units.add(new Unit(teamID, template));
+        List<Unit> deck = new ArrayList<>();
+
+        for (int templateIndex = 0; templateIndex < unitTemplates.size(); templateIndex++) {
+            UnitTemplate template = unitTemplates.get(templateIndex);
+            int count = deckCounts[templateIndex];
+
+            for (int copyIndex = 0; copyIndex < count; copyIndex++) {
+                deck.add(new Unit(teamID, template));
             }
         }
-        return units;
+
+        return deck;
     }
 }

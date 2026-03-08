@@ -34,15 +34,6 @@ public class Unit extends BoardEntity {
         this.statusValue = statusValue;
     }
 
-
-    /**
-     * Reveals the unit, making its name and status values visible to all players.
-     * Once revealed, the unit's information cannot be hidden again.
-     */
-    public void reveale() {
-        this.setRevealed();
-    }
-
     /**
      * Returns the attack value of the unit, which determines how much damage it can deal to other units.
      * The attack value is a non-negative integer.
@@ -75,6 +66,10 @@ public class Unit extends BoardEntity {
      */
     public void block() {
         this.blocking = true;
+    }
+
+    public void unblock() {
+        this.blocking = false;
     }
 
 }

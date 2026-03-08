@@ -1,4 +1,4 @@
-package edu.kit.kastel.crownoffarmland.ui.renderer.boardsymbols;
+package edu.kit.kastel.crownoffarmland.ui.renderer.board.boardsymbols;
 
 /**
  * Enum representing the relative position of a selected symbol to the current Field.

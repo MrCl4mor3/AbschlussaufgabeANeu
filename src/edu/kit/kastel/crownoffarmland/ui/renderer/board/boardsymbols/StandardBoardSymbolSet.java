@@ -1,4 +1,4 @@
-package edu.kit.kastel.crownoffarmland.ui.renderer.boardsymbols;
+package edu.kit.kastel.crownoffarmland.ui.renderer.board.boardsymbols;
 
 /**
  * A standard implementation of {@link BoardSymbolSet} that uses simple ASCII characters to represent the board symbols.

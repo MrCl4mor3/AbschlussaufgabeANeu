@@ -2,331 +2,211 @@ package edu.kit.kastel.crownoffarmland.startup;
 
 import edu.kit.kastel.crownoffarmland.model.RandomGenerator;
 import edu.kit.kastel.crownoffarmland.model.units.UnitTemplate;
-import edu.kit.kastel.crownoffarmland.startup.config.DeckConfigMode;
 import edu.kit.kastel.crownoffarmland.startup.config.Verbosity;
+import edu.kit.kastel.crownoffarmland.ui.renderer.board.boardsymbols.BoardSymbolSet;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 
 /**
- * Immutable container that holds all values collected during the startup phase.
- * <p>
- * Instances are created step by step by the {@link StartupLoader}. Each {@code with...} method returns a new
- * {@code StartupContext} instance with one value changed, leaving the original instance unchanged.
- * <p>
- * The class applies defensive copying for mutable data (lists and arrays) to preserve immutability.
+ * Immutable container for all validated startup data.
  *
  * @author ucgdi
  */
 public final class StartupContext {
-
-    private final long seed;
-    private final RandomGenerator rng;
-    private final String boardSymbols;
+    private final RandomGenerator randomGenerator;
     private final List<UnitTemplate> unitTemplates;
-    private final DeckConfigMode deckMode;
     private final int[] deckCountsTeam1;
     private final int[] deckCountsTeam2;
     private final String team1Name;
     private final String team2Name;
+    private final BoardSymbolSet boardSymbolSet;
     private final Verbosity verbosity;
 
-    /**
-     * Creates a new {@code StartupContext} from the given builder.
-     * <p>
-     * This constructor is private to enforce immutability and to keep object creation controlled by this class.
-     *
-     * @param b builder holding the state that will be copied into the new {@code StartupContext}
-     */
-    private StartupContext(Builder b) {
-        this.seed = b.seed;
-        this.rng = b.rng;
-        this.boardSymbols = b.boardSymbols;
-
-        this.unitTemplates = b.unitTemplates == null
-                ? null
-                : Collections.unmodifiableList(new ArrayList<UnitTemplate>(b.unitTemplates));
-
-        this.deckMode = b.deckMode;
-        this.deckCountsTeam1 = copyArray(b.deckCountsTeam1);
-        this.deckCountsTeam2 = copyArray(b.deckCountsTeam2);
-
-        this.team1Name = b.team1Name;
-        this.team2Name = b.team2Name;
-        this.verbosity = b.verbosity;
+    private StartupContext(RandomGenerator randomGenerator, List<UnitTemplate> unitTemplates,
+                           int[] deckCountsTeam1, int[] deckCountsTeam2,
+                           String team1Name, String team2Name,
+                           BoardSymbolSet boardSymbolSet, Verbosity verbosity) {
+        this.randomGenerator = randomGenerator;
+        this.unitTemplates = unitTemplates == null ? null : List.copyOf(unitTemplates);
+        this.deckCountsTeam1 = copyArray(deckCountsTeam1);
+        this.deckCountsTeam2 = copyArray(deckCountsTeam2);
+        this.team1Name = team1Name;
+        this.team2Name = team2Name;
+        this.boardSymbolSet = boardSymbolSet;
+        this.verbosity = verbosity;
     }
 
     /**
-     * Creates an empty {@code StartupContext}.
-     * <p>
-     * All values are set to their default "unset" state (e.g., {@code null} for references and {@code 0} for primitives).
-     * The loader fills the context incrementally using the {@code with...} methods.
+     * Returns an empty startup context.
      *
-     * @return a new empty {@code StartupContext}
+     * @return empty startup context
      */
     public static StartupContext empty() {
-        return new Builder().build();
+        return new StartupContext(null, null, null, null, null, null, null, null);
     }
 
     /**
-     * Creates a defensive copy of an {@code int} array.
+     * Returns the configured random generator.
      *
-     * @param a array to copy (may be {@code null})
-     * @return a new copied array or {@code null} if the input was {@code null}
-     */
-    private static int[] copyArray(int[] a) {
-        if (a == null) {
-            return null;
-        }
-        int[] c = new int[a.length];
-        for (int i = 0; i < a.length; i++) {
-            c[i] = a[i];
-        }
-        return c;
-    }
-
-    /**
-     * Returns a new context with the given seed and random generator.
-     *
-     * @param seed the seed used to initialize randomness
-     * @param rng the random generator created from the seed
-     * @return a new {@code StartupContext} with the updated seed and generator
-     */
-    public StartupContext withSeed(long seed, RandomGenerator rng) {
-        Builder b = new Builder(this);
-        b.seed = seed;
-        b.rng = rng;
-        return b.build();
-    }
-
-    /**
-     * Returns a new context with the given board symbols.
-     * <p>
-     * The symbols string may be {@code null} to signal that the default symbol set should be used.
-     *
-     * @param boardSymbols the board symbols string (may be {@code null})
-     * @return a new {@code StartupContext} with updated board symbols
-     */
-    public StartupContext withBoardSymbols(String boardSymbols) {
-        Builder b = new Builder(this);
-        b.boardSymbols = boardSymbols;
-        return b.build();
-    }
-
-    /**
-     * Returns a new context with the given unit templates.
-     *
-     * @param unitTemplates list of parsed unit templates
-     * @return a new {@code StartupContext} with updated unit templates
-     */
-    public StartupContext withUnitTemplates(List<UnitTemplate> unitTemplates) {
-        Builder b = new Builder(this);
-        b.unitTemplates = unitTemplates;
-        return b.build();
-    }
-
-    /**
-     * Returns a new context for a shared deck configuration.
-     * <p>
-     * Both teams will use the same deck counts array.
-     *
-     * @param sharedCounts array of card counts per unit template (shared by both teams)
-     * @return a new {@code StartupContext} with shared deck configuration
-     */
-    public StartupContext withSharedDeck(int[] sharedCounts) {
-        Builder b = new Builder(this);
-        b.deckMode = DeckConfigMode.SHARED_DECK;
-        b.deckCountsTeam1 = sharedCounts;
-        b.deckCountsTeam2 = sharedCounts;
-        return b.build();
-    }
-
-    /**
-     * Returns a new context for split deck configuration.
-     *
-     * @param team1Counts array of card counts per unit template for team 1
-     * @param team2Counts array of card counts per unit template for team 2
-     * @return a new {@code StartupContext} with split deck configuration
-     */
-    public StartupContext withSplitDecks(int[] team1Counts, int[] team2Counts) {
-        Builder b = new Builder(this);
-        b.deckMode = DeckConfigMode.SPLIT_DECKS;
-        b.deckCountsTeam1 = team1Counts;
-        b.deckCountsTeam2 = team2Counts;
-        return b.build();
-    }
-
-    /**
-     * Returns a new context with the given team names.
-     *
-     * @param team1Name name of team 1
-     * @param team2Name name of team 2
-     * @return a new {@code StartupContext} with updated team names
-     */
-    public StartupContext withTeams(String team1Name, String team2Name) {
-        Builder b = new Builder(this);
-        b.team1Name = team1Name;
-        b.team2Name = team2Name;
-        return b.build();
-    }
-
-    /**
-     * Returns a new context with the given verbosity.
-     *
-     * @param verbosity the verbosity configuration
-     * @return a new {@code StartupContext} with updated verbosity
-     */
-    public StartupContext withVerbosity(Verbosity verbosity) {
-        Builder b = new Builder(this);
-        b.verbosity = verbosity;
-        return b.build();
-    }
-
-    /**
-     * Returns the configured seed.
-     *
-     * @return the seed value
-     */
-    public long getSeed() {
-        return seed;
-    }
-
-    /**
-     * Returns the random generator created from the seed.
-     *
-     * @return the random generator (may be {@code null} if not set yet)
+     * @return random generator
      */
     public RandomGenerator getRandomGenerator() {
-        return rng;
+        return randomGenerator;
     }
 
     /**
-     * Returns the board symbols string.
+     * Returns the configured unit templates.
      *
-     * @return the board symbols (may be {@code null} if default symbols should be used)
-     */
-    public String getBoardSymbols() {
-        return boardSymbols;
-    }
-
-    /**
-     * Returns the list of parsed unit templates.
-     *
-     * @return an unmodifiable list of unit templates (may be {@code null} if not set yet)
+     * @return immutable list of unit templates
      */
     public List<UnitTemplate> getUnitTemplates() {
         return unitTemplates;
     }
 
     /**
-     * Returns the deck configuration mode.
+     * Returns the configured deck counts for team 1.
      *
-     * @return the deck configuration mode (may be {@code null} if not set yet)
-     */
-    public DeckConfigMode getDeckMode() {
-        return deckMode;
-    }
-
-    /**
-     * Returns the deck counts for team 1.
-     * <p>
-     * A defensive copy is returned to preserve immutability.
-     *
-     * @return a copy of the deck counts array for team 1 (may be {@code null} if not set yet)
+     * @return copy of deck counts for team 1
      */
     public int[] getDeckCountsTeam1() {
         return copyArray(deckCountsTeam1);
     }
 
     /**
-     * Returns the deck counts for team 2.
-     * <p>
-     * A defensive copy is returned to preserve immutability.
+     * Returns the configured deck counts for team 2.
      *
-     * @return a copy of the deck counts array for team 2 (may be {@code null} if not set yet)
+     * @return copy of deck counts for team 2
      */
     public int[] getDeckCountsTeam2() {
         return copyArray(deckCountsTeam2);
     }
 
     /**
-     * Returns the name of team 1.
+     * Returns the configured name of team 1.
      *
-     * @return the name of team 1 (may be {@code null} if not set yet)
+     * @return team 1 name
      */
     public String getTeam1Name() {
         return team1Name;
     }
 
     /**
-     * Returns the name of team 2.
+     * Returns the configured name of team 2.
      *
-     * @return the name of team 2 (may be {@code null} if not set yet)
+     * @return team 2 name
      */
     public String getTeam2Name() {
         return team2Name;
     }
 
     /**
-     * Returns the configured verbosity level.
+     * Returns the configured board symbol set.
      *
-     * @return the verbosity (may be {@code null} if not set yet)
+     * @return board symbol set
+     */
+    public BoardSymbolSet getBoardSymbolSet() {
+        return boardSymbolSet;
+    }
+
+    /**
+     * Returns the configured verbosity.
+     *
+     * @return verbosity
      */
     public Verbosity getVerbosity() {
         return verbosity;
     }
 
     /**
-     * Internal builder used to create immutable {@link StartupContext} instances without exceeding
-     * the allowed maximum number of parameters per constructor.
-     * <p>
-     * This builder is intentionally private and only used internally by {@link StartupContext}.
+     * Returns a copy of this context with the given random generator.
+     *
+     * @param newRandomGenerator the new random generator
+     * @return updated startup context
      */
-    private static final class Builder {
-        long seed;
-        RandomGenerator rng;
-        String boardSymbols;
-        List<UnitTemplate> unitTemplates;
-        DeckConfigMode deckMode;
-        int[] deckCountsTeam1;
-        int[] deckCountsTeam2;
-        String team1Name;
-        String team2Name;
-        Verbosity verbosity;
+    public StartupContext withRandomGenerator(RandomGenerator newRandomGenerator) {
+        return new StartupContext(newRandomGenerator, unitTemplates, deckCountsTeam1, deckCountsTeam2,
+                team1Name, team2Name, boardSymbolSet, verbosity);
+    }
 
-        /**
-         * Creates a new empty builder.
-         */
-        Builder() {
-            // default state
-        }
+    /**
+     * Returns a copy of this context with the given unit templates.
+     *
+     * @param newUnitTemplates the new unit templates
+     * @return updated startup context
+     */
+    public StartupContext withUnitTemplates(List<UnitTemplate> newUnitTemplates) {
+        return new StartupContext(randomGenerator, newUnitTemplates, deckCountsTeam1, deckCountsTeam2,
+                team1Name, team2Name, boardSymbolSet, verbosity);
+    }
 
-        /**
-         * Creates a builder initialized from an existing context.
-         *
-         * @param c the context to copy from
-         */
-        Builder(StartupContext c) {
-            this.seed = c.seed;
-            this.rng = c.rng;
-            this.boardSymbols = c.boardSymbols;
-            this.unitTemplates = c.unitTemplates;
-            this.deckMode = c.deckMode;
-            this.deckCountsTeam1 = c.deckCountsTeam1;
-            this.deckCountsTeam2 = c.deckCountsTeam2;
-            this.team1Name = c.team1Name;
-            this.team2Name = c.team2Name;
-            this.verbosity = c.verbosity;
-        }
+    /**
+     * Returns a copy of this context with the given deck counts for team 1.
+     *
+     * @param newDeckCountsTeam1 the new deck counts for team 1
+     * @return updated startup context
+     */
+    public StartupContext withDeckCountsTeam1(int[] newDeckCountsTeam1) {
+        return new StartupContext(randomGenerator, unitTemplates, newDeckCountsTeam1, deckCountsTeam2,
+                team1Name, team2Name, boardSymbolSet, verbosity);
+    }
 
-        /**
-         * Builds a new immutable {@link StartupContext} from the current builder state.
-         *
-         * @return a new {@link StartupContext}
-         */
-        StartupContext build() {
-            return new StartupContext(this);
-        }
+    /**
+     * Returns a copy of this context with the given deck counts for team 2.
+     *
+     * @param newDeckCountsTeam2 the new deck counts for team 2
+     * @return updated startup context
+     */
+    public StartupContext withDeckCountsTeam2(int[] newDeckCountsTeam2) {
+        return new StartupContext(randomGenerator, unitTemplates, deckCountsTeam1, newDeckCountsTeam2,
+                team1Name, team2Name, boardSymbolSet, verbosity);
+    }
+
+    /**
+     * Returns a copy of this context with the given team 1 name.
+     *
+     * @param newTeam1Name the new team 1 name
+     * @return updated startup context
+     */
+    public StartupContext withTeam1Name(String newTeam1Name) {
+        return new StartupContext(randomGenerator, unitTemplates, deckCountsTeam1, deckCountsTeam2,
+                newTeam1Name, team2Name, boardSymbolSet, verbosity);
+    }
+
+    /**
+     * Returns a copy of this context with the given team 2 name.
+     *
+     * @param newTeam2Name the new team 2 name
+     * @return updated startup context
+     */
+    public StartupContext withTeam2Name(String newTeam2Name) {
+        return new StartupContext(randomGenerator, unitTemplates, deckCountsTeam1, deckCountsTeam2,
+                team1Name, newTeam2Name, boardSymbolSet, verbosity);
+    }
+
+    /**
+     * Returns a copy of this context with the given board symbol set.
+     *
+     * @param newBoardSymbolSet the new board symbol set
+     * @return updated startup context
+     */
+    public StartupContext withBoardSymbolSet(BoardSymbolSet newBoardSymbolSet) {
+        return new StartupContext(randomGenerator, unitTemplates, deckCountsTeam1, deckCountsTeam2,
+                team1Name, team2Name, newBoardSymbolSet, verbosity);
+    }
+
+    /**
+     * Returns a copy of this context with the given verbosity.
+     *
+     * @param newVerbosity the new verbosity
+     * @return updated startup context
+     */
+    public StartupContext withVerbosity(Verbosity newVerbosity) {
+        return new StartupContext(randomGenerator, unitTemplates, deckCountsTeam1, deckCountsTeam2,
+                team1Name, team2Name, boardSymbolSet, newVerbosity);
+    }
+
+    private static int[] copyArray(int[] source) {
+        return source == null ? null : Arrays.copyOf(source, source.length);
     }
 }

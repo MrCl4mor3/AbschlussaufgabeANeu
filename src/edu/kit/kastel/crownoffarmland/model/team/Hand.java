@@ -66,7 +66,7 @@ public class Hand {
      * @return the unit at the specified index
      * @throws IndexOutOfBoundsException if the index is out of range
      */
-    public Unit getCardOnIndex(int index) {
+    public Unit getCardAt(int index) {
         return cards.get(index);
     }
 
@@ -77,7 +77,7 @@ public class Hand {
      * @return the removed unit
      * @throws IndexOutOfBoundsException if the index is out of range
      */
-    public Unit remove(int index) {
+    public Unit removeCardAt(int index) {
         return cards.remove(index);
     }
 }

@@ -1,5 +1,6 @@
 package edu.kit.kastel.crownoffarmland.model.team;
 
+import edu.kit.kastel.crownoffarmland.model.RandomGenerator;
 import edu.kit.kastel.crownoffarmland.model.units.FarmerKing;
 import edu.kit.kastel.crownoffarmland.model.units.Unit;
 
@@ -69,7 +70,49 @@ public class Team {
      * Reduces the team's life points by the specified amount of damage.
      * @param amount the amount of damage to inflict on the team
      */
-    public void getDamage(int amount) {
-        this.lifePoints = lifePoints - amount;
+    public void takeDamage(int amount) {
+        this.lifePoints = Math.max(0, this.lifePoints - amount);
+    }
+
+    public FarmerKing getKing() {
+        return king;
+    }
+
+    public void shuffleDrawPile(RandomGenerator generator) {
+        this.drawPile.shuffle(generator);
+    }
+
+    public int getHandSize() {
+        return this.hand.size();
+    }
+
+    public boolean isHandFull() {
+        return this.hand.isFull();
+    }
+
+    public Unit getHandCardAt(int index) {
+        return this.hand.getCardAt(index);
+    }
+
+    public Unit removeHandCardAt(int index) {
+        return this.hand.removeCardAt(index);
+    }
+
+    public int getDrawPileSize() {
+        return this.drawPile.size();
+    }
+
+    public boolean isDrawPileEmpty() {
+        return this.drawPile.isEmpty();
+    }
+
+    public Unit drawToHand() {
+        if (hand.isFull() || drawPile.isEmpty()) {
+            return null;
+        }
+
+        Unit drawnCard = drawPile.drawTop();
+        hand.add(drawnCard);
+        return drawnCard;
     }
 }

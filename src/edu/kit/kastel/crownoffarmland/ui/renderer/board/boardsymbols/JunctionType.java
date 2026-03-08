@@ -1,4 +1,4 @@
-package edu.kit.kastel.crownoffarmland.ui.renderer.boardsymbols;
+package edu.kit.kastel.crownoffarmland.ui.renderer.board.boardsymbols;
 
 /**
  * Enumeration representing the different types of junctions that can occur in a board symbol.

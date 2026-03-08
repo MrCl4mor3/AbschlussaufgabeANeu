@@ -18,7 +18,7 @@ public class Position {
      */
     public Position(int row, char column) {
         this.row = row;
-        this.column = column;
+        this.column = Character.toUpperCase(column);
     }
 
     /**
@@ -35,5 +35,10 @@ public class Position {
      */
     public int getRow() {
         return row;
+    }
+
+    @Override
+    public String toString() {
+        return column + String.valueOf(row);
     }
 }

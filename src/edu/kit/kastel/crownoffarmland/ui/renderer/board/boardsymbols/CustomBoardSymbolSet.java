@@ -1,4 +1,4 @@
-package edu.kit.kastel.crownoffarmland.ui.renderer.boardsymbols;
+package edu.kit.kastel.crownoffarmland.ui.renderer.board.boardsymbols;
 
 /**
  * A custom implementation of {@link BoardSymbolSet} that allows for a flexible set of symbols to be used for rendering the board.

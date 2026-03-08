@@ -6,11 +6,13 @@ package edu.kit.kastel.crownoffarmland.exceptions;
  * @author Programmieren-Team
  */
 public class InvalidCommandArgumentException extends  CrownOfFarmlandException {
+
+    private static final String ERROR_WRONG_NUMBER_OF_ARGUMENTS = "Wrong number of arguments. Expected %d but got %d.";
     /**
      * Creates a new InvalidCommandArgumentException with the given message.
-     * @param message The message to be displayed when the exception is thrown.
+     * @param expected The message to be displayed when the exception is thrown.
      */
-    public InvalidCommandArgumentException(String message) {
-        super(message);
+    public InvalidCommandArgumentException(int expected, int actual) {
+        super(String.format(ERROR_WRONG_NUMBER_OF_ARGUMENTS, expected, actual));
     }
 }

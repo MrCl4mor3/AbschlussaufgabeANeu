@@ -72,7 +72,7 @@ public abstract class BoardEntity {
      * Sets the revealed status of this board entity. This method is protected to allow subclasses to control when an entity becomes
      * revealed. Once an entity is revealed, it cannot be hidden again, so this method only allows changing the status from false to true.
      */
-    protected void setRevealed() {
+    public void revealeEntity() {
         this.revealed = true;
     }
 

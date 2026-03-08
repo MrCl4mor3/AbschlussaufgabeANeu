@@ -1,5 +1,6 @@
 package edu.kit.kastel.crownoffarmland.model.team;
 
+import edu.kit.kastel.crownoffarmland.model.RandomGenerator;
 import edu.kit.kastel.crownoffarmland.model.units.Unit;
 
 import java.util.ArrayDeque;
@@ -40,18 +41,20 @@ public final class DrawPile {
      * @return the unit drawn from the top of the pile, or null if the pile is empty
      */
     public Unit drawTop() {
-        Unit unit = deck.pollFirst();
-        return unit;
+        return  deck.pollFirst();
+    }
+
+    public boolean isEmpty() {
+        return deck.isEmpty();
     }
 
     /**
      * Shuffles the draw pile by randomizing the order of the units in the pile.
      * This method creates a temporary list of the units, shuffles it, and then repopulates the draw pile with the shuffled units.
      */
-    public void shuffle() {
+    public void shuffle(RandomGenerator generator) {
         List<Unit> toShuffle = new ArrayList<>(deck);
-
-
+        generator.shuffle(toShuffle);
         deck.clear();
         deck.addAll(toShuffle);
     }
