@@ -24,11 +24,8 @@ import edu.kit.kastel.crownoffarmland.model.team.TeamID;
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
 import edu.kit.kastel.crownoffarmland.model.units.Unit;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
 
 /**
  * The GameHandler class is responsible for managing the state and flow of the game. It interacts with the Game model to execute player
@@ -44,13 +41,12 @@ public class GameHandler {
     private static final Position TEAM2_KING_START = new Position(7, 'D');
     private static final int HAND_INDEX_OFFSET = 1;
     private static final int OPENING_HAND_SIZE = 4;
-    private static final int MAX_MOVE_DISTANCE = 1;
-    private static final int MAX_UNITS_ON_BOARD = 5;
     private final Game game;
     private final DuelManager duelManager;
     private final UnitMerger unitMerger;
     private final SnapshotFactory snapshotFactory;
     private final TurnState turnState;
+    private final PlacementService placementService;
     /**
      * Constructs a new GameHandler instance with the specified Game model. The GameHandler initializes the DuelManager and UnitMerger,
      * and sets up the initial state of the game. The selected position is initially set to null, and the placedThisTurn flag is set to
@@ -69,6 +65,7 @@ public class GameHandler {
         this.unitMerger = unitMerger;
         this.snapshotFactory = snapshotFactory;
         this.turnState = turnState;
+        this.placementService = new PlacementService(game, unitMerger, turnState);
     }
 
     /**
@@ -77,27 +74,18 @@ public class GameHandler {
      * be called after creating a GameHandler instance to ensure that the game is properly initialized before players start taking actions.
      */
     public void initializeGame() {
-        shuffleDecks();
-        drawOpeningHands();
-        placeKings();
-        startCurrentTurn();
-    }
-    private void shuffleDecks() {
         game.shuffleDrawPile(TeamID.TEAM_1);
         game.shuffleDrawPile(TeamID.TEAM_2);
-    }
-    private void drawOpeningHands() {
         drawCards(TeamID.TEAM_1, OPENING_HAND_SIZE);
         drawCards(TeamID.TEAM_2, OPENING_HAND_SIZE);
+        game.setOccupant(TEAM1_KING_START, game.getKing(TeamID.TEAM_1));
+        game.setOccupant(TEAM2_KING_START, game.getKing(TeamID.TEAM_2));
+        startCurrentTurn();
     }
     private void drawCards(TeamID teamID, int amount) {
         for (int i = 0; i < amount; i++) {
             game.drawToHand(teamID);
         }
-    }
-    private void placeKings() {
-        game.setOccupant(TEAM1_KING_START, game.getKing(TeamID.TEAM_1));
-        game.setOccupant(TEAM2_KING_START, game.getKing(TeamID.TEAM_2));
     }
     private void startCurrentTurn() {
         turnState.resetForNewTurn();
@@ -108,13 +96,6 @@ public class GameHandler {
         }
         game.drawToHand(currentTeam);
     }
-    private boolean hasMovedThisTurn(BoardEntity entity) {
-        return turnState.hasMoved(entity);
-    }
-    private void markAsMovedThisTurn(BoardEntity entity) {
-        turnState.markMoved(entity);
-    }
-
     /**
      * Returns the currently selected position on the board.
      * @return The Position witch is currently selected. This can be null if no position is selected.
@@ -122,23 +103,6 @@ public class GameHandler {
     public Position getSelectedPos() {
         return turnState.getSelectedPos();
     }
-
-    /**
-     * Checks if the current player's hand is full, meaning they have reached the maximum number of cards allowed in their hand.
-     * @return true if the current player's hand is full, false otherwise.
-     */
-    public boolean isHandFull() {
-        return game.isHandFull(getCurrentTeamID());
-    }
-
-    /**
-     * Returns the name of the next player to take a turn.
-     * @return The name of the next player
-     */
-    public String getNextPlayerName() {
-        return game.getTeamName(game.getEnemyTeamID());
-    }
-
     /**
      * Returns the TeamID of the current player whose turn it is.
      * @return The TeamID of the current player
@@ -146,7 +110,6 @@ public class GameHandler {
     public TeamID getCurrentTeamID() {
         return game.getCurrentTeamID();
     }
-
     /**
      * Returns the name of the current player whose turn it is.
      * @return The name of the current player
@@ -161,6 +124,7 @@ public class GameHandler {
      * @return An EntitySnapshot containing the details of the flipped entity after it has been revealed.
      * @throws InvalidGameStateException if there is no selected position, the selected field is empty, the selected entity belongs to
      *      the enemy team, or the selected unit has already acted this turn.
+     * @throws UnitAlreadyRevealedException if the selected entity is already revealed, indicating that it cannot be flipped again.
      */
     public EntitySnapshot flipSelectedEntity() throws InvalidGameStateException {
         BoardEntity entity = getSelectedEntity();
@@ -178,7 +142,7 @@ public class GameHandler {
         if (entity == null) {
             throw new EmptySelectedFieldException(turnState.getSelectedPos().toString());
         }
-        if (entity.getTeamID() != getCurrentTeamID()) {
+        if (entity.getTeamID() != game.getCurrentTeamID()) {
             throw new EnemyUnitSelectedException();
         }
         if (turnState.hasMoved(entity)) {
@@ -231,7 +195,7 @@ public class GameHandler {
      * @return A TeamStateSnapshot representing the current state of the specified team
      */
     public TeamStateSnapshot createTeamStateSnapshots(TeamID teamID) {
-        return snapshotFactory.createTeamStateSnapshot(game, teamID, getUnitsPlaced(teamID));
+        return snapshotFactory.createTeamStateSnapshot(game, teamID);
     }
 
     /**
@@ -252,37 +216,16 @@ public class GameHandler {
         turnState.markMoved(unit);
         return createEntitySnapshotAtSelected();
     }
-
-    /**
-     * Counts the number of units (excluding the Farmer King) that the specified team has placed on the board. This method iterates
-     * through all positions on the board and counts the units that belong to the specified team, excluding any Farmer King units.
-     * @param teamID The TeamID of the team for which to count the placed units on the board
-     * @return The number of units (excluding the Farmer King) that the specified team has placed on the board
-     */
-    public int getUnitsPlaced(TeamID teamID) {
-        int count = 0;
-        for (int rowIndex = 0; rowIndex < game.getBoardSize(); rowIndex++) {
-            for (int columnIndex = 0; columnIndex < game.getBoardSize(); columnIndex++) {
-                Position position = game.getPositionAt(rowIndex, columnIndex);
-                BoardEntity entity = game.getOccupant(position);
-                if (entity != null && entity.getTeamID() == teamID && !entity.isFarmerKing()) {
-                    count++;
-                }
-            }
-        }
-        return count;
-    }
-
     /**
      * Checks if the yield restriction is currently active for the current turn. The yield restriction is activated when a player
      * attempts to end their turn with a full hand, forcing them to discard a card before they can end their turn. This method returns
-     * true if the yield restriction is active, indicating that the player must discard a card before ending their turn, and false otherwise.
+     * true if the yield restriction is active, indicating that the player must discard a card before ending their turn, and false
+     * otherwise.
      * @return true if the yield restriction is active for the current turn, false otherwise
      */
     public boolean isYieldRestrictionActive() {
         return turnState.isYieldRestrictionActive();
     }
-
     /**
      * Attempts to end the current player's turn. If the player's hand is full, the yield restriction is activated, and a YieldException
      * is thrown, indicating that the player must discard a card before they can end their turn. If the player's hand is not full, the
@@ -292,7 +235,7 @@ public class GameHandler {
      * @throws YieldException if the player's hand is full, indicating that they must discard a card before they can end their turn
      */
     public boolean tryEndTurn() throws InvalidGameStateException {
-        if (isHandFull()) {
+        if (game.isHandFull(game.getCurrentTeamID())) {
             turnState.activateYieldRestriction();
             throw new YieldException(game.getTeamName(game.getCurrentTeamID()));
         } else {
@@ -300,7 +243,6 @@ public class GameHandler {
             return true;
         }
     }
-
     /**
      * Attempts to end the current player's turn by discarding a card from their hand. The player must provide the index of the card they
      * wish to discard.
@@ -313,7 +255,7 @@ public class GameHandler {
      */
     //ToDo: Exceptions noch richtig werfen!
     public EntitySnapshot tryEndTurnWithDiscard(int index) throws InvalidGameStateException {
-        if (!isHandFull()) {
+        if (!game.isHandFull(getCurrentTeamID())) {
             turnState.activateYieldRestriction();
             throw new YieldException(game.getTeamName(game.getCurrentTeamID()));
         } else {
@@ -365,60 +307,6 @@ public class GameHandler {
         }
         return internalIndex;
     }
-    //ToDO: Exceptions noch richtig werfen!
-    private List<Integer> parseToInternalHandIndices(int[] userIndices) throws InvalidHandException {
-        List<Integer> internalIndices = new ArrayList<>();
-        Set<Integer> seenIndices = new HashSet<>();
-        for (int userIndex : userIndices) {
-            int internalIndex = parseToInternalHandIndex(userIndex);
-            if (!seenIndices.add(internalIndex)) {
-                throw new InvalidHandException("Duplicate hand index: " + userIndex);
-            }
-            internalIndices.add(internalIndex);
-        }
-        return internalIndices;
-    }
-    private boolean isAdjacentToKing(Position target, Position kingPosition) {
-        int rowDiff = Math.abs(target.getRow() - kingPosition.getRow());
-        int colDiff = Math.abs(target.getColumn() - kingPosition.getColumn());
-        return Math.max(rowDiff, colDiff) == MAX_MOVE_DISTANCE;
-    }
-    private Position getCurrentKingPosition() {
-        return game.getKingPosition(game.getCurrentTeamID());
-    }
-    //ToDO: Exceptions noch richtig werfen!
-    private void validatePlaceTarget() throws InvalidGameStateException {
-        if (turnState.getSelectedPos() == null) {
-            throw new NoSelectionException();
-        }
-        if (turnState.hasPlacedThisTurn()) {
-            throw new InvalidGameStateException("You have already placed a unit this turn.");
-        }
-        Position kingPosition = getCurrentKingPosition();
-        Position targetPosition = turnState.getSelectedPos();
-        if (!isAdjacentToKing(targetPosition, kingPosition)) {
-            throw new InvalidGameStateException("You can only place a unit adjacent to your King.");
-        }
-        BoardEntity occupant = game.getOccupant(targetPosition);
-        if (occupant != null && occupant.getTeamID() != game.getCurrentTeamID()) {
-            throw new InvalidGameStateException("You cannot place a an enemy occupied field.");
-        }
-    }
-    private List<Unit> extractUnitsFromHand(List<Integer> internalIndices) {
-        List<Unit> units = new ArrayList<>();
-        for (int internalIndex : internalIndices) {
-            units.add(game.getHandCardAt(getCurrentTeamID(), internalIndex));
-        }
-        return units;
-    }
-    private void removeHandCardsDescending(List<Integer> internalIndices) {
-        List<Integer> sortedIndices = new ArrayList<>(internalIndices);
-        sortedIndices.sort(Collections.reverseOrder());
-        for (int internalIndex : sortedIndices) {
-            game.removeHandCardAt(getCurrentTeamID(), internalIndex);
-        }
-    }
-
     /**
      * Attempts to place units from the player's hand onto the board at the currently selected position. The player must provide an array of
      * user indices corresponding to the cards in their hand that they wish to place. The method validates the target position for
@@ -431,45 +319,6 @@ public class GameHandler {
      *      player cannot place the specified cards from their hand.
      */
     public List<PlaceStepSnapshot> placeUnits(int[] userIndices) throws InvalidGameStateException {
-        validatePlaceTarget();
-        List<Integer> internalIndices = parseToInternalHandIndices(userIndices);
-        List<Unit> unitsToPlace = extractUnitsFromHand(internalIndices);
-        removeHandCardsDescending(internalIndices);
-        List<PlaceStepSnapshot> results = new ArrayList<>();
-        for (Unit unit : unitsToPlace) {
-            results.add(placeSingleUnit(unit));
-        }
-        turnState.markPlacedThisTurn();
-        return results;
-    }
-    private PlaceStepSnapshot placeSingleUnit(Unit incomingUnit) throws InvalidGameStateException {
-        BoardEntity occupant = game.getOccupant(turnState.getSelectedPos());
-        if (occupant == null) {
-            game.setOccupant(turnState.getSelectedPos(), incomingUnit);
-            eliminateIfBoardLimitExceeded(turnState.getSelectedPos(), incomingUnit);
-            return new PlaceStepSnapshot(getCurrentTeamName(), incomingUnit.getName().toString(), null, null, turnState.getSelectedPos().toString());
-        }
-        if (occupant.isFarmerKing()) {
-            throw new InvalidGameStateException("You cannot place a unit on top of a Farmer King.");
-        }
-        Unit existingUnit = (Unit) occupant;
-        String existingUnitName = existingUnit.getName().toString();
-        MergeResult result = unitMerger.tryMerge(incomingUnit, existingUnit);
-        if (result.isSuccessful()) {
-            Unit mergedUnit = result.getUnit();
-            game.setOccupant(turnState.getSelectedPos(), mergedUnit);
-            return new PlaceStepSnapshot(getCurrentTeamName(), incomingUnit.getName().toString(), existingUnitName, null,
-                    turnState.getSelectedPos().toString());
-        } else  {
-            game.setOccupant(turnState.getSelectedPos(), incomingUnit);
-            return new PlaceStepSnapshot(getCurrentTeamName(), incomingUnit.getName().toString(), existingUnitName, existingUnitName,
-                    turnState.getSelectedPos().toString());
-        }
-    }
-    private void eliminateIfBoardLimitExceeded(Position targetPosition, Unit justPlacedUnit) {
-        if (getUnitsPlaced(getCurrentTeamID()) > MAX_UNITS_ON_BOARD
-                && game.getOccupant(targetPosition) == justPlacedUnit) {
-            game.setOccupant(targetPosition, null);
-        }
+        return placementService.placeUnits(userIndices);
     }
 }

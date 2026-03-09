@@ -111,8 +111,8 @@ public class TurnState {
     }
 
     /**
-     * Returns an unmodifiable view of the set of entities that have been moved during this turn. This allows other parts of the code to check
-     * which entities have been moved without allowing modification of the underlying set, ensuring that the turn state remains
+     * Returns an unmodifiable view of the set of entities that have been moved during this turn. This allows other parts of the code to
+     * check which entities have been moved without allowing modification of the underlying set, ensuring that the turn state remains
      * consistent and accurate throughout the turn.
      * @return an unmodifiable set of entities that have been moved during this turn
      */

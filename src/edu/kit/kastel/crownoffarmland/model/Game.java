@@ -283,4 +283,24 @@ public class Game {
     public Position parsePosition(String rawPosition) throws InvalidPositionException {
         return board.parsePosition(rawPosition);
     }
+
+    /**
+     * Counts the number of units (excluding the Farmer King) that the specified team has placed on the board. This method iterates
+     * through all positions on the board and counts the units that belong to the specified team, excluding any Farmer King units.
+     * @param teamID The TeamID of the team for which to count the placed units on the board
+     * @return The number of units (excluding the Farmer King) that the specified team has placed on the board
+     */
+    public int getUnitsPlaced(TeamID teamID) {
+        int count = 0;
+        for (int rowIndex = 0; rowIndex < getBoardSize(); rowIndex++) {
+            for (int columnIndex = 0; columnIndex < getBoardSize(); columnIndex++) {
+                Position position = getPositionAt(rowIndex, columnIndex);
+                BoardEntity entity = getOccupant(position);
+                if (entity != null && entity.getTeamID() == teamID && !entity.isFarmerKing()) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
 }

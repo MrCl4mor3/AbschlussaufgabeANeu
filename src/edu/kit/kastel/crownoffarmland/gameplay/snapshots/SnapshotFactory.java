@@ -90,15 +90,14 @@ public class SnapshotFactory {
      * Creates a snapshot of the current team's state, including life points, remaining deck cards, and placed units.
      * @param game the current game
      * @param teamID the team for which to create the snapshot
-     * @param placedUnits the number of units the team has placed this turn
      * @return the team state snapshot
      */
-    public TeamStateSnapshot createTeamStateSnapshot(Game game, TeamID teamID, int placedUnits) {
+    public TeamStateSnapshot createTeamStateSnapshot(Game game, TeamID teamID) {
         String teamName = game.getTeamName(teamID);
         int remainingDeckCards = game.getDrawPileSize(teamID);
         int lifePoints = game.getLifePoints(teamID);
 
-        return new TeamStateSnapshot(teamName, lifePoints, remainingDeckCards, placedUnits);
+        return new TeamStateSnapshot(teamName, lifePoints, remainingDeckCards, game.getUnitsPlaced(teamID));
     }
 
     private BoardCellSnapshot createBoardCellSnapshot(Game game, Position position, Set<BoardEntity> movedEntities, TeamID currentTeamID) {

@@ -23,7 +23,8 @@ public class PlaceStepSnapshot {
      * @param eliminatedUnitName The name of any unit that was eliminated as a result of the placement (if applicable).
      * @param targetPosition The position on the board where the unit was placed.
      */
-    public PlaceStepSnapshot(String teamName, String placedUnitName, String existingUnitName, String eliminatedUnitName, String targetPosition) {
+    public PlaceStepSnapshot(String teamName, String placedUnitName, String existingUnitName, String eliminatedUnitName,
+        String targetPosition) {
         this.teamName = teamName;
         this.placedUnitName = placedUnitName;
         this.existingUnitName = existingUnitName;
