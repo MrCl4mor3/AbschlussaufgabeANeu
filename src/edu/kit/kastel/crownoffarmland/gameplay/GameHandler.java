@@ -9,28 +9,20 @@ import edu.kit.kastel.crownoffarmland.exceptions.KingCannotBlockedException;
 import edu.kit.kastel.crownoffarmland.exceptions.NoSelectionException;
 import edu.kit.kastel.crownoffarmland.exceptions.UnitAlreadyActedException;
 import edu.kit.kastel.crownoffarmland.exceptions.UnitAlreadyRevealedException;
-
-
 import edu.kit.kastel.crownoffarmland.exceptions.YieldException;
 import edu.kit.kastel.crownoffarmland.gameplay.combat.DuelManager;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.SnapshotFactory;
 import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.MergeResult;
 import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.UnitMerger;
-
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.BoardSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.TeamStateSnapshot;
 import edu.kit.kastel.crownoffarmland.model.Game;
 import edu.kit.kastel.crownoffarmland.model.board.Position;
 import edu.kit.kastel.crownoffarmland.model.team.TeamID;
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
-import edu.kit.kastel.crownoffarmland.model.units.StatusValue;
 import edu.kit.kastel.crownoffarmland.model.units.Unit;
-
-
-import edu.kit.kastel.crownoffarmland.model.units.UnitName;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.BoardCellSnapshot;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.BoardSnapshot;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.TeamStateSnapshot;
-
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,19 +43,14 @@ public class GameHandler {
     private static final Position TEAM1_KING_START = new Position(1, 'D');
     private static final Position TEAM2_KING_START = new Position(7, 'D');
     private static final int HAND_INDEX_OFFSET = 1;
-
     private static final int OPENING_HAND_SIZE = 4;
     private static final int MAX_MOVE_DISTANCE = 1;
-
+    private static final int MAX_UNITS_ON_BOARD = 5;
     private final Game game;
     private final DuelManager duelManager;
     private final UnitMerger unitMerger;
-
-    private Position selected;
-    private boolean yieldRestrictionActive;
-    private final Set<BoardEntity> movedEntityThisTurn;
-    private boolean placedThisTurn;
-
+    private final SnapshotFactory snapshotFactory;
+    private final TurnState turnState;
     /**
      * Constructs a new GameHandler instance with the specified Game model. The GameHandler initializes the DuelManager and UnitMerger,
      * and sets up the initial state of the game. The selected position is initially set to null, and the placedThisTurn flag is set to
@@ -74,17 +61,14 @@ public class GameHandler {
      *             components, such as the board, teams, and units, before being passed to the GameHandler constructor.
      */
     public GameHandler(Game game) {
-        this(game, new DuelManager(), new UnitMerger());
+        this(game, new DuelManager(), new UnitMerger(), new SnapshotFactory(), new TurnState());
     }
-
-    private GameHandler(Game game, DuelManager duelManager, UnitMerger unitMerger) {
+    private GameHandler(Game game, DuelManager duelManager, UnitMerger unitMerger, SnapshotFactory snapshotFactory, TurnState turnState) {
         this.game = game;
         this.duelManager = duelManager;
         this.unitMerger = unitMerger;
-        this.selected = null;
-        this.movedEntityThisTurn = new HashSet<>();
-        this.placedThisTurn = false;
-        this.yieldRestrictionActive = false;
+        this.snapshotFactory = snapshotFactory;
+        this.turnState = turnState;
     }
 
     public void initializeGame() {
@@ -93,71 +77,53 @@ public class GameHandler {
         placeKings();
         startCurrentTurn();
     }
-
     private void shuffleDecks() {
         game.shuffleDrawPile(TeamID.TEAM_1);
         game.shuffleDrawPile(TeamID.TEAM_2);
     }
-
     private void drawOpeningHands() {
         drawCards(TeamID.TEAM_1, OPENING_HAND_SIZE);
         drawCards(TeamID.TEAM_2, OPENING_HAND_SIZE);
     }
-
     private void drawCards(TeamID teamID, int amount) {
         for (int i = 0; i < amount; i++) {
             game.drawToHand(teamID);
         }
     }
-
     private void placeKings() {
         game.setOccupant(TEAM1_KING_START, game.getKing(TeamID.TEAM_1));
         game.setOccupant(TEAM2_KING_START, game.getKing(TeamID.TEAM_2));
-
-        Unit unit = new Unit(TeamID.TEAM_2, new UnitName("Best", "King"), new StatusValue(1, 1));
-        game.setOccupant(new Position(2, 'D'), unit);
     }
-
-
-
     private void startCurrentTurn() {
-        selected = null;
-        placedThisTurn = false;
-        movedEntityThisTurn.clear();
-        yieldRestrictionActive = false;
-
+        turnState.resetForNewTurn();
         TeamID currentTeam = game.getCurrentTeamID();
-
         if (game.isDrawPileEmpty(currentTeam)) {
             game.setWinner(currentTeam.getNext());
             return;
         }
-
         game.drawToHand(currentTeam);
     }
-
-
     private boolean hasMovedThisTurn(BoardEntity entity) {
-        return movedEntityThisTurn.contains(entity);
+        return turnState.hasMoved(entity);
     }
-
     private void markAsMovedThisTurn(BoardEntity entity) {
-        movedEntityThisTurn.add(entity);
+        turnState.markMoved(entity);
     }
-
     public Position getSelectedPos() {
-        return selected;
+        return turnState.getSelectedPos();
     }
-
     public boolean isHandFull() {
         return game.isHandFull(getCurrentTeamID());
     }
-
     public String getNextPlayerName() {
         return game.getTeamName(game.getEnemyTeamID());
     }
-
-
+    public TeamID getCurrentTeamID() {
+        return game.getCurrentTeamID();
+    }
+    public String getCurrentTeamName() {
+        return game.getTeamName(game.getCurrentTeamID());
+    }
     public EntitySnapshot flipSelectedEntity() throws InvalidGameStateException {
         BoardEntity entity = getSelectedEntity();
         if (entity.isRevealed()) {
@@ -166,94 +132,37 @@ public class GameHandler {
         entity.revealeEntity();
         return createEntitySnapshotAtSelected();
     }
-
     private BoardEntity getSelectedEntity() throws InvalidGameStateException {
-        if (selected == null) {
+        if (turnState.getSelectedPos() == null) {
             throw new NoSelectionException();
         }
-        BoardEntity entity = game.getOccupant(selected);
+        BoardEntity entity = game.getOccupant(turnState.getSelectedPos());
         if (entity == null) {
-            throw new EmptySelectedFieldException(selected.toString());
+            throw new EmptySelectedFieldException(turnState.getSelectedPos().toString());
         }
         if (entity.getTeamID() != getCurrentTeamID()) {
             throw new EnemyUnitSelectedException();
         }
-        if (movedEntityThisTurn.contains(entity)) {
+        if (turnState.hasMoved(entity)) {
             throw new UnitAlreadyActedException(entity.getName().toString());
         }
         return entity;
     }
-
     public void setSelected(String rawPosition) throws InvalidPositionException {
-        this.selected = game.parsePosition(rawPosition);
+        turnState.setSelectedPos(game.parsePosition(rawPosition));
     }
-
-    public TeamID getCurrentTeamID() {
-        return game.getCurrentTeamID();
-    }
-
-    public String getCurrentTeamName() {
-        return game.getTeamName(game.getCurrentTeamID());
-    }
-
-
-    public Set<BoardEntity> getMovedEntityThisTurn() {
-        return movedEntityThisTurn;
-    }
-
     public BoardSnapshot createBoardSnapshot() {
-        final int boardSize = game.getBoardSize();
-        BoardCellSnapshot[][] cells = new BoardCellSnapshot[boardSize][boardSize];
-
-        for (int rowIndex = 0; rowIndex < boardSize; rowIndex++) {
-            for (int columnIndex = 0; columnIndex < boardSize; columnIndex++) {
-                Position position = game.getPositionAt(rowIndex, columnIndex);
-                cells[rowIndex][columnIndex] = createCellSnapshot(position);
-            }
-        }
-        return new BoardSnapshot(cells, selected);
+        return snapshotFactory.createBoardSnapshot(game, turnState.getSelectedPos(), turnState.getMovedEntities());
     }
-
-    private BoardCellSnapshot createCellSnapshot(Position position) {
-        BoardEntity occupant = game.getOccupant(position);
-
-        if (occupant == null) {
-            return BoardCellSnapshot.empty();
-        }
-
-        boolean isOwnTeam = occupant.getTeamID() == game.getCurrentTeamID();
-        boolean isMoveable = isOwnTeam && !hasMovedThisTurn(occupant);
-
-        return new BoardCellSnapshot(true, occupant.isFarmerKing(), occupant.isBlocked(), isOwnTeam, isMoveable);
-    }
-
     public EntitySnapshot createEntitySnapshotAtSelected() throws InvalidGameStateException {
-        if (selected == null) {
-            throw new NoSelectionException();
-        }
-
-        BoardEntity entity = game.getOccupant(selected);
-        if (entity == null) {
-            return EntitySnapshot.noUnit();
-        }
-
-        String teamName = game.getTeamName(entity.getTeamID());
-        boolean hidden = !entity.isRevealed() && (entity.getTeamID() != game.getCurrentTeamID());
-        return new EntitySnapshot(entity, teamName, entity.isFarmerKing(), hidden);
+        return snapshotFactory.createEntitySnapshotAtSelected(game, turnState.getSelectedPos());
     }
-
     public List<EntitySnapshot> createHandSnapshot() {
-        List<EntitySnapshot> handEntries = new ArrayList<>();
-        int handSize = game.getHandSize(game.getCurrentTeamID());
-
-        for (int index = 0; index < handSize; index++) {
-            Unit unit = game.getHandCardAt(getCurrentTeamID(), index);
-
-            handEntries.add(new EntitySnapshot(unit, game.getTeamName(game.getCurrentTeamID())));
-        }
-        return List.copyOf(handEntries);
+        return snapshotFactory.createHandSnapshot(game);
     }
-
+    public TeamStateSnapshot createTeamStateSnapshots(TeamID teamID) {
+        return snapshotFactory.createTeamStateSnapshot(game, teamID, getUnitsPlaced(teamID));
+    }
     public EntitySnapshot blockSelected() throws InvalidGameStateException {
         BoardEntity entity = getSelectedEntity();
         if (entity.isFarmerKing()) {
@@ -261,25 +170,15 @@ public class GameHandler {
         }
         Unit unit = (Unit) entity;
         unit.block();
-        movedEntityThisTurn.add(unit);
+        turnState.markMoved(unit);
         return createEntitySnapshotAtSelected();
     }
-
-    public TeamStateSnapshot createTeamStateSnapshots(TeamID teamID) {
-        String teamName = game.getTeamName(teamID);
-        int remainingDeckSize = game.getDrawPileSize(teamID);
-        int lifePoints = game.getLifePoints(teamID);
-        return new TeamStateSnapshot(teamName, lifePoints, remainingDeckSize, getUnitsPlaced(teamID));
-    }
-
     public int getUnitsPlaced(TeamID teamID) {
         int count = 0;
-
         for (int rowIndex = 0; rowIndex < game.getBoardSize(); rowIndex++) {
             for (int columnIndex = 0; columnIndex < game.getBoardSize(); columnIndex++) {
                 Position position = game.getPositionAt(rowIndex, columnIndex);
                 BoardEntity entity = game.getOccupant(position);
-
                 if (entity != null && entity.getTeamID() == teamID && !entity.isFarmerKing()) {
                     count++;
                 }
@@ -287,27 +186,22 @@ public class GameHandler {
         }
         return count;
     }
-
-
-
     public boolean isYieldRestrictionActive() {
-        return yieldRestrictionActive;
+        return turnState.isYieldRestrictionActive();
     }
-
-
     public boolean tryEndTurn() throws InvalidGameStateException {
         if (isHandFull()) {
-            setYieldRestrictionActive();
+            turnState.activateYieldRestriction();
             throw new YieldException(game.getTeamName(game.getCurrentTeamID()));
         } else {
             nextRound();
             return true;
         }
     }
-
+    //ToDo: Exceptions noch richtig werfen!
     public EntitySnapshot tryEndTurnWithDiscard(int index) throws InvalidGameStateException {
         if (!isHandFull()) {
-            setYieldRestrictionActive();
+            turnState.activateYieldRestriction();
             throw new YieldException(game.getTeamName(game.getCurrentTeamID()));
         } else {
             int handSize = game.getHandSize(game.getCurrentTeamID());
@@ -327,49 +221,33 @@ public class GameHandler {
             return output;
         }
     }
-
-    private void setYieldRestrictionActive() {
-        this.yieldRestrictionActive = true;
-    }
-
-
     private void nextRound() {
         game.nextTurn();
         startCurrentTurn();
     }
-
-
-
-
     public boolean isGameOver() {
         return game.getWinner() != null;
     }
-
     public String getWinner() {
         if (isGameOver()) {
             return game.getTeamName(game.getWinner());
         }
         return null;
     }
-
     private int parseToInternalHandIndex(int userIndex) throws InvalidHandException {
         int internalIndex = userIndex - HAND_INDEX_OFFSET;
         int handSize = game.getHandSize(getCurrentTeamID());
-
         if (internalIndex < 0 || internalIndex >= handSize) {
             throw new InvalidHandException(String.valueOf(userIndex));
         }
         return internalIndex;
     }
-
     //ToDO: Exceptions noch richtig werfen!
     private List<Integer> parseToInternalHandIndices(int[] userIndices) throws InvalidHandException {
         List<Integer> internalIndices = new ArrayList<>();
         Set<Integer> seenIndices = new HashSet<>();
-
         for (int userIndex : userIndices) {
             int internalIndex = parseToInternalHandIndex(userIndex);
-
             if (!seenIndices.add(internalIndex)) {
                 throw new InvalidHandException("Duplicate hand index: " + userIndex);
             }
@@ -377,47 +255,39 @@ public class GameHandler {
         }
         return internalIndices;
     }
-
     private boolean isAdjacentToKing(Position target, Position kingPosition) {
         int rowDiff = Math.abs(target.getRow() - kingPosition.getRow());
         int colDiff = Math.abs(target.getColumn() - kingPosition.getColumn());
         return Math.max(rowDiff, colDiff) == MAX_MOVE_DISTANCE;
     }
-
     private Position getCurrentKingPosition() {
         return game.getKingPosition(game.getCurrentTeamID());
     }
-
     //ToDO: Exceptions noch richtig werfen!
     private void validatePlaceTarget() throws InvalidGameStateException {
-        if (selected == null) {
+        if (turnState.getSelectedPos() == null) {
             throw new NoSelectionException();
         }
-        if (placedThisTurn) {
+        if (turnState.hasPlacedThisTurn()) {
             throw new InvalidGameStateException("You have already placed a unit this turn.");
         }
-
         Position kingPosition = getCurrentKingPosition();
-        Position targetPosition = selected;
+        Position targetPosition = turnState.getSelectedPos();
         if (!isAdjacentToKing(targetPosition, kingPosition)) {
             throw new InvalidGameStateException("You can only place a unit adjacent to your King.");
         }
-
         BoardEntity occupant = game.getOccupant(targetPosition);
         if (occupant != null && occupant.getTeamID() != game.getCurrentTeamID()) {
             throw new InvalidGameStateException("You cannot place a an enemy occupied field.");
         }
     }
-
     private List<Unit> extractUnitsFromHand(List<Integer> internalIndices) {
         List<Unit> units = new ArrayList<>();
-
         for (int internalIndex : internalIndices) {
             units.add(game.getHandCardAt(getCurrentTeamID(), internalIndex));
         }
         return units;
     }
-
     private void removeHandCardsDescending(List<Integer> internalIndices) {
         List<Integer> sortedIndices = new ArrayList<>(internalIndices);
         sortedIndices.sort(Collections.reverseOrder());
@@ -425,54 +295,46 @@ public class GameHandler {
             game.removeHandCardAt(getCurrentTeamID(), internalIndex);
         }
     }
-
     public List<PlaceStepSnapshot> placeUnits(int[] userIndices) throws InvalidGameStateException {
         validatePlaceTarget();
-
         List<Integer> internalIndices = parseToInternalHandIndices(userIndices);
         List<Unit> unitsToPlace = extractUnitsFromHand(internalIndices);
-
         removeHandCardsDescending(internalIndices);
-
         List<PlaceStepSnapshot> results = new ArrayList<>();
-
         for (Unit unit : unitsToPlace) {
             results.add(placeSingleUnit(unit));
         }
-
-        placedThisTurn = true;
+        turnState.markPlacedThisTurn();
         return results;
     }
-
     private PlaceStepSnapshot placeSingleUnit(Unit incomingUnit) throws InvalidGameStateException {
-
-        BoardEntity occupant = game.getOccupant(selected);
-
+        BoardEntity occupant = game.getOccupant(turnState.getSelectedPos());
         if (occupant == null) {
-            game.setOccupant(selected, incomingUnit);
-            // eliminiere falls mehr als 5 Einheiten aus eigenem Team auf dem Board vorhanden sind
-            return new PlaceStepSnapshot(getCurrentTeamName(), incomingUnit.getName().toString(), null, null, selected.toString());
+            game.setOccupant(turnState.getSelectedPos(), incomingUnit);
+            eliminateIfBoardLimitExceeded(turnState.getSelectedPos(), incomingUnit);
+            return new PlaceStepSnapshot(getCurrentTeamName(), incomingUnit.getName().toString(), null, null, turnState.getSelectedPos().toString());
         }
-
         if (occupant.isFarmerKing()) {
             throw new InvalidGameStateException("You cannot place a unit on top of a Farmer King.");
         }
-
         Unit existingUnit = (Unit) occupant;
         String existingUnitName = existingUnit.getName().toString();
-
-
         MergeResult result = unitMerger.tryMerge(incomingUnit, existingUnit);
-
         if (result.isSuccessful()) {
             Unit mergedUnit = result.getUnit();
-            game.setOccupant(selected, mergedUnit);
+            game.setOccupant(turnState.getSelectedPos(), mergedUnit);
             return new PlaceStepSnapshot(getCurrentTeamName(), incomingUnit.getName().toString(), existingUnitName, null,
-                    selected.toString());
+                    turnState.getSelectedPos().toString());
         } else  {
-            game.setOccupant(selected, incomingUnit);
+            game.setOccupant(turnState.getSelectedPos(), incomingUnit);
             return new PlaceStepSnapshot(getCurrentTeamName(), incomingUnit.getName().toString(), existingUnitName, existingUnitName,
-                    selected.toString());
+                    turnState.getSelectedPos().toString());
+        }
+    }
+    private void eliminateIfBoardLimitExceeded(Position targetPosition, Unit justPlacedUnit) {
+        if (getUnitsPlaced(getCurrentTeamID()) > MAX_UNITS_ON_BOARD
+                && game.getOccupant(targetPosition) == justPlacedUnit) {
+            game.setOccupant(targetPosition, null);
         }
     }
 }
