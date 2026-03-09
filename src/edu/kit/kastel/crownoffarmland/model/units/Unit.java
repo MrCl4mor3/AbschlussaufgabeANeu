@@ -68,6 +68,9 @@ public class Unit extends BoardEntity {
         this.blocking = true;
     }
 
+    /**
+     * Unblocks the unit, allowing it to perform actions again. An unblocked unit can move, attack, and be attacked as normal.
+     */
     public void unblock() {
         this.blocking = false;
     }

@@ -92,14 +92,30 @@ public class TurnState {
     }
 
 
+    /**
+     * Checks if the specified entity has already been moved during this turn. If the entity is in the set of moved entities, it means that
+     * it has already been moved and cannot be moved again until the next turn.
+     * @param entity the entity to check for movement status during this turn
+     * @return true if the entity has already been moved this turn, false otherwise
+     */
     public boolean hasMoved(BoardEntity entity) {
         return movedEntities.contains(entity);
     }
 
+    /**
+     * Marks the specified entity as having been moved during this turn by adding it to the set of moved entities.
+     * @param entity the entity to mark as having been moved during this turn, preventing it from being moved again until the next turn
+     */
     public void markMoved(BoardEntity entity) {
         movedEntities.add(entity);
     }
 
+    /**
+     * Returns an unmodifiable view of the set of entities that have been moved during this turn. This allows other parts of the code to check
+     * which entities have been moved without allowing modification of the underlying set, ensuring that the turn state remains
+     * consistent and accurate throughout the turn.
+     * @return an unmodifiable set of entities that have been moved during this turn
+     */
     public Set<BoardEntity> getMovedEntities() {
         return Collections.unmodifiableSet(movedEntities);
     }
