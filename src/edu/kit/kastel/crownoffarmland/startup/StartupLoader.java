@@ -246,9 +246,14 @@ public final class StartupLoader {
         try {
             byte[] encoded = Files.readAllBytes(Paths.get(filePath));
             String content = new String(encoded, StandardCharsets.UTF_8);
+            printRawFileContent(content);
             return StartupResult.success(content);
         } catch (IOException e) {
             return StartupError.error(FILE_NOT_FOUND_ERROR, filePath);
         }
+    }
+
+    private void printRawFileContent(String content) {
+        System.out.println(content);
     }
 }
