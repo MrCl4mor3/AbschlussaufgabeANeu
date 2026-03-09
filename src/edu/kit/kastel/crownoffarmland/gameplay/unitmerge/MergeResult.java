@@ -33,11 +33,19 @@ public class MergeResult {
     }
 
 
+    /**
+     * Getter method for the merged Unit.
+     * @return the merged Unit resulting from the merge operation.
+     */
     public Unit getUnit() {
         return unit;
     }
 
 
+    /**
+     * Determines whether the merge operation was successful based on the merge type.
+     * @return true if the merge was successful (i.e., the merge type is not INCOMPATIBLE), false otherwise.
+     */
     public boolean isSuccessful() {
         return this.mergeType != MergeType.INCOMPATIBLE;
     }

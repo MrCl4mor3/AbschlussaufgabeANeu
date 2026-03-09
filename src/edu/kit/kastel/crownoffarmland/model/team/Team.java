@@ -74,38 +74,78 @@ public class Team {
         this.lifePoints = Math.max(0, this.lifePoints - amount);
     }
 
+    /**
+     * Returns the Farmer King unit that represents the team's leader.
+     * @return the Farmer King unit of the team
+     */
     public FarmerKing getKing() {
         return king;
     }
 
+    /**
+     * Shuffles the team's draw pile using the provided random generator.
+     * @param generator the random generator to use for shuffling the draw pile
+     */
     public void shuffleDrawPile(RandomGenerator generator) {
         this.drawPile.shuffle(generator);
     }
 
+    /**
+     * Returns the current number of cards in the team's hand.
+     * @return the current hand size
+     */
     public int getHandSize() {
         return this.hand.size();
     }
 
+    /**
+     * Checks if the team's hand is full, meaning it has reached the maximum allowed number of cards.
+     * @return true if the hand is full, false otherwise
+     */
     public boolean isHandFull() {
         return this.hand.isFull();
     }
 
+    /**
+     * Returns the card at the specified index in the team's hand.
+     * @param index the index of the card to retrieve from the hand
+     * @return the card at the specified index in the hand
+     */
     public Unit getHandCardAt(int index) {
         return this.hand.getCardAt(index);
     }
 
+    /**
+     * Removes and returns the card at the specified index from the team's hand. This method is used when a card is played or discarded
+     * from the hand.
+     * @param index the index of the card to remove from the hand
+     * @return the card that was removed from the hand at the specified index
+     */
     public Unit removeHandCardAt(int index) {
         return this.hand.removeCardAt(index);
     }
 
+    /**
+     * Returns the current number of cards in the team's draw pile. This method is used to check how many cards are left in the draw pile.
+     * @return the current size of the draw pile
+     */
     public int getDrawPileSize() {
         return this.drawPile.size();
     }
 
+    /**
+     * Checks if the team's draw pile is empty, meaning there are no more cards left to draw.
+     * @return true if the draw pile is empty, false otherwise
+     */
     public boolean isDrawPileEmpty() {
         return this.drawPile.isEmpty();
     }
 
+    /**
+     * Draws the top card from the team's draw pile and adds it to the team's hand. This method is used when the team needs to draw a
+     * card during the game. If the hand is full or the draw pile is empty, the method returns null, indicating that no card was drawn.
+     * @return the card that was drawn and added to the hand, or null if the hand is full or the draw pile is empty
+     */
     public Unit drawToHand() {
         if (hand.isFull() || drawPile.isEmpty()) {
             return null;

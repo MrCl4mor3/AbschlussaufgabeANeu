@@ -11,6 +11,7 @@ public class InvalidCommandArgumentException extends  CrownOfFarmlandException {
     /**
      * Creates a new InvalidCommandArgumentException with the given message.
      * @param expected The message to be displayed when the exception is thrown.
+     * @param actual The message to be displayed when the exception is thrown.
      */
     public InvalidCommandArgumentException(int expected, int actual) {
         super(String.format(ERROR_WRONG_NUMBER_OF_ARGUMENTS, expected, actual));

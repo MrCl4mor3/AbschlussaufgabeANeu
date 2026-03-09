@@ -6,7 +6,7 @@ package edu.kit.kastel.crownoffarmland.exceptions;
  *
  * @author ucgdi
  */
-public class InvalidGameStateException extends CrownOfFarmlandException{
+public class InvalidGameStateException extends CrownOfFarmlandException {
 
 
     /**
