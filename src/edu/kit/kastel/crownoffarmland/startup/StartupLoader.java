@@ -5,6 +5,9 @@ import edu.kit.kastel.crownoffarmland.model.units.UnitTemplate;
 import edu.kit.kastel.crownoffarmland.startup.config.StartupKey;
 import edu.kit.kastel.crownoffarmland.startup.config.Verbosity;
 import edu.kit.kastel.crownoffarmland.startup.context.StartupContext;
+import edu.kit.kastel.crownoffarmland.startup.context.StartupDecks;
+import edu.kit.kastel.crownoffarmland.startup.context.StartupOutput;
+import edu.kit.kastel.crownoffarmland.startup.context.StartupTeams;
 import edu.kit.kastel.crownoffarmland.startup.parser.BoardSymbolParser;
 import edu.kit.kastel.crownoffarmland.startup.parser.DeckFileParser;
 import edu.kit.kastel.crownoffarmland.startup.parser.RawArgsParser;
@@ -122,7 +125,8 @@ public final class StartupLoader {
         String rawBoardPath = arguments.get(StartupKey.BOARD);
 
         if (rawBoardPath == null || rawBoardPath.isEmpty()) {
-            return StartupResult.success(context.withBoardSymbolSet(new StandardBoardSymbolSet()));
+            StartupOutput output = context.getOutput().withBoardSymbolSet(new StandardBoardSymbolSet());
+            return StartupResult.success(context.withOutput(output));
         }
 
         StartupResult<String> fileContentResult = readFileContent(rawBoardPath);
@@ -135,9 +139,9 @@ public final class StartupLoader {
             return StartupError.error(boardResult.getErrorMessage());
         }
 
-        return StartupResult.success(
-                context.withBoardSymbolSet(new CustomBoardSymbolSet(boardResult.getValue()))
-        );
+        StartupOutput output = context.getOutput()
+                .withBoardSymbolSet(new CustomBoardSymbolSet(boardResult.getValue()));
+        return StartupResult.success(context.withOutput(output));
     }
 
     private StartupResult<StartupContext> stepUnits(Map<StartupKey, String> arguments, StartupContext context) {
@@ -171,9 +175,8 @@ public final class StartupLoader {
                 return StartupError.error(deckResult.getErrorMessage());
             }
 
-            StartupContext updatedContext = context.withDeckCountsTeam1(deckResult.getValue());
-            updatedContext = updatedContext.withDeckCountsTeam2(deckResult.getValue());
-            return StartupResult.success(updatedContext);
+            StartupDecks decks = StartupDecks.mirrored(deckResult.getValue());
+            return StartupResult.success(context.withDecks(decks));
         }
 
         String rawDeckPathTeam1 = arguments.get(StartupKey.DECK1);
@@ -199,9 +202,8 @@ public final class StartupLoader {
             return StartupError.error(deckResultTeam2.getErrorMessage());
         }
 
-        StartupContext updatedContext = context.withDeckCountsTeam1(deckResultTeam1.getValue());
-        updatedContext = updatedContext.withDeckCountsTeam2(deckResultTeam2.getValue());
-        return StartupResult.success(updatedContext);
+        StartupDecks decks = StartupDecks.of(deckResultTeam1.getValue(), deckResultTeam2.getValue());
+        return StartupResult.success(context.withDecks(decks));
     }
 
     private StartupResult<StartupContext> stepTeams(Map<StartupKey, String> arguments, StartupContext context) {
@@ -219,16 +221,16 @@ public final class StartupLoader {
             return StartupError.error(INVALID_TEAMNAME_ERROR, team1Name, team2Name, MAX_TEAM_NAME_LENGTH);
         }
 
-        StartupContext updatedContext = context.withTeam1Name(team1Name);
-        updatedContext = updatedContext.withTeam2Name(team2Name);
-        return StartupResult.success(updatedContext);
+        StartupTeams teams = StartupTeams.of(team1Name, team2Name);
+        return StartupResult.success(context.withTeams(teams));
     }
 
     private StartupResult<StartupContext> stepVerbosity(Map<StartupKey, String> arguments, StartupContext context) {
         String rawVerbosity = arguments.get(StartupKey.VERBOSITY);
 
         if (rawVerbosity == null || rawVerbosity.isEmpty()) {
-            return StartupResult.success(context.withVerbosity(Verbosity.ALL));
+            StartupOutput output = context.getOutput().withVerbosity(Verbosity.ALL);
+            return StartupResult.success(context.withOutput(output));
         }
 
         Verbosity verbosity = Verbosity.fromString(rawVerbosity);
@@ -236,7 +238,8 @@ public final class StartupLoader {
             return StartupError.error(INVALID_VERBOSITY_NAME, rawVerbosity);
         }
 
-        return StartupResult.success(context.withVerbosity(verbosity));
+        StartupOutput output = context.getOutput().withVerbosity(verbosity);
+        return StartupResult.success(context.withOutput(output));
     }
 
     private StartupResult<String> readFileContent(String filePath) {
