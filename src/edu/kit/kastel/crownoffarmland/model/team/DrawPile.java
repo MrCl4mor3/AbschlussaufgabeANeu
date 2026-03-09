@@ -44,6 +44,10 @@ public final class DrawPile {
         return  deck.pollFirst();
     }
 
+    /**
+     * Checks if the draw pile is empty.
+     * @return true if the draw pile is empty, false otherwise
+     */
     public boolean isEmpty() {
         return deck.isEmpty();
     }
@@ -51,6 +55,7 @@ public final class DrawPile {
     /**
      * Shuffles the draw pile by randomizing the order of the units in the pile.
      * This method creates a temporary list of the units, shuffles it, and then repopulates the draw pile with the shuffled units.
+     * @param generator the random generator used to shuffle the units in the draw pile
      */
     public void shuffle(RandomGenerator generator) {
         List<Unit> toShuffle = new ArrayList<>(deck);
