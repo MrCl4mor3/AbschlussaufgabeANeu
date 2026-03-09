@@ -10,7 +10,7 @@ import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -45,7 +45,7 @@ public class CommandHandler {
         this.gameHandler = gameHandler;
         this.boardRenderer = boardRenderer;
         this.entityFormatter = new EntityFormatter();
-        commands = new HashMap<>();
+        commands = new LinkedHashMap<>();
         initCommands();
         this.running = true;
     }
@@ -148,17 +148,17 @@ public class CommandHandler {
 
 
     private void initCommands() {
-        addCommand(new BlockCommand(this, gameHandler));
-        addCommand(new BoardCommand(this, gameHandler));
-        addCommand(new FlipCommand(this, gameHandler));
-        addCommand(new HandCommand(this, gameHandler));
-        addCommand(new MoveCommand(this, gameHandler));
-        addCommand(new PlaceCommand(this, gameHandler));
-        addCommand(new QuitCommand(this, gameHandler));
         addCommand(new SelectCommand(this, gameHandler));
+        addCommand(new BoardCommand(this, gameHandler));
+        addCommand(new MoveCommand(this, gameHandler));
+        addCommand(new FlipCommand(this, gameHandler));
+        addCommand(new BlockCommand(this, gameHandler));
+        addCommand(new HandCommand(this, gameHandler));
+        addCommand(new PlaceCommand(this, gameHandler));
         addCommand(new ShowCommand(this, gameHandler));
-        addCommand(new StateCommand(this, gameHandler));
         addCommand(new YieldCommand(this, gameHandler));
+        addCommand(new StateCommand(this, gameHandler));
+        addCommand(new QuitCommand(this, gameHandler));
     }
 
 
