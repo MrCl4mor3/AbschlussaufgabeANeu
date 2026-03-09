@@ -18,6 +18,7 @@ import java.util.Scanner;
  * Implement the command handler in a similar fashion as on earlier tasks.
  *
  * @author Programmieren-Team
+ * @author ucgdi
  */
 public class CommandHandler {
     private static final String COMMAND_ERROR_PREFIX = "ERROR: ";
@@ -70,19 +71,29 @@ public class CommandHandler {
         this.running = false;
     }
 
+    /**
+     * Prints the current state of the board to the console.
+     * @throws InvalidGameStateException if the board snapshot could not be created, e.g. because the game is already over
+     */
     public void printBoard() throws  InvalidGameStateException {
         BoardSnapshot boardSnapshot = gameHandler.createBoardSnapshot();
         System.out.println(boardRenderer.renderBoard(boardSnapshot));
     }
 
+    /**
+     * Prints the currently selected entity to the console.
+     * @throws InvalidGameStateException if the entity snapshot could not be created, e.g. because no entity is currently selected
+     */
     public void printShow() throws InvalidGameStateException {
         EntitySnapshot snapshot = gameHandler.createEntitySnapshotAtSelected();
         System.out.println(entityFormatter.format(snapshot));
     }
 
 
-
-
+    /**
+     * Returns the entity formatter used by this command handler.
+     * @return the entity formatter used by this command handler
+     */
     public EntityFormatter getEntityFormatter() {
         return this.entityFormatter;
     }

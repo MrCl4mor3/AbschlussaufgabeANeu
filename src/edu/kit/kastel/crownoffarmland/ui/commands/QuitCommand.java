@@ -5,20 +5,21 @@ import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 
 /**
  * Implements the quit command.
- * This command does not have a pattern. The name would match the pattern and therefore the name is the pattern
- * in this case.
+ * Command to quit the game. This command does not take any arguments and will end the current game session.
  *
  * @author Programmieren-Team
+ * @author ucgdi
  */
 public class QuitCommand extends Command {
 
     private static final String COMMAND_NAME = "quit";
-    public static final boolean ALLOW_EXECUTE_DURING_YIELD_RESTRICTION = true;
+    private static final boolean ALLOW_EXECUTE_DURING_YIELD_RESTRICTION = true;
 
     /**
-     * Creates a new quit command object.
-     * @param commandHandler The command handler
-     * @param gameHandler The game handler
+     * Constructs a new QuitCommand with the specified CommandHandler and GameHandler.
+     *
+     * @param commandHandler the CommandHandler to use for executing the command
+     * @param gameHandler    the GameHandler to use for accessing and modifying the game state
      */
     protected QuitCommand(CommandHandler commandHandler, GameHandler gameHandler) {
         super(COMMAND_NAME, commandHandler, gameHandler);

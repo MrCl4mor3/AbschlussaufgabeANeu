@@ -6,7 +6,13 @@ import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 import edu.kit.kastel.crownoffarmland.model.team.TeamID;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.TeamStateSnapshot;
 
-
+/**
+ * Implements the state command.
+ * This command allows the player to view the current state of both teams, including their life points, remaining deck cards, and placed
+ * units. The output is formatted in a clear and organized manner for easy comparison between the two teams.
+ *
+ * @author ucgdi
+ */
 public class StateCommand extends  Command {
     private static final String COMMAND_NAME = "state";
 
@@ -18,6 +24,12 @@ public class StateCommand extends  Command {
     private static final String PADDING = " ";
 
 
+    /**
+     * Constructs a new StateCommand with the specified CommandHandler and GameHandler.
+     *
+     * @param commandHandler the CommandHandler to use for executing the command
+     * @param gameHandler    the GameHandler to use for accessing and modifying the game state
+     */
     public StateCommand(CommandHandler commandHandler, GameHandler gameHandler)  {
         super(COMMAND_NAME, commandHandler, gameHandler);
     }

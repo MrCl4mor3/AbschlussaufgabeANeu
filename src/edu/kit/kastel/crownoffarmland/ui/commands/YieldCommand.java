@@ -6,6 +6,14 @@ import edu.kit.kastel.crownoffarmland.exceptions.InvalidHandException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
 
+/**
+ * Implements the yield command.
+ * Command to end the current turn.
+ * This command can be used without any arguments to simply end the turn, or with one argument to discard a card from the player's hand
+ * before ending the turn. The argument should be the index of the card in the player's hand that they wish to discard.
+ *
+ * @author ucgdi
+ */
 public class YieldCommand extends  Command {
 
     private static final String COMMAND_NAME = "yield";
@@ -15,6 +23,11 @@ public class YieldCommand extends  Command {
     private static final String DISCARDING_CARD_MESSAGE = "%s discarded %s.%n";
     private static final String NO_CARD_LEFT_MESSAGE = "%s has no cards left in the deck!%n";
 
+    /**
+     * Creates a new yield command object.
+     * @param commandHandler The command handler to which this command belongs
+     * @param gameHandler The game handler that provides access to the game state and logic
+     */
     public YieldCommand(CommandHandler commandHandler, GameHandler gameHandler) {
         super(COMMAND_NAME, commandHandler, gameHandler);
     }

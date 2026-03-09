@@ -6,10 +6,11 @@ import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 
 /**
  * Implements the board command.
- * This command does not have a pattern. The name would match the pattern and therefore the name is the pattern
- * in this case.
+ * Command to print the current state of the game board. This command does not take any arguments and will display the current layout of
+ * the board, including the positions of all entities and fields. It is useful for players to get an overview of the game state at any
+ * point during their turn.
  *
- * @author Programmieren-Team
+ * @author ucgdi
  */
 public class BoardCommand extends Command {
 

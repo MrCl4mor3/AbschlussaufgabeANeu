@@ -9,6 +9,16 @@ import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
 import java.util.List;
 
 
+/**
+ * Implements the place command.
+ * Command for placing units on the board.
+ * This command allows players to place units from their hand onto the board, potentially merging with existing units.
+ * The command takes one or more indices as arguments, which correspond to the units in the player's hand that they wish to place. The
+ * command will handle the placement logic, including any merging of units and the resulting changes to the game state. After execution,
+ * it will print the results of the placement and update the board and show displays.
+ *
+ * @author ucgdi
+ */
 public class PlaceCommand extends Command {
     private static final String COMMAND_NAME = "place";
     private static final int MIN_ARGS = 1;
@@ -18,6 +28,12 @@ public class PlaceCommand extends Command {
     private static final String MERGING_UNIT_FAILURE_MESSAGE = "Union failed. %s was eliminated.%n";
 
 
+    /**
+     * Constructs a new PlaceCommand with the specified CommandHandler and GameHandler.
+     *
+     * @param commandHandler the CommandHandler to use for executing the command
+     * @param gameHandler    the GameHandler to use for accessing and modifying the game state
+     */
     public PlaceCommand(CommandHandler commandHandler, GameHandler gameHandler) {
         super(COMMAND_NAME, commandHandler, gameHandler);
     }
