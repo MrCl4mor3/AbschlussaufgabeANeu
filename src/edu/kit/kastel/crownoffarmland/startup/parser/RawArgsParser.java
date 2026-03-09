@@ -2,9 +2,9 @@ package edu.kit.kastel.crownoffarmland.startup.parser;
 
 
 import edu.kit.kastel.crownoffarmland.startup.config.DeckConfigMode;
-import edu.kit.kastel.crownoffarmland.startup.StartupError;
+import edu.kit.kastel.crownoffarmland.startup.result.StartupError;
 import edu.kit.kastel.crownoffarmland.startup.config.StartupKey;
-import edu.kit.kastel.crownoffarmland.startup.StartupResult;
+import edu.kit.kastel.crownoffarmland.startup.result.StartupResult;
 
 import java.util.ArrayList;
 import java.util.EnumMap;

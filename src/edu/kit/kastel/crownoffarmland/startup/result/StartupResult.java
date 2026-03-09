@@ -1,4 +1,4 @@
-package edu.kit.kastel.crownoffarmland.startup;
+package edu.kit.kastel.crownoffarmland.startup.result;
 
 /**
  * This class represents the result of a startup operation, which can either be successful or contain an error message.

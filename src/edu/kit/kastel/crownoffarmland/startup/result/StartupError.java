@@ -1,4 +1,4 @@
-package edu.kit.kastel.crownoffarmland.startup;
+package edu.kit.kastel.crownoffarmland.startup.result;
 
 import edu.kit.kastel.crownoffarmland.startup.config.StartupKey;
 

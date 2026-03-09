@@ -13,7 +13,6 @@ import edu.kit.kastel.crownoffarmland.exceptions.YieldException;
 import edu.kit.kastel.crownoffarmland.gameplay.combat.DuelManager;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.SnapshotFactory;
-import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.MergeResult;
 import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.UnitMerger;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.BoardSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
@@ -261,7 +260,7 @@ public class GameHandler {
         } else {
             int handSize = game.getHandSize(game.getCurrentTeamID());
 
-            int internalIndex = parseToInternalHandIndex(index);
+            int internalIndex = index - HAND_INDEX_OFFSET;
 
             if (internalIndex < 0 || internalIndex >= handSize) {
                 throw new InvalidHandException("Invalid hand index: " + index);
@@ -298,14 +297,6 @@ public class GameHandler {
             return game.getTeamName(game.getWinner());
         }
         return null;
-    }
-    private int parseToInternalHandIndex(int userIndex) throws InvalidHandException {
-        int internalIndex = userIndex - HAND_INDEX_OFFSET;
-        int handSize = game.getHandSize(getCurrentTeamID());
-        if (internalIndex < 0 || internalIndex >= handSize) {
-            throw new InvalidHandException(String.valueOf(userIndex));
-        }
-        return internalIndex;
     }
     /**
      * Attempts to place units from the player's hand onto the board at the currently selected position. The player must provide an array of

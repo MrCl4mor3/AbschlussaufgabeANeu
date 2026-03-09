@@ -3,10 +3,10 @@ package edu.kit.kastel.crownoffarmland;
 
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 import edu.kit.kastel.crownoffarmland.startup.GameFactory;
-import edu.kit.kastel.crownoffarmland.startup.StartupContext;
-import edu.kit.kastel.crownoffarmland.startup.StartupError;
+import edu.kit.kastel.crownoffarmland.startup.context.StartupContext;
+import edu.kit.kastel.crownoffarmland.startup.result.StartupError;
 import edu.kit.kastel.crownoffarmland.startup.StartupLoader;
-import edu.kit.kastel.crownoffarmland.startup.StartupResult;
+import edu.kit.kastel.crownoffarmland.startup.result.StartupResult;
 import edu.kit.kastel.crownoffarmland.ui.commands.CommandHandler;
 import edu.kit.kastel.crownoffarmland.ui.renderer.board.BoardEntityTokenFormatter;
 import edu.kit.kastel.crownoffarmland.ui.renderer.board.BoardRenderer;

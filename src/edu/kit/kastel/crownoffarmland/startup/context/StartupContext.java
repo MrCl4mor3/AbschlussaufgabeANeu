@@ -1,4 +1,4 @@
-package edu.kit.kastel.crownoffarmland.startup;
+package edu.kit.kastel.crownoffarmland.startup.context;
 
 import edu.kit.kastel.crownoffarmland.model.RandomGenerator;
 import edu.kit.kastel.crownoffarmland.model.units.UnitTemplate;
@@ -24,9 +24,9 @@ public final class StartupContext {
     private final Verbosity verbosity;
 
     private StartupContext(RandomGenerator randomGenerator, List<UnitTemplate> unitTemplates,
-                           int[] deckCountsTeam1, int[] deckCountsTeam2,
-                           String team1Name, String team2Name,
-                           BoardSymbolSet boardSymbolSet, Verbosity verbosity) {
+        int[] deckCountsTeam1, int[] deckCountsTeam2,
+        String team1Name, String team2Name,
+        BoardSymbolSet boardSymbolSet, Verbosity verbosity) {
         this.randomGenerator = randomGenerator;
         this.unitTemplates = unitTemplates == null ? null : List.copyOf(unitTemplates);
         this.deckCountsTeam1 = copyArray(deckCountsTeam1);

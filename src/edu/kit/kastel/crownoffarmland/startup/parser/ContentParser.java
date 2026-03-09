@@ -1,6 +1,6 @@
 package edu.kit.kastel.crownoffarmland.startup.parser;
 
-import edu.kit.kastel.crownoffarmland.startup.StartupResult;
+import edu.kit.kastel.crownoffarmland.startup.result.StartupResult;
 
 /**
  * This interface defines a contract for parsing content of type T. It contains a single method, parse, which takes a String input and
