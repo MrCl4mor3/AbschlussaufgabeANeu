@@ -60,8 +60,8 @@ public class SnapshotFactory {
             return EntitySnapshot.noUnit();
         }
 
-        String teamName = game.getTeamName(entity.getTeamID());
-        boolean hidden = !entity.isRevealed() && entity.getTeamID() != game.getCurrentTeamID();
+        String teamName = game.getTeamName(entity.getOwner());
+        boolean hidden = !entity.isRevealed() && entity.getOwner() != game.getCurrentTeamID();
 
         return new EntitySnapshot(entity, teamName, entity.isFarmerKing(), hidden);
     }
@@ -107,7 +107,7 @@ public class SnapshotFactory {
             return BoardCellSnapshot.empty();
         }
 
-        boolean isOwnTeam = occupant.getTeamID() == currentTeamID;
+        boolean isOwnTeam = occupant.getOwner() == currentTeamID;
         boolean isMoveable = isOwnTeam && !movedEntities.contains(occupant);
 
         return new BoardCellSnapshot(true, occupant.isFarmerKing(), occupant.isBlocked(), isOwnTeam, isMoveable);

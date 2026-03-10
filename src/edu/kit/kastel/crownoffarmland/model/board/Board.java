@@ -106,6 +106,18 @@ public class Board {
     }
 
     /**
+     * Removes and returns the BoardEntity occupying the field at the given position, if any. If the field is empty, it returns null.
+     * @param position the position of the field from which to remove the occupant
+     * @return the BoardEntity that was occupying the field, or null if the field was empty
+     */
+    public BoardEntity removeOccupant(Position position) {
+        BoardEntity occupant = getOccupant(position);
+        getField(position).setOccupant(null);
+        return occupant;
+    }
+
+
+    /**
      * Checks if the field at the given position is empty (i.e., has no occupant).
      * @param position the position of the field to check
      * @return true if the field is empty, false otherwise

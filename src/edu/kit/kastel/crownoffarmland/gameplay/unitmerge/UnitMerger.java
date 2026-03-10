@@ -83,7 +83,7 @@ public class UnitMerger {
     private Unit buildMergedUnit(Unit incoming, Unit resident, int atk, int def) {
         String mergedQualificator = mergeQualificator(incoming.getQualificator(), resident.getQualificator());
         String mergedRole = mergeRole(incoming.getRole(), resident.getRole());
-        return new Unit(incoming.getTeamID(), new UnitName(mergedRole, mergedQualificator), new StatusValue(atk, def));
+        return new Unit(incoming.getOwner(), new UnitName(mergedRole, mergedQualificator), new StatusValue(atk, def));
     }
 
     private String mergeQualificator(String qualificatorA, String qualificatorB) {

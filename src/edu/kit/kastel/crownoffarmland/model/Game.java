@@ -113,6 +113,18 @@ public class Game {
         return board.getOccupant(position);
     }
 
+
+    /**
+     * Removes and returns the BoardEntity that occupies the specified position on the game board.
+     * @param position the Position object representing the location on the game board from which to remove and return the occupant
+     * @return the BoardEntity that was removed from the specified position on the game board, or null if the position was unoccupied
+     */
+    public BoardEntity removeOccupant(Position position) {
+        return board.removeOccupant(position);
+    }
+
+
+
     /**
      * Sets the occupant of the specified position on the game board to the given BoardEntity. This method allows you to place a unit or
      * other entity on the board at a specific location.
@@ -296,7 +308,7 @@ public class Game {
             for (int columnIndex = 0; columnIndex < getBoardSize(); columnIndex++) {
                 Position position = getPositionAt(rowIndex, columnIndex);
                 BoardEntity entity = getOccupant(position);
-                if (entity != null && entity.getTeamID() == teamID && !entity.isFarmerKing()) {
+                if (entity != null && entity.getOwner() == teamID && !entity.isFarmerKing()) {
                     count++;
                 }
             }

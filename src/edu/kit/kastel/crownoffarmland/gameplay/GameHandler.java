@@ -11,6 +11,7 @@ import edu.kit.kastel.crownoffarmland.exceptions.UnitAlreadyActedException;
 import edu.kit.kastel.crownoffarmland.exceptions.UnitAlreadyRevealedException;
 import edu.kit.kastel.crownoffarmland.exceptions.YieldException;
 import edu.kit.kastel.crownoffarmland.gameplay.combat.DuelManager;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.MoveSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.SnapshotFactory;
 import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.UnitMerger;
@@ -21,7 +22,10 @@ import edu.kit.kastel.crownoffarmland.model.Game;
 import edu.kit.kastel.crownoffarmland.model.board.Position;
 import edu.kit.kastel.crownoffarmland.model.team.TeamID;
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
+import edu.kit.kastel.crownoffarmland.model.units.StatusValue;
 import edu.kit.kastel.crownoffarmland.model.units.Unit;
+import edu.kit.kastel.crownoffarmland.model.units.UnitName;
+
 
 import java.util.List;
 
@@ -41,11 +45,10 @@ public class GameHandler {
     private static final int HAND_INDEX_OFFSET = 1;
     private static final int OPENING_HAND_SIZE = 4;
     private final Game game;
-    private final DuelManager duelManager;
-    private final UnitMerger unitMerger;
     private final SnapshotFactory snapshotFactory;
     private final TurnState turnState;
     private final PlacementService placementService;
+    private final MovementService movementService;
     /**
      * Constructs a new GameHandler instance with the specified Game model. The GameHandler initializes the DuelManager and UnitMerger,
      * and sets up the initial state of the game. The selected position is initially set to null, and the placedThisTurn flag is set to
@@ -56,15 +59,14 @@ public class GameHandler {
      *             components, such as the board, teams, and units, before being passed to the GameHandler constructor.
      */
     public GameHandler(Game game) {
-        this(game, new DuelManager(), new UnitMerger(), new SnapshotFactory(), new TurnState());
+        this(game, new UnitMerger(), new SnapshotFactory(), new TurnState(), new DuelManager());
     }
-    private GameHandler(Game game, DuelManager duelManager, UnitMerger unitMerger, SnapshotFactory snapshotFactory, TurnState turnState) {
+    private GameHandler(Game game, UnitMerger unitMerger, SnapshotFactory snapshotFactory, TurnState turnState, DuelManager duelManager) {
         this.game = game;
-        this.duelManager = duelManager;
-        this.unitMerger = unitMerger;
         this.snapshotFactory = snapshotFactory;
         this.turnState = turnState;
         this.placementService = new PlacementService(game, unitMerger, turnState);
+        this.movementService = new MovementService(game, unitMerger, turnState, duelManager);
     }
 
     /**
@@ -79,6 +81,14 @@ public class GameHandler {
         drawCards(TeamID.TEAM_2, OPENING_HAND_SIZE);
         game.setOccupant(TEAM1_KING_START, game.getKing(TeamID.TEAM_1));
         game.setOccupant(TEAM2_KING_START, game.getKing(TeamID.TEAM_2));
+
+        Unit unit1 = new Unit(TeamID.TEAM_1, new UnitName("TestUnit1", "Role"), new StatusValue(8002, 1));
+        Unit unit2 = new Unit(TeamID.TEAM_2, new UnitName("TestUnit2", "Role"), new StatusValue(2, 2));
+
+        game.setOccupant(new Position(3, 'D'), unit1);
+        game.setOccupant(new Position(2, 'D'), unit2);
+
+
         startCurrentTurn();
     }
     private void drawCards(TeamID teamID, int amount) {
@@ -130,9 +140,10 @@ public class GameHandler {
         if (entity.isRevealed()) {
             throw new UnitAlreadyRevealedException(entity.getName().toString());
         }
-        entity.revealeEntity();
+        entity.reveal();
         return createEntitySnapshotAtSelected();
     }
+
     private BoardEntity getSelectedEntity() throws InvalidGameStateException {
         if (turnState.getSelectedPos() == null) {
             throw new NoSelectionException();
@@ -141,7 +152,7 @@ public class GameHandler {
         if (entity == null) {
             throw new EmptySelectedFieldException(turnState.getSelectedPos().toString());
         }
-        if (entity.getTeamID() != game.getCurrentTeamID()) {
+        if (entity.getOwner() != game.getCurrentTeamID()) {
             throw new EnemyUnitSelectedException();
         }
         if (turnState.hasMoved(entity)) {
@@ -311,5 +322,18 @@ public class GameHandler {
      */
     public List<PlaceStepSnapshot> placeUnits(int[] userIndices) throws InvalidGameStateException {
         return placementService.placeUnits(userIndices);
+    }
+
+    /**
+     * Attempts to move the currently selected unit on the board to a target position specified by the player. The method validates the
+     * target position for movement.
+     * @param target A string representing the target position
+     * @return A MoveSnapshot representing the result of the move action, including any combat or merges that occurred as a result of the
+     *      move.
+     * @throws InvalidGameStateException if there is a problem with the game state that prevents moving the unit
+     */
+    public MoveSnapshot moveUnit(String target) throws InvalidGameStateException {
+        Position targetPosition = game.parsePosition(target);
+        return movementService.moveUnit(targetPosition, getCurrentTeamID());
     }
 }

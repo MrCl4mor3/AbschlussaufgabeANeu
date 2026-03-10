@@ -30,7 +30,7 @@ public class DuelManager {
      * @param defender The board entity that is defending in the duel. This can be a unit or a Farmer King.
      * @return A DuelResult object that contains the outcome of the duel.
      */
-    public DuelResult duel(Unit attacker, BoardEntity defender) {
+    public DuelResult resolveDuel(Unit attacker, BoardEntity defender) {
         if (defender.isFarmerKing()) {
             return new DuelResult(DuelType.KING, false, false, 0, attacker.getAtk());
         }
@@ -64,9 +64,9 @@ public class DuelManager {
         int atkB = defender.getAtk();
 
         if (atkA > atkB) {
-            return new DuelResult(DuelType.STANDARD, false, true, 0, 0);
+            return new DuelResult(DuelType.STANDARD, false, true, 0, atkA - atkB);
         } else  if (atkB > atkA) {
-            return new DuelResult(DuelType.STANDARD, true, false, 0, 0);
+            return new DuelResult(DuelType.STANDARD, true, false, atkB - atkA, 0);
         } else   {
             return new DuelResult(DuelType.STANDARD, true, true, 0, 0);
         }

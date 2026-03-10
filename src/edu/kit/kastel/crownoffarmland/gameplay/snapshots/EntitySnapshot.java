@@ -1,6 +1,7 @@
 package edu.kit.kastel.crownoffarmland.gameplay.snapshots;
 
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
+import edu.kit.kastel.crownoffarmland.model.units.FarmerKing;
 import edu.kit.kastel.crownoffarmland.model.units.Unit;
 
 /**
@@ -39,9 +40,17 @@ public final class EntitySnapshot {
      * @param teamName the name of the team the unit belongs to
      */
     public EntitySnapshot(Unit unit, String teamName) {
-        this(true, false, unit.isRevealed(), teamName, unit.getName().toString(), unit.getAtk(), unit.getDef());
+        this(true, false, !unit.isRevealed(), teamName, unit.getName().toString(), unit.getAtk(), unit.getDef());
     }
 
+    /**
+     * Creates a new immutable entity snapshot for the given farmer king.
+     * @param farmerKing the farmer king to create the snapshot for
+     * @param teamName the name of the team the farmer king belongs to
+     */
+    public EntitySnapshot(FarmerKing farmerKing, String teamName) {
+        this(true, true, !farmerKing.isRevealed(), teamName, farmerKing.getName().toString(), 0, 0);
+    }
     /**
      * Creates a new immutable entity snapshot for the given entity.
      * @param entity the entity to create the snapshot for

@@ -80,7 +80,7 @@ public final class PlacementService {
         }
 
         BoardEntity occupant = game.getOccupant(targetPosition);
-        if (occupant != null && occupant.getTeamID() != game.getCurrentTeamID()) {
+        if (occupant != null && occupant.getOwner() != game.getCurrentTeamID()) {
             throw new InvalidGameStateException("You cannot place on an enemy occupied field.");
         }
     }
@@ -182,7 +182,7 @@ public final class PlacementService {
             for (int columnIndex = 0; columnIndex < game.getBoardSize(); columnIndex++) {
                 Position position = game.getPositionAt(rowIndex, columnIndex);
                 BoardEntity entity = game.getOccupant(position);
-                if (entity != null && entity.getTeamID() == teamID && !entity.isFarmerKing()) {
+                if (entity != null && entity.getOwner() == teamID && !entity.isFarmerKing()) {
                     count++;
                 }
             }

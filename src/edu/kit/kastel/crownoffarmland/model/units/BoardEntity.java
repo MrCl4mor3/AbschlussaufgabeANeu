@@ -35,7 +35,7 @@ public abstract class BoardEntity {
      * Returns the team ID associated with this board entity.
      * @return the team ID of this board entity
      */
-    public TeamID getTeamID() {
+    public TeamID getOwner() {
         return teamID;
     }
     /**
@@ -72,7 +72,7 @@ public abstract class BoardEntity {
      * Sets the revealed status of this board entity. This method is protected to allow subclasses to control when an entity becomes
      * revealed. Once an entity is revealed, it cannot be hidden again, so this method only allows changing the status from false to true.
      */
-    public void revealeEntity() {
+    public void reveal() {
         this.revealed = true;
     }
 
