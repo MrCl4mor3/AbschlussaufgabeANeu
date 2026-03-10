@@ -10,7 +10,7 @@ import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
  * @author ucgdi
  */
 public class EntityFormatter {
-    private static final String OUTPUT_NO_UNIT = "no unit";
+    private static final String OUTPUT_NO_UNIT = "<no unit>";
     private static final String OUTPUT_HIDDEN = "???";
     private static final String FARMER_KING_SUFFIX = "'s Farmer King";
     private static final String TEAM_PREFIX = " (Team ";
