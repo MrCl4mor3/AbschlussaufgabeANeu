@@ -81,14 +81,6 @@ public class GameHandler {
         drawCards(TeamID.TEAM_2, OPENING_HAND_SIZE);
         game.setOccupant(TEAM1_KING_START, game.getKing(TeamID.TEAM_1));
         game.setOccupant(TEAM2_KING_START, game.getKing(TeamID.TEAM_2));
-
-        Unit unit1 = new Unit(TeamID.TEAM_1, new UnitName("TestUnit1", "Role"), new StatusValue(8002, 1));
-        Unit unit2 = new Unit(TeamID.TEAM_2, new UnitName("TestUnit2", "Role"), new StatusValue(2, 2));
-
-        game.setOccupant(new Position(3, 'D'), unit1);
-        game.setOccupant(new Position(2, 'D'), unit2);
-
-
         startCurrentTurn();
     }
     private void drawCards(TeamID teamID, int amount) {
