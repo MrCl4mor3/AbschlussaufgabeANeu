@@ -18,7 +18,7 @@ public class MoveCommand extends  Command {
     private static final String MERGING_MESSAGE = "%s and %s on %s join forces!%n";
     private static final String MERGING_UNIT_SUCCESS_MESSAGE = "Success!%n";
     private static final String MERGING_UNIT_FAILURE_MESSAGE = "Union failed. %s was eliminated.%n";
-    private static final String MOVE_MESSAGE = "%s moved to %s.%n";
+    private static final String MOVE_MESSAGE = "%s moves to %s.%n";
     private static final String REMOVE_BLOCK_MESSAGE = "%s no longer blocks.%n";
     private static final String ATTACK_MESSAGE = "%s attacks %s on %s!%n";
     private static final String FLIP_MESSAGE = "%s was flipped on %s!%n";
