@@ -22,7 +22,7 @@ import java.util.List;
 public class PlaceCommand extends Command {
     private static final String COMMAND_NAME = "place";
     private static final int MIN_ARGS = 1;
-    private static final String PLACE_MESSAGE = "%s placed %s on %s.%n";
+    private static final String PLACE_MESSAGE = "%s places %s on %s.%n";
     private static final String MERGING_MESSAGE = "%s and %s on %s join forces!%n";
     private static final String MERGING_UNIT_SUCCESS_MESSAGE = "Success!%n";
     private static final String MERGING_UNIT_FAILURE_MESSAGE = "Union failed. %s was eliminated.%n";
