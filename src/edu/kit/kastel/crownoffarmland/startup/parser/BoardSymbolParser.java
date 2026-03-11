@@ -14,9 +14,6 @@ import java.util.Objects;
  */
 public class BoardSymbolParser implements ContentParser<String> {
     private static final int BOARD_SYMBOL_COUNT = 29;
-    private static final String DEFAULT_BOARD_SYMBOLS =
-            ".,#~^*+xXoO"; // Beispiel für einen Standard-Symbolsatz, der 29 Symbole enthält
-    private static final String LINE_BREAK_REGEX = "\\R";
     private static final String MORE_THAN_ONE_LINE_ERROR =
             "The Board file must contain exactly one line of symbols, but found multiple lines.";
 
