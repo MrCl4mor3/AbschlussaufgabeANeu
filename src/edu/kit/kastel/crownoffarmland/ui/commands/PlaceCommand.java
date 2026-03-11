@@ -4,9 +4,9 @@ import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidCommandArgumentException;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidHandException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
+import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
 
-import java.util.List;
+
 
 
 /**
@@ -22,10 +22,6 @@ import java.util.List;
 public class PlaceCommand extends Command {
     private static final String COMMAND_NAME = "place";
     private static final int MIN_ARGS = 1;
-    private static final String PLACE_MESSAGE = "%s places %s on %s.%n";
-    private static final String MERGING_MESSAGE = "%s and %s on %s join forces!%n";
-    private static final String MERGING_UNIT_SUCCESS_MESSAGE = "Success!%n";
-    private static final String MERGING_UNIT_FAILURE_MESSAGE = "Union failed. %s was eliminated.%n";
 
 
     /**
@@ -34,8 +30,8 @@ public class PlaceCommand extends Command {
      * @param commandHandler the CommandHandler to use for executing the command
      * @param gameHandler    the GameHandler to use for accessing and modifying the game state
      */
-    public PlaceCommand(CommandHandler commandHandler, GameHandler gameHandler) {
-        super(COMMAND_NAME, commandHandler, gameHandler);
+    public PlaceCommand(CommandHandler commandHandler, GameHandler gameHandler, GameOutputPrinter gameOutputPrinter) {
+        super(COMMAND_NAME, commandHandler, gameHandler, gameOutputPrinter);
     }
 
     @Override
@@ -53,25 +49,8 @@ public class PlaceCommand extends Command {
             }
         }
 
-        List<PlaceStepSnapshot> results = this.gameHandler.placeUnits(userIndices);
-
-        for (PlaceStepSnapshot result : results) {
-            printPlaceStep(result);
-        }
-        commandHandler.printBoard();
-        commandHandler.printShow();
-    }
-
-    private void printPlaceStep(PlaceStepSnapshot snapshot) {
-        System.out.printf(PLACE_MESSAGE, snapshot.getTeamName(), snapshot.getPlacedUnitName(), snapshot.getTargetPosition());
-
-        if (snapshot.getExistingUnitName() != null) {
-            System.out.printf(MERGING_MESSAGE, snapshot.getExistingUnitName(), snapshot.getPlacedUnitName(), snapshot.getTargetPosition());
-            if (snapshot.getEliminatedUnitName() == null) {
-                System.out.printf(MERGING_UNIT_SUCCESS_MESSAGE);
-            } else {
-                System.out.printf(MERGING_UNIT_FAILURE_MESSAGE, snapshot.getEliminatedUnitName());
-            }
-        }
+        System.out.println(gameOutputPrinter.formatPlace(gameHandler.placeUnits(userIndices)));
+        System.out.println(gameOutputPrinter.formatBoard(gameHandler.createBoardSnapshot()));
+        System.out.println(gameOutputPrinter.formatShow(gameHandler.createEntitySnapshot()));
     }
 }

@@ -2,6 +2,7 @@ package edu.kit.kastel.crownoffarmland.ui.commands;
 
 import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
+import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
 
 
 /**
@@ -21,15 +22,15 @@ public class SelectCommand extends Command {
      * @param commandHandler the CommandHandler to use for executing the command
      * @param gameHandler    the GameHandler to use for accessing and modifying the game state
      */
-    public SelectCommand(CommandHandler commandHandler, GameHandler gameHandler) {
-        super(COMMAND_NAME, commandHandler, gameHandler);
+    public SelectCommand(CommandHandler commandHandler, GameHandler gameHandler, GameOutputPrinter gameOutputPrinter) {
+        super(COMMAND_NAME, commandHandler, gameHandler, gameOutputPrinter);
     }
 
     @Override
     public void execute(String[] commandArguments) throws CrownOfFarmlandException {
         ensureOneArguments(commandArguments);
         gameHandler.setSelected(commandArguments[0]);
-        commandHandler.printBoard();
-        commandHandler.printShow();
+        System.out.println(gameOutputPrinter.formatBoard(gameHandler.createBoardSnapshot()));
+        System.out.println(gameOutputPrinter.formatShow(gameHandler.createEntitySnapshot()));
     }
 }

@@ -2,6 +2,7 @@ package edu.kit.kastel.crownoffarmland.ui.commands;
 
 import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
+import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
 
 
 /**
@@ -21,13 +22,13 @@ public class BoardCommand extends Command {
      * @param commandHandler The command handler
      * @param gameHandler The game handler
      */
-    protected BoardCommand(CommandHandler commandHandler, GameHandler gameHandler) {
-        super(COMMAND_NAME, commandHandler, gameHandler);
+    protected BoardCommand(CommandHandler commandHandler, GameHandler gameHandler, GameOutputPrinter gameOutputPrinter) {
+        super(COMMAND_NAME, commandHandler, gameHandler, gameOutputPrinter);
     }
 
     @Override
     public void execute(String[] commandArguments) throws CrownOfFarmlandException {
         ensureNoArguments(commandArguments);
-        commandHandler.printBoard();
+        System.out.printf(gameOutputPrinter.formatBoard(gameHandler.createBoardSnapshot()));
     }
 }

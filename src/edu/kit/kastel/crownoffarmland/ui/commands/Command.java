@@ -3,6 +3,7 @@ package edu.kit.kastel.crownoffarmland.ui.commands;
 import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidCommandArgumentException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
+import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
 
 /**
  * This implements the command class the same way/in a similar way than it was implemented by the Programmieren-Team
@@ -15,8 +16,10 @@ public abstract class Command {
     private static final int NO_ARGUMENT_NEEDED = 0;
     private static final int ONE_ARGUMENT_NEEDED = 1;
     private static final boolean ALLOW_EXECUTE_DURING_YIELD_RESTRICTION_STANDARD = false;
+    protected final GameOutputPrinter gameOutputPrinter;
     protected final CommandHandler commandHandler;
     protected final GameHandler gameHandler;
+
 
 
     private final String commandName;
@@ -28,10 +31,11 @@ public abstract class Command {
      * @param commandHandler The command handler
      * @param gameHandler The game handler, which is needed for some commands to execute their logic.
      */
-    public Command(String commandName, CommandHandler commandHandler, GameHandler gameHandler) {
+    public Command(String commandName, CommandHandler commandHandler, GameHandler gameHandler,  GameOutputPrinter gameOutputPrinter) {
         this.commandName = commandName;
         this.commandHandler = commandHandler;
         this.gameHandler = gameHandler;
+        this.gameOutputPrinter = gameOutputPrinter;
     }
 
     /**

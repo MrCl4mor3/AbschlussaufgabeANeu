@@ -5,6 +5,7 @@ import edu.kit.kastel.crownoffarmland.exceptions.InvalidCommandArgumentException
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidHandException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
+import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
 
 /**
  * Implements the yield command.
@@ -19,6 +20,7 @@ public class YieldCommand extends  Command {
     private static final String COMMAND_NAME = "yield";
     private static final boolean ALLOW_EXECUTE_DURING_YIELD_RESTRICTION = true;
     private static final int EXPECTED_NUMBER_OF_ARGUMENTS = 1;
+
     private static final String SUCCESSFULLY_ENDED_TURN_MESSAGE = "It is %s's turn!%n";
     private static final String DISCARDING_CARD_MESSAGE = "%s discarded %s. ";
     private static final String NO_CARD_LEFT_MESSAGE = "%s has no cards left in the deck!%n";
@@ -28,8 +30,8 @@ public class YieldCommand extends  Command {
      * @param commandHandler The command handler to which this command belongs
      * @param gameHandler The game handler that provides access to the game state and logic
      */
-    public YieldCommand(CommandHandler commandHandler, GameHandler gameHandler) {
-        super(COMMAND_NAME, commandHandler, gameHandler);
+    public YieldCommand(CommandHandler commandHandler, GameHandler gameHandler, GameOutputPrinter gameOutputPrinter) {
+        super(COMMAND_NAME, commandHandler, gameHandler, gameOutputPrinter);
     }
 
     @Override

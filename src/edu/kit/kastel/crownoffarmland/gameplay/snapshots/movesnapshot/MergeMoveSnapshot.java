@@ -43,7 +43,7 @@ public final class MergeMoveSnapshot extends  MoveSnapshot {
      * Returns the name of the target entity involved in the merge.
      * @return the name of the target entity involved in the merge
      */
-    public String getTargetEnityName() {
+    public String getTargetEntityName() {
         return targetEntityName;
     }
 

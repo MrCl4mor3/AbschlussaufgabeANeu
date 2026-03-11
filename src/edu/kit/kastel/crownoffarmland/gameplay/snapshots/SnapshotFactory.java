@@ -1,6 +1,7 @@
 package edu.kit.kastel.crownoffarmland.gameplay.snapshots;
 
 import edu.kit.kastel.crownoffarmland.exceptions.NoSelectionException;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.EntityOnPositionSnapshot;
 import edu.kit.kastel.crownoffarmland.model.Game;
 import edu.kit.kastel.crownoffarmland.model.board.Position;
 import edu.kit.kastel.crownoffarmland.model.team.TeamID;
@@ -50,7 +51,11 @@ public class SnapshotFactory {
     * @return the entity snapshot, or a no-unit snapshot if the field is empty
     * @throws NoSelectionException if no field is selected
     */
-    public EntitySnapshot createEntitySnapshotAtSelected(Game game, Position selected) throws NoSelectionException {
+    public EntityOnPositionSnapshot createEntitySnapshotAtSelected(Game game, Position selected) throws NoSelectionException {
+        return new EntityOnPositionSnapshot(createEntitySnapshot(game, selected), selected.toString());
+    }
+
+    public EntitySnapshot createEntitySnapshot(Game game, Position selected) throws NoSelectionException {
         if (selected == null) {
             throw new NoSelectionException();
         }
@@ -65,6 +70,7 @@ public class SnapshotFactory {
 
         return new EntitySnapshot(entity, teamName, entity.isFarmerKing(), hidden);
     }
+
 
     /**
      * Creates a snapshot of the current team's hand.

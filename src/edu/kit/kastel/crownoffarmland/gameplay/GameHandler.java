@@ -14,6 +14,7 @@ import edu.kit.kastel.crownoffarmland.gameplay.ai.AIDecisionService;
 import edu.kit.kastel.crownoffarmland.gameplay.ai.AITurnController;
 import edu.kit.kastel.crownoffarmland.gameplay.ai.WeightedRandomSelector;
 import edu.kit.kastel.crownoffarmland.gameplay.combat.DuelManager;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.EntityOnPositionSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.MoveSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.SnapshotFactory;
@@ -132,7 +133,7 @@ public class GameHandler {
      *      the enemy team, or the selected unit has already acted this turn.
      * @throws UnitAlreadyRevealedException if the selected entity is already revealed, indicating that it cannot be flipped again.
      */
-    public EntitySnapshot flipSelectedEntity() throws InvalidGameStateException {
+    public EntityOnPositionSnapshot flipSelectedEntity() throws InvalidGameStateException {
         BoardEntity entity = getSelectedEntity();
         if (entity.isRevealed()) {
             throw new UnitAlreadyRevealedException(entity.getName().toString());
@@ -188,9 +189,15 @@ public class GameHandler {
      * @return An EntitySnapshot representing the currently selected entity on the board
      * @throws InvalidGameStateException if there is no selected position, the selected field is empty
      */
-    public EntitySnapshot createEntitySnapshotAtSelected() throws InvalidGameStateException {
-        return snapshotFactory.createEntitySnapshotAtSelected(game, turnState.getSelectedPos());
+    public EntitySnapshot createEntitySnapshot() throws InvalidGameStateException {
+        return snapshotFactory.createEntitySnapshot(game, getSelectedPos());
     }
+
+
+    public EntityOnPositionSnapshot createEntitySnapshotAtSelected() throws InvalidGameStateException {
+        return snapshotFactory.createEntitySnapshotAtSelected(game, getSelectedPos());
+    }
+
 
     /**
      * Creates a snapshot of the current state of the player's hand, including the cards in hand and their details.
@@ -217,7 +224,7 @@ public class GameHandler {
      * @throws InvalidGameStateException if there is a problem with the game state
      * @throws KingCannotBlockedException if the selected unit is the Farmer King, as the King cannot be blocked.
      */
-    public EntitySnapshot blockSelected() throws InvalidGameStateException {
+    public EntityOnPositionSnapshot blockSelected() throws InvalidGameStateException {
         BoardEntity entity = getSelectedEntity();
         if (entity.isFarmerKing()) {
             throw new KingCannotBlockedException();

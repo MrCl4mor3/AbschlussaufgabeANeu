@@ -1,12 +1,10 @@
 package edu.kit.kastel.crownoffarmland.ui.commands;
 
 import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
-import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
+import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
 import edu.kit.kastel.crownoffarmland.ui.renderer.board.BoardRenderer;
 import edu.kit.kastel.crownoffarmland.ui.renderer.entity.EntityFormatter;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.BoardSnapshot;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,6 +32,7 @@ public class CommandHandler {
     private final GameHandler gameHandler;
     private final BoardRenderer boardRenderer;
     private final EntityFormatter entityFormatter;
+    private final GameOutputPrinter gameOutputPrinter;
     private boolean running = false;
 
 
@@ -46,6 +45,7 @@ public class CommandHandler {
         this.gameHandler = gameHandler;
         this.boardRenderer = boardRenderer;
         this.entityFormatter = new EntityFormatter();
+        this.gameOutputPrinter = new GameOutputPrinter(boardRenderer, entityFormatter);
         commands = new LinkedHashMap<>();
         initCommands();
     }
@@ -74,25 +74,6 @@ public class CommandHandler {
     public void quit() {
         this.running = false;
     }
-
-    /**
-     * Prints the current state of the board to the console.
-     * @throws InvalidGameStateException if the board snapshot could not be created, e.g. because the game is already over
-     */
-    public void printBoard() throws  InvalidGameStateException {
-        BoardSnapshot boardSnapshot = gameHandler.createBoardSnapshot();
-        System.out.println(boardRenderer.renderBoard(boardSnapshot));
-    }
-
-    /**
-     * Prints the currently selected entity to the console.
-     * @throws InvalidGameStateException if the entity snapshot could not be created, e.g. because no entity is currently selected
-     */
-    public void printShow() throws InvalidGameStateException {
-        EntitySnapshot snapshot = gameHandler.createEntitySnapshotAtSelected();
-        System.out.println(entityFormatter.format(snapshot));
-    }
-
 
     /**
      * Returns the entity formatter used by this command handler.
@@ -163,17 +144,17 @@ public class CommandHandler {
 
 
     private void initCommands() {
-        addCommand(new SelectCommand(this, gameHandler));
-        addCommand(new BoardCommand(this, gameHandler));
-        addCommand(new MoveCommand(this, gameHandler));
-        addCommand(new FlipCommand(this, gameHandler));
-        addCommand(new BlockCommand(this, gameHandler));
-        addCommand(new HandCommand(this, gameHandler));
-        addCommand(new PlaceCommand(this, gameHandler));
-        addCommand(new ShowCommand(this, gameHandler));
-        addCommand(new YieldCommand(this, gameHandler));
-        addCommand(new StateCommand(this, gameHandler));
-        addCommand(new QuitCommand(this, gameHandler));
+        addCommand(new SelectCommand(this, gameHandler, gameOutputPrinter));
+        addCommand(new BoardCommand(this, gameHandler, gameOutputPrinter));
+        addCommand(new MoveCommand(this, gameHandler, gameOutputPrinter));
+        addCommand(new FlipCommand(this, gameHandler, gameOutputPrinter));
+        addCommand(new BlockCommand(this, gameHandler, gameOutputPrinter));
+        addCommand(new HandCommand(this, gameHandler, gameOutputPrinter));
+        addCommand(new PlaceCommand(this, gameHandler, gameOutputPrinter));
+        addCommand(new ShowCommand(this, gameHandler, gameOutputPrinter));
+        addCommand(new YieldCommand(this, gameHandler, gameOutputPrinter));
+        addCommand(new StateCommand(this, gameHandler, gameOutputPrinter));
+        addCommand(new QuitCommand(this, gameHandler, gameOutputPrinter));
     }
 
 
