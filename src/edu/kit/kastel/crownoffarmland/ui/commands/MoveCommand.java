@@ -5,6 +5,7 @@ import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.MoveSnapshot;
 
+import edu.kit.kastel.crownoffarmland.model.board.Position;
 import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
 
 /**
@@ -31,8 +32,9 @@ public class MoveCommand extends  Command {
     @Override
     public void execute(String[] commandArgs) throws CrownOfFarmlandException {
         ensureOneArguments(commandArgs);
-        String targetPositionName = commandArgs[0];
-        MoveSnapshot result = gameHandler.moveUnit(targetPositionName);
+
+        Position targetPosition = Position.fromString(commandArgs[0]);
+        MoveSnapshot result = gameHandler.moveUnit(targetPosition);
 
         System.out.println(gameOutputPrinter.formatMove(result));
 

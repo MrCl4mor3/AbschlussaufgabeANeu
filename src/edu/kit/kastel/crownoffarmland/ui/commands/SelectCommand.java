@@ -2,6 +2,7 @@ package edu.kit.kastel.crownoffarmland.ui.commands;
 
 import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
+import edu.kit.kastel.crownoffarmland.model.board.Position;
 import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
 
 
@@ -29,7 +30,13 @@ public class SelectCommand extends Command {
     @Override
     public void execute(String[] commandArguments) throws CrownOfFarmlandException {
         ensureOneArguments(commandArguments);
-        gameHandler.setSelected(commandArguments[0]);
+
+        Position selectedPosition = Position.fromString(commandArguments[0]);
+
+        gameHandler.setSelected(selectedPosition);
+
+
+
         System.out.println(gameOutputPrinter.formatBoard(gameHandler.createBoardSnapshot()));
         System.out.println(gameOutputPrinter.formatShow(gameHandler.createEntitySnapshot()));
     }

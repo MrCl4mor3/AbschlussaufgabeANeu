@@ -1,6 +1,10 @@
 package edu.kit.kastel.crownoffarmland.model.board;
 
 
+import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
+import edu.kit.kastel.crownoffarmland.exceptions.InvalidCommandArgumentException;
+import edu.kit.kastel.crownoffarmland.exceptions.InvalidPositionException;
+
 import java.util.Objects;
 
 /**
@@ -10,6 +14,7 @@ import java.util.Objects;
  * @author  ucgdi
  */
 public final class Position {
+    private static final int EXPECTED_POSITION_LENGTH = 2;
     private final int row;
     private final char column;
 
@@ -65,5 +70,30 @@ public final class Position {
     @Override
     public int hashCode() {
         return Objects.hash(this.row, this.column);
+    }
+
+
+
+    public static Position fromString(String input) throws CrownOfFarmlandException {
+        if (input == null) {
+            throw new InvalidPositionException(input);
+        }
+
+        String trimmed = input.trim().toUpperCase();
+
+        if (trimmed.length() != EXPECTED_POSITION_LENGTH) {
+            throw new InvalidCommandArgumentException(2, trimmed.length());
+        }
+        char column = trimmed.charAt(0);
+        String rowPart = trimmed.substring(1);
+
+
+        int row;
+        try {
+            row = Integer.parseInt(rowPart);
+        } catch (NumberFormatException e) {
+            throw new InvalidPositionException(input);
+        }
+        return new Position(row, column);
     }
 }

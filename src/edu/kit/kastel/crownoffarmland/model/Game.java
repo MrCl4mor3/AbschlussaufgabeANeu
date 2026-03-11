@@ -285,16 +285,9 @@ public class Game {
         teams.get(teamID).shuffleDrawPile(generator);
     }
 
-    /**
-     * Parses the given raw position string and returns the corresponding Position object on the game board.
-     * @param rawPosition the raw position string to be parsed, which should be in a specific format that can be interpreted as a
-     *                    position on the game board
-     * @return the Position object corresponding to the given raw position string on the game board
-     * @throws InvalidPositionException if the raw position string is not in a valid format or cannot be parsed into a valid Position
-     *      object on the game board
-     */
-    public Position parsePosition(String rawPosition) throws InvalidPositionException {
-        return board.parsePosition(rawPosition);
+
+    public Position validatePosition(Position position) throws InvalidPositionException {
+        return board.validatePosition(position);
     }
 
     /**

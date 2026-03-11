@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class Board {
     private static final int NEIGHBOR_DISTANCE = 1;
-    private static final int EXPECTED_POSITION_LENGTH = 2;
     private static final int BOARD_SIZE = 7;
     private static final char START_COLUMN_NAME = 'A';
     private static final int ROW_OFFSET = '0';
@@ -131,34 +130,10 @@ public class Board {
     }
 
 
-    /**
-     * Parses a raw position string (e.g., "A1", "B3") and converts it to a Position object. The raw position must consist of a single
-     * letter (A-G) followed by a single digit (1-7). The method validates the format of the raw position and checks if it corresponds to
-     * a valid position on the board. If the raw position is invalid or does not correspond to a valid position on the board, an
-     * InvalidPositionException is thrown.
-     * @param rawPosition the raw position string to parse
-     * @return the Position object corresponding to the given raw position string
-     * @throws InvalidPositionException if the raw position string is invalid or does not correspond to a valid position on the board
-     */
-    public Position parsePosition(String rawPosition) throws InvalidPositionException {
-        if (rawPosition == null || rawPosition.length() != EXPECTED_POSITION_LENGTH) {
-            throw new InvalidPositionException(rawPosition);
-        }
-
-        char columnName = Character.toUpperCase(rawPosition.charAt(0));
-        char rowNumber = Character.toUpperCase(rawPosition.charAt(1));
-
-        if (!Character.isDigit(rowNumber)) {
-            throw new InvalidPositionException(rawPosition);
-        }
-
-        int row = rowNumber - ROW_OFFSET;
-        Position position = new Position(row, columnName);
-
+    public Position validatePosition(Position position) throws InvalidPositionException {
         if (!isValidPosition(position)) {
-            throw new InvalidPositionException(rawPosition);
+            throw new InvalidPositionException(position.toString());
         }
-
         return position;
     }
 

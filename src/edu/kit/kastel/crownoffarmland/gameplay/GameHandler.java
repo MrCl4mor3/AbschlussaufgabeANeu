@@ -159,19 +159,9 @@ public class GameHandler {
         return entity;
     }
 
-    /**
-     * Sets the selected position on the board based on the provided raw position string. The raw position string should be in a valid
-     * format.
-     * @param rawPosition A string representing the position to be selected, typically in a format like "A1", "B2", etc.
-     * @throws InvalidPositionException if the provided raw position string is not in a valid format or does not correspond to a valid
-     *      position on the board.
-     */
-    public void setSelected(String rawPosition) throws InvalidPositionException {
-        turnState.setSelectedPos(game.parsePosition(rawPosition));
-    }
 
     public void setSelected(Position position) throws InvalidPositionException {
-        turnState.setSelectedPos(position);
+        turnState.setSelectedPos(game.validatePosition(position));
     }
 
     /**
@@ -341,13 +331,8 @@ public class GameHandler {
      *      move.
      * @throws InvalidGameStateException if there is a problem with the game state that prevents moving the unit
      */
-    public MoveSnapshot moveUnit(String target) throws InvalidGameStateException {
-        Position targetPosition = game.parsePosition(target);
-        return movementService.moveUnit(targetPosition, getCurrentTeamID());
-    }
-
-    public MoveSnapshot moveUnit(Position targetPosition) throws InvalidGameStateException {
-        return movementService.moveUnit(targetPosition, getCurrentTeamID());
+    public MoveSnapshot moveUnit(Position target) throws InvalidGameStateException {
+        return movementService.moveUnit(game.validatePosition(target), getCurrentTeamID());
     }
 
     public void executeAITurn() {
