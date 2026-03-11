@@ -11,6 +11,7 @@ import edu.kit.kastel.crownoffarmland.model.units.FarmerKing;
 import edu.kit.kastel.crownoffarmland.model.units.Unit;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -314,5 +315,17 @@ public class Game {
             }
         }
         return count;
+    }
+
+    public List<Position> getOrthogonalNeighbors(Position position) {
+        return board.getOrthogonalNeighbors(position);
+    }
+
+    public List<Position> getSurroundingPositions(Position position) {
+        return board.getSurroundingPositions(position);
+    }
+
+    public RandomGenerator getRandomGenerator() {
+        return this.generator;
     }
 }

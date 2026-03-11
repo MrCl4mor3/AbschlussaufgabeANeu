@@ -36,8 +36,9 @@ public class CommandHandler {
     private final EntityFormatter entityFormatter;
     private boolean running = false;
 
+
     /**
-     * Creates a new command handler object and initisalizes its program.commands.
+     * Creates a new command handler object and initializes its program.commands.
      * @param gameHandler the game handler to execute the commands on
      * @param boardRenderer the board renderer to print the board when the board command is executed
      */
@@ -47,7 +48,6 @@ public class CommandHandler {
         this.entityFormatter = new EntityFormatter();
         commands = new LinkedHashMap<>();
         initCommands();
-        this.running = true;
     }
 
 
@@ -60,10 +60,14 @@ public class CommandHandler {
         System.out.println(startHelpMessage());
         try (Scanner scanner = new Scanner(System.in)) {
             while (this.running) {
-                executeCommand(scanner.nextLine());
+                while (!gameHandler.isCurrentPlayerAI()) {
+                    executeCommand(scanner.nextLine());
+                }
+                executeAITurn();
             }
         }
     }
+
     /**
      * Ends the program.
      */
@@ -118,6 +122,7 @@ public class CommandHandler {
         }
 
 
+        //public void executeCommandNew(Command command, String[] commandArguments) {
         try {
             command.execute(commandArguments);
 
@@ -131,6 +136,16 @@ public class CommandHandler {
             System.err.println(COMMAND_ERROR_PREFIX + e.getMessage());
         }
     }
+
+    private void  executeAITurn() {
+        gameHandler.executeAITurn();
+
+        if (gameHandler.isGameOver()) {
+            System.out.printf(WINNER_MESSAGE, gameHandler.getWinner());
+            quit();
+        }
+    }
+
 
     private String startHelpMessage() {
         return String.format(HELP_COMMAND, String.join(", ", getCommandNames()));

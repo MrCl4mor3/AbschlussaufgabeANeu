@@ -10,6 +10,9 @@ import edu.kit.kastel.crownoffarmland.exceptions.NoSelectionException;
 import edu.kit.kastel.crownoffarmland.exceptions.UnitAlreadyActedException;
 import edu.kit.kastel.crownoffarmland.exceptions.UnitAlreadyRevealedException;
 import edu.kit.kastel.crownoffarmland.exceptions.YieldException;
+import edu.kit.kastel.crownoffarmland.gameplay.ai.AIDecisionService;
+import edu.kit.kastel.crownoffarmland.gameplay.ai.AITurnController;
+import edu.kit.kastel.crownoffarmland.gameplay.ai.WeightedRandomSelector;
 import edu.kit.kastel.crownoffarmland.gameplay.combat.DuelManager;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.MoveSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
@@ -47,6 +50,7 @@ public class GameHandler {
     private final TurnState turnState;
     private final PlacementService placementService;
     private final MovementService movementService;
+    private final AITurnController AITurnController;
     /**
      * Constructs a new GameHandler instance with the specified Game model. The GameHandler initializes the DuelManager and UnitMerger,
      * and sets up the initial state of the game. The selected position is initially set to null, and the placedThisTurn flag is set to
@@ -65,6 +69,9 @@ public class GameHandler {
         this.turnState = turnState;
         this.placementService = new PlacementService(game, unitMerger, turnState);
         this.movementService = new MovementService(game, unitMerger, turnState, duelManager);
+        WeightedRandomSelector weightedRandomSelector = new WeightedRandomSelector(game.getRandomGenerator());
+        AIDecisionService AIDecisionService = new AIDecisionService(game, turnState, weightedRandomSelector);
+        this.AITurnController = new AITurnController(this, game, AIDecisionService);
     }
 
     /**
@@ -160,6 +167,10 @@ public class GameHandler {
      */
     public void setSelected(String rawPosition) throws InvalidPositionException {
         turnState.setSelectedPos(game.parsePosition(rawPosition));
+    }
+
+    public void setSelected(Position position) throws InvalidPositionException {
+        turnState.setSelectedPos(position);
     }
 
     /**
@@ -273,6 +284,7 @@ public class GameHandler {
             }
             EntitySnapshot output = new EntitySnapshot(discardedCard, game.getTeamName(game.getCurrentTeamID()));
             nextRound();
+
             return output;
         }
     }
@@ -325,5 +337,17 @@ public class GameHandler {
     public MoveSnapshot moveUnit(String target) throws InvalidGameStateException {
         Position targetPosition = game.parsePosition(target);
         return movementService.moveUnit(targetPosition, getCurrentTeamID());
+    }
+
+    public MoveSnapshot moveUnit(Position targetPosition) throws InvalidGameStateException {
+        return movementService.moveUnit(targetPosition, getCurrentTeamID());
+    }
+
+    public void executeAITurn() {
+        AITurnController.executeTurn();
+    }
+
+    public boolean isCurrentPlayerAI() {
+        return getCurrentTeamID() == TeamID.TEAM_2;
     }
 }

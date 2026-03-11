@@ -4,6 +4,9 @@ package edu.kit.kastel.crownoffarmland.model.board;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidPositionException;
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Represents the game board, which consists of a grid of fields. Each field can be occupied by a BoardEntity (e.g., a unit).
  * The board provides methods to access and manipulate the fields and their occupants.
@@ -12,6 +15,7 @@ import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
  * @author ucgdi
  */
 public class Board {
+    private static final int NEIGHBOR_DISTANCE = 1;
     private static final int EXPECTED_POSITION_LENGTH = 2;
     private static final int BOARD_SIZE = 7;
     private static final char START_COLUMN_NAME = 'A';
@@ -182,6 +186,48 @@ public class Board {
     private  boolean isValidColumn(int column) {
         return column >= START_COLUMN_NAME && column < START_COLUMN_NAME + BOARD_SIZE;
     }
+
+
+    public List<Position> getOrthogonalNeighbors(Position position) {
+        List<Position> neighbors = new ArrayList<>();
+        int rowIndex = rowIndex(position);
+        int columnIndex = columnIndex(position);
+
+        Position up = new Position(position.getRow() + NEIGHBOR_DISTANCE, position.getColumn());
+        Position down = new Position(position.getRow() - NEIGHBOR_DISTANCE, position.getColumn());
+        Position left = new Position(position.getRow(), (char) (position.getColumn() - NEIGHBOR_DISTANCE));
+        Position right = new Position(position.getRow(), (char) (position.getColumn() + NEIGHBOR_DISTANCE));
+
+        addIfValid(neighbors, up);
+        addIfValid(neighbors, right);
+        addIfValid(neighbors, down);
+        addIfValid(neighbors, left);
+
+        return  neighbors;
+    }
+
+    public List<Position> getSurroundingPositions(Position position) {
+        List<Position> surroundingPositions = new ArrayList<>();
+
+        for (int rowOffset = -NEIGHBOR_DISTANCE; rowOffset <= NEIGHBOR_DISTANCE; rowOffset++) {
+            for (int columnOffset = -NEIGHBOR_DISTANCE; columnOffset <= NEIGHBOR_DISTANCE; columnOffset++) {
+                if (rowOffset == 0 && columnOffset == 0) {
+                    continue; // Skip the original position
+                }
+                Position neighbor = new Position(position.getRow() + rowOffset, (char) (position.getColumn() + columnOffset));
+                addIfValid(surroundingPositions, neighbor);
+            }
+        }
+        return surroundingPositions;
+    }
+
+
+    private void addIfValid(List<Position> neighbors, Position position) {
+        if (isValidPosition(position)) {
+            neighbors.add(position);
+        }
+    }
+
 
 
 }
