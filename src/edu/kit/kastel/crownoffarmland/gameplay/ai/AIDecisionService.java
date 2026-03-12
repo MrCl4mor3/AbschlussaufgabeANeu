@@ -315,8 +315,6 @@ public final class AIDecisionService {
     }
     //TargetEntity kann leer sein, eigenes Team, oder Gegner, ABER: Nicht eigener König!
     private int scoreDirectionalAction(Position source, Position target, Unit unit, TeamID currentTeam, BoardEntity targetEntity) {
-        int score = 0;
-        
         if (targetEntity == null) {
             Position enemyKingPosition = game.getKingPosition(game.getEnemyTeamID());
             int steps = manhattanDistance(target, enemyKingPosition);
