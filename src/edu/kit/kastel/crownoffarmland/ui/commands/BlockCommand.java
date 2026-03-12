@@ -21,6 +21,8 @@ public class BlockCommand extends Command {
      *
      * @param commandHandler the CommandHandler to which this command belongs
      * @param gameHandler the GameHandler that provides access to the game state and logic
+     * @param gameOutputPrinter the Printer for the game
+     *
      */
     public BlockCommand(CommandHandler commandHandler, GameHandler gameHandler, GameOutputPrinter gameOutputPrinter) {
         super(COMMAND_NAME, commandHandler, gameHandler,  gameOutputPrinter);

@@ -116,7 +116,7 @@ public class CommandHandler {
         }
     }
 
-    private void  executeAITurn() {
+    private void  executeAITurn() throws CrownOfFarmlandException {
         gameHandler.executeAITurn();
 
         if (gameHandler.isGameOver()) {

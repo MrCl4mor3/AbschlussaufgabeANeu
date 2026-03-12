@@ -37,7 +37,7 @@ public final class AIDecisionService {
     private static final int DUEL_FACTOR = 2;
 
     private final UnitMerger unitMerger;
-
+    private final TurnState turnState;
     private final Game game;
     private final WeightedRandomSelector weightedRandomSelector;
 
@@ -46,8 +46,9 @@ public final class AIDecisionService {
      * @param game the current game state, used to evaluate potential moves, place units, and other game-related information
      * @param weightedRandomSelector the weighted random selector, used to select a choice among multiple options with the same score
      */
-    public AIDecisionService(Game game, UnitMerger unitMerger, WeightedRandomSelector weightedRandomSelector) {
+    public AIDecisionService(Game game, TurnState turnState, UnitMerger unitMerger, WeightedRandomSelector weightedRandomSelector) {
         this.game = game;
+        this.turnState = turnState;
         this.unitMerger = unitMerger;
         this.weightedRandomSelector = weightedRandomSelector;
     }
@@ -144,6 +145,11 @@ public final class AIDecisionService {
     public UnitActionDecision chooseNextUnitAction() {
         TeamID currentTeam = game.getCurrentTeamID();
         List<UnitCandidate> candidates = getMoveableUnitCandidates(currentTeam);
+        return null;
+    }
+
+    public int chooseDiscardIndex() {
+        return 0;
     }
 
 

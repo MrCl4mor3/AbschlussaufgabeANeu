@@ -1,5 +1,6 @@
 package edu.kit.kastel.crownoffarmland.gameplay;
 
+import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
 import edu.kit.kastel.crownoffarmland.exceptions.EmptySelectedFieldException;
 import edu.kit.kastel.crownoffarmland.exceptions.EnemyUnitSelectedException;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
@@ -27,7 +28,8 @@ import edu.kit.kastel.crownoffarmland.model.board.Position;
 import edu.kit.kastel.crownoffarmland.model.team.TeamID;
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
 import edu.kit.kastel.crownoffarmland.model.units.Unit;
-
+import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
+import edu.kit.kastel.crownoffarmland.ui.renderer.board.BoardRenderer;
 
 
 import java.util.List;
@@ -72,7 +74,8 @@ public class GameHandler {
         this.placementService = new PlacementService(game, unitMerger, turnState);
         this.movementService = new MovementService(game, unitMerger, turnState, duelManager);
         WeightedRandomSelector weightedRandomSelector = new WeightedRandomSelector(game.getRandomGenerator());
-        this.aiTurnController = new AITurnController(this, game, new AIDecisionService(game, unitMerger, weightedRandomSelector));
+        this.aiTurnController = new AITurnController(this, game, new AIDecisionService(game, turnState, unitMerger,
+                weightedRandomSelector));
     }
 
     /**
@@ -335,7 +338,7 @@ public class GameHandler {
         return movementService.moveUnit(game.validatePosition(target), getCurrentTeamID());
     }
 
-    public void executeAITurn() {
+    public void executeAITurn() throws CrownOfFarmlandException {
         aiTurnController.executeTurn();
     }
 
@@ -343,7 +346,14 @@ public class GameHandler {
         return getCurrentTeamID() == TeamID.TEAM_2;
     }
 
-    public void endTurn() {
-        nextRound();
+
+    public void markSelectedUnitAsActed() throws InvalidGameStateException {
+        BoardEntity entity = getSelectedEntity();
+
+        if (entity.isFarmerKing()) {
+            throw new InvalidGameStateException("Farmer king cannot use unit stay action.");
+        }
+
+        turnState.markMoved(entity);
     }
 }
