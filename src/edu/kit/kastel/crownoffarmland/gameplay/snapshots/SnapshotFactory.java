@@ -121,9 +121,9 @@ public class SnapshotFactory {
             return BoardCellSnapshot.empty();
         }
 
-        boolean isOwnTeam = occupant.getOwner() == currentTeamID;
-        boolean isMoveable = isOwnTeam && !movedEntities.contains(occupant);
+        boolean isPlayerTeam = occupant.getOwner() == TeamID.TEAM_1;
+        boolean isMoveable = occupant.getOwner().equals(currentTeamID) && !movedEntities.contains(occupant);
 
-        return new BoardCellSnapshot(true, occupant.isFarmerKing(), occupant.isBlocked(), isOwnTeam, isMoveable);
+        return new BoardCellSnapshot(true, occupant.isFarmerKing(), occupant.isBlocked(), isPlayerTeam, isMoveable);
     }
 }

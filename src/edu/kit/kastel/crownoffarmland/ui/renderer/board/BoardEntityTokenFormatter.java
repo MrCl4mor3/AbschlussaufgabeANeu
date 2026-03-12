@@ -8,8 +8,8 @@ import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardCell
  * @author ucgdi
  */
 public class BoardEntityTokenFormatter {
-    private static final char TEAM_CURRENT_UNIT = 'x';
-    private static final char TEAM_CURRENT_KING = 'X';
+    private static final char TEAM_PLAYER_UNIT = 'x';
+    private static final char TEAM_PLAYER_KING = 'X';
     private static final char TEAM_ENEMY_UNIT = 'y';
     private static final char TEAM_ENEMY_KING = 'Y';
     private static final char EMPTY_TOKEN = ' ';
@@ -43,9 +43,9 @@ public class BoardEntityTokenFormatter {
 
     private char resolveBaseSymbol(BoardCellSnapshot cell) {
         if (cell.isFarmerKing()) {
-            return cell.isOwnTeam() ? TEAM_CURRENT_KING : TEAM_ENEMY_KING;
+            return cell.isPlayerTeam() ? TEAM_PLAYER_KING : TEAM_ENEMY_KING;
         } else {
-            return cell.isOwnTeam() ? TEAM_CURRENT_UNIT : TEAM_ENEMY_UNIT;
+            return cell.isPlayerTeam() ? TEAM_PLAYER_UNIT : TEAM_ENEMY_UNIT;
         }
     }
 }

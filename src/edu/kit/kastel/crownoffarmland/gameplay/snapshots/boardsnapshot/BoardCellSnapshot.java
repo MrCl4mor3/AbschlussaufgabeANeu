@@ -79,7 +79,7 @@ public final class BoardCellSnapshot {
      *
      * @return true if the entity belongs to the current team
      */
-    public boolean isOwnTeam() {
+    public boolean isPlayerTeam() {
         return ownTeam;
     }
 
