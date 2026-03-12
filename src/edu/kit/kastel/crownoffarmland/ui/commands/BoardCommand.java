@@ -30,6 +30,6 @@ public class BoardCommand extends Command {
     @Override
     public void execute(String[] commandArguments) throws CrownOfFarmlandException {
         ensureNoArguments(commandArguments);
-        System.out.printf(gameOutputPrinter.formatBoard(gameHandler.createBoardSnapshot()));
+        System.out.println(gameOutputPrinter.formatBoard(gameHandler.createBoardSnapshot()));
     }
 }

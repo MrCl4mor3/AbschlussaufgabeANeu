@@ -68,7 +68,6 @@ public class BoardRenderer {
 
         appendColumnLabels(output, boardSize);
 
-        output.append(System.lineSeparator());
         return output.toString();
     }
 
