@@ -21,6 +21,7 @@ public class BoardCommand extends Command {
      * Creates a new board command object.
      * @param commandHandler The command handler
      * @param gameHandler The game handler
+     * @param gameOutputPrinter The game output printer
      */
     protected BoardCommand(CommandHandler commandHandler, GameHandler gameHandler, GameOutputPrinter gameOutputPrinter) {
         super(COMMAND_NAME, commandHandler, gameHandler, gameOutputPrinter);

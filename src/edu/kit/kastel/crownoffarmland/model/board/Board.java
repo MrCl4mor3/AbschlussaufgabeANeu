@@ -1,7 +1,6 @@
 package edu.kit.kastel.crownoffarmland.model.board;
 
 
-import edu.kit.kastel.crownoffarmland.exceptions.InvalidPositionException;
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
 
 import java.util.ArrayList;
@@ -143,6 +142,11 @@ public class Board {
         getField(position).setOccupant(entity);
     }
 
+    /**
+     * Validates if the position is valid and in the range of the board size.
+     * @param position the Position to validate
+     * @return true, if the position is valid, false otherwise
+     */
     public boolean isValidPosition(Position position) {
         if (position == null) {
             return false;
@@ -159,13 +163,19 @@ public class Board {
     }
 
 
-    public List<Position> getOrthogonalNeighbors(Position position) {
+    /**
+     * Gets the neighbor position of a given center, wich is orthogonally adjacent (up, down, left, right) to the given center. If a
+     * neighbor position is out of bounds, it is not included in the result. The method returns a list of valid neighboring positions.
+     * @param center the center to look for neighbors
+     * @return a List of neighboring positions that are orthogonally adjacent to the given center and within the bounds of the board
+     */
+    public List<Position> getOrthogonalNeighbors(Position center) {
         List<Position> neighbors = new ArrayList<>();
 
-        Position up = new Position(position.getRow() + NEIGHBOR_DISTANCE, position.getColumn());
-        Position down = new Position(position.getRow() - NEIGHBOR_DISTANCE, position.getColumn());
-        Position left = new Position(position.getRow(), (char) (position.getColumn() - NEIGHBOR_DISTANCE));
-        Position right = new Position(position.getRow(), (char) (position.getColumn() + NEIGHBOR_DISTANCE));
+        Position up = new Position(center.getRow() + NEIGHBOR_DISTANCE, center.getColumn());
+        Position down = new Position(center.getRow() - NEIGHBOR_DISTANCE, center.getColumn());
+        Position left = new Position(center.getRow(), (char) (center.getColumn() - NEIGHBOR_DISTANCE));
+        Position right = new Position(center.getRow(), (char) (center.getColumn() + NEIGHBOR_DISTANCE));
 
         addIfValid(neighbors, up);
         addIfValid(neighbors, right);
@@ -175,6 +185,13 @@ public class Board {
         return  neighbors;
     }
 
+    /**
+     * Gets all neighboring positions of a given position, which are adjacent (including diagonals) to the given position. If a
+     * neighboring position is out of bounds, it is not included in the result. The method returns a list of valid surrounding positions.
+     * @param center the center to look for surrounding positions
+     * @return a List of neighboring positions that are adjacent (including diagonals) to the given center and within the bounds of the
+     *      board
+     */
     public List<Position> getSurroundingPositions(Position center) {
         List<Position> surroundingPositions = new ArrayList<>();
 

@@ -282,7 +282,6 @@ public final class AIDecisionService {
         }
         return candidates;
     }
-
     private UnitCandidate evaluateUnit(Position source, Unit unit, TeamID currentTeam) {
         List<ActionScore> actionScores = evaluatePossibleActions(source, unit, currentTeam);
         int totalScore = 0;
@@ -292,7 +291,6 @@ public final class AIDecisionService {
 
         return new UnitCandidate(source, actionScores, totalScore);
     }
-
     private List<ActionScore> evaluatePossibleActions(Position source, Unit unit, TeamID team) {
         List<ActionScore> actionScores = new ArrayList<>();
 
@@ -308,34 +306,25 @@ public final class AIDecisionService {
 
         return actionScores;
     }
-
-
     private void addDirectionalAction(List<ActionScore> actionScores, Position source, Position target, Unit unit, TeamID currentTeam) {
         if (!game.isValidPosition(target)) {
             return;
         }
-
         BoardEntity targetEntity = game.getOccupant(target);
-
         if (targetEntity != null && targetEntity.isFarmerKing() && targetEntity.getOwner().equals(currentTeam)) {
             return;
         }
-
         int score = scoreDirectionalAction(source, target, unit, currentTeam);
         actionScores.add(new ActionScore(UnitActionType.MOVE, target, score));
     }
-
-
     private int scoreDirectionalAction(Position source, Position target, Unit unit, TeamID team) {
         BoardEntity targetEntity = game.getOccupant(target);
         TeamID enemyTeam = game.getEnemyTeamID();
-
         if (targetEntity == null) {
             int steps = manhattanDistance(target, game.getKingPosition(enemyTeam));
             int enemies = countAdjacentEntitiesFromTeam(target, enemyTeam, true);
             return ADVANCE_STEPS_FACTOR * steps - enemies;
         }
-
         if (targetEntity.getOwner().equals(team) && !targetEntity.isFarmerKing()) {
             Unit targetUnit =  (Unit) targetEntity;
             MergeResult mergeResult = unitMerger.tryMerge(unit, targetUnit);
@@ -346,33 +335,26 @@ public final class AIDecisionService {
                 return -unit.getAtk() - targetUnit.getDef();
             }
         }
-
         if (targetEntity.isFarmerKing()) {
             return -unit.getAtk();
         }
-
         Unit enemyUnit = (Unit) targetEntity;
-
         if (!enemyUnit.isFarmerKing()) {
             return enemyUnit.getAtk() - HIDDEN_ENEMY_PENALTY;
         }
-
         if (enemyUnit.isBlocked()) {
             return unit.getAtk() - enemyUnit.getDef();
         }
         return DUEL_FACTOR * (unit.getAtk() - enemyUnit.getDef());
     }
-
     private int scoreBlockAction(Position source, Unit unit, TeamID currentTeam) {
         int strongestEnemyAtk = getStrongestEnemyAtkInStraightLine(source, currentTeam.getNext());
         return Math.max(BLOCK_MIN_SCORE, (unit.getDef() - strongestEnemyAtk) / DIVISOR);
     }
-
     private int scoreStayAction(Position source, Unit unit, TeamID currentTeam) {
         int strongestEnemyAtk = getStrongestEnemyAtkInStraightLine(source, currentTeam.getNext());
         return Math.max(STAY_MIN_SCORE,  (unit.getAtk() - strongestEnemyAtk) / DIVISOR);
     }
-
     private int getStrongestEnemyAtkInStraightLine(Position source, TeamID enemyTeam) {
         int strongestAtk = 0;
 
@@ -382,14 +364,11 @@ public final class AIDecisionService {
         }
         return strongestAtk;
     }
-
     private int getStrongestEnemyAtkAlongRay(Position source, int rowDelta, int columnDelta, TeamID enemyTeam) {
         int strongestAtk = 0;
         Position current = new Position(source.getRow() + rowDelta, (char)  (source.getColumn() + columnDelta));
-
         while (game.isValidPosition(current)) {
             BoardEntity occupant = game.getOccupant(current);
-
             if (occupant != null && occupant.getOwner().equals(enemyTeam) && !occupant.isFarmerKing()) {
                 Unit enemyUnit = (Unit) occupant;
                 strongestAtk = Math.max(strongestAtk, enemyUnit.getAtk());
@@ -398,8 +377,6 @@ public final class AIDecisionService {
         }
         return strongestAtk;
     }
-
-
     private boolean hasPositiveMovementOption(List<ActionScore> actionScores) {
         for (ActionScore actionScore : actionScores) {
             if (actionScore.getActionType() != UnitActionType.BLOCK

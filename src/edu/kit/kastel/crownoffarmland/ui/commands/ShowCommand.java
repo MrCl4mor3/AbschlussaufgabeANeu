@@ -20,6 +20,7 @@ public class ShowCommand extends  Command {
      * Constructs a new ShowCommand with the specified CommandHandler and GameHandler.
      * @param commandHandler the CommandHandler to use for executing the command
      * @param gameHandler the GameHandler to use for accessing and modifying the game state
+     * @param gameOutputPrinter the GameOutputPrinter to use for formatting the output of the command
      */
     public ShowCommand(CommandHandler commandHandler, GameHandler gameHandler, GameOutputPrinter gameOutputPrinter)  {
         super(COMMAND_NAME, commandHandler, gameHandler,  gameOutputPrinter);

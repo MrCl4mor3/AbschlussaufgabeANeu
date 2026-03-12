@@ -19,6 +19,7 @@ public class FlipCommand extends  Command {
      * Creates a new instance of the FlipCommand.
      * @param commandHandler the CommandHandler to which this command belongs
      * @param gameHandler the GameHandler that provides access to the game state and logic
+     * @param gameOutputPrinter the GameOutputPrinter that provides methods to format the output of the command
      */
     public FlipCommand(CommandHandler commandHandler, GameHandler gameHandler, GameOutputPrinter gameOutputPrinter) {
         super(COMMAND_NAME, commandHandler, gameHandler, gameOutputPrinter);

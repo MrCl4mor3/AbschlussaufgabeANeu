@@ -26,6 +26,7 @@ public class StateCommand extends  Command {
      *
      * @param commandHandler the CommandHandler to use for executing the command
      * @param gameHandler    the GameHandler to use for accessing and modifying the game state
+     * @param gameOutputPrinter the GameOutputPrinter to use for formatting the output of the command
      */
     public StateCommand(CommandHandler commandHandler, GameHandler gameHandler, GameOutputPrinter gameOutputPrinter)  {
         super(COMMAND_NAME, commandHandler, gameHandler, gameOutputPrinter);

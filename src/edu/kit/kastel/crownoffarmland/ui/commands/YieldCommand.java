@@ -5,10 +5,8 @@ import edu.kit.kastel.crownoffarmland.exceptions.InvalidCommandArgumentException
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidHandException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EndTurnSnapshot;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
 import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
 
-import java.util.Arrays;
 
 /**
  * Implements the yield command.
@@ -29,6 +27,7 @@ public class YieldCommand extends  Command {
      * Creates a new yield command object.
      * @param commandHandler The command handler to which this command belongs
      * @param gameHandler The game handler that provides access to the game state and logic
+     * @param gameOutputPrinter The game output printer that provides methods to format the output of the command
      */
     public YieldCommand(CommandHandler commandHandler, GameHandler gameHandler, GameOutputPrinter gameOutputPrinter) {
         super(COMMAND_NAME, commandHandler, gameHandler, gameOutputPrinter);

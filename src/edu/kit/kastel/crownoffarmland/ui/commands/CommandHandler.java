@@ -39,8 +39,11 @@ public class CommandHandler {
      * Creates a new command handler object and initializes its program.commands.
      * @param gameHandler the game handler to execute the commands on
      * @param boardRenderer the board renderer to print the board when the board command is executed
+     * @param entityFormatter the entity formatter to print the entities when the show command is executed
+     * @param gameOutputPrinter the game output printer to print the output of the commands
      */
-    public CommandHandler(GameHandler gameHandler, BoardRenderer boardRenderer, EntityFormatter entityFormatter, GameOutputPrinter gameOutputPrinter) {
+    public CommandHandler(GameHandler gameHandler, BoardRenderer boardRenderer, EntityFormatter entityFormatter,
+        GameOutputPrinter gameOutputPrinter) {
         this.gameHandler = gameHandler;
         this.entityFormatter = entityFormatter;
         this.gameOutputPrinter = gameOutputPrinter;

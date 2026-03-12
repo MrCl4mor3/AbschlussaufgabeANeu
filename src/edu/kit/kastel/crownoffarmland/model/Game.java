@@ -285,6 +285,12 @@ public class Game {
     }
 
 
+    /**
+     * Checks if the specified position on the game board is valid. A valid position is one that falls within the bounds of the board and
+     * can be occupied by units or other entities during the game.
+     * @param position the Position object representing the location on the game board to check for validity
+     * @return true if the specified position is valid on the game board, false otherwise
+     */
     public boolean isValidPosition(Position position) {
         return board.isValidPosition(position);
     }
@@ -309,14 +315,28 @@ public class Game {
         return count;
     }
 
+    /**
+     * Getter for the OrthogonalNeighbors.
+     * @param position the Center Position
+     * @return a List of neighbors
+     */
     public List<Position> getOrthogonalNeighbors(Position position) {
         return board.getOrthogonalNeighbors(position);
     }
 
+    /**
+     * Getter for SurroundingPosition.
+     * @param position the Center Position
+     * @return a List of neighbors
+     */
     public List<Position> getSurroundingPositions(Position position) {
         return board.getSurroundingPositions(position);
     }
 
+    /**
+     * Getter for the Random Generator.
+     * @return the Random Generator of the Game
+     */
     public RandomGenerator getRandomGenerator() {
         return this.generator;
     }

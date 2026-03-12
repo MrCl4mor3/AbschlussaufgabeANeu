@@ -30,6 +30,7 @@ public abstract class Command {
      * @param commandName The name of the command
      * @param commandHandler The command handler
      * @param gameHandler The game handler, which is needed for some commands to execute their logic.
+     * @param gameOutputPrinter The game output printer, which is needed for some commands to print their output.
      */
     public Command(String commandName, CommandHandler commandHandler, GameHandler gameHandler,  GameOutputPrinter gameOutputPrinter) {
         this.commandName = commandName;

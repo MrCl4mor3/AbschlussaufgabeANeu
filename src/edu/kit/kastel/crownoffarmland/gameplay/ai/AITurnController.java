@@ -14,20 +14,36 @@ import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
 
 import java.util.List;
 
-
+/**
+ * Controlls the AI turn.
+ *
+ * @author ucgdi
+ */
 public final class AITurnController {
     private final Game game;
     private final GameHandler gameHandler;
-    private final AIDecisionService AIDecisionService;
+    private final AIDecisionService aiDecisionService;
     private final GameOutputPrinter printer;
 
-    public AITurnController(GameHandler gameHandler, Game game, AIDecisionService AIDecisionService, GameOutputPrinter printer) {
+
+    /**
+     * Creates a new Controller.
+     * @param gameHandler the gameHandler
+     * @param game the model
+     * @param aiDecisionService to decide the AI's actions
+     * @param printer to generate a output
+     */
+    public AITurnController(GameHandler gameHandler, Game game, AIDecisionService aiDecisionService, GameOutputPrinter printer) {
         this.gameHandler = gameHandler;
-        this.AIDecisionService = AIDecisionService;
+        this.aiDecisionService = aiDecisionService;
         this.game = game;
         this.printer = printer;
     }
 
+    /**
+     * Execute the AI turn.
+     * @throws CrownOfFarmlandException if a invalid Move triggert.
+     */
     public void executeTurn() throws CrownOfFarmlandException {
         executeKingMove();
 
@@ -53,7 +69,7 @@ public final class AITurnController {
 
     private void executeKingMove() throws CrownOfFarmlandException {
         Position kingPosition = game.getKingPosition(game.getCurrentTeamID());
-        Position target = AIDecisionService.chooseKingMove();
+        Position target = aiDecisionService.chooseKingMove();
 
         gameHandler.setSelected(kingPosition);
         MoveSnapshot moveSnapshot = gameHandler.moveUnit(target);
@@ -62,23 +78,21 @@ public final class AITurnController {
     }
 
     private void executePlacementIfPossible() throws CrownOfFarmlandException {
-        Position target = AIDecisionService.choosePlacementPosition();
+        Position target = aiDecisionService.choosePlacementPosition();
 
         if (target == null) {
             return;
         }
 
-        int handIndex = AIDecisionService.choosePlacementHandIndex();
-
         gameHandler.setSelected(target);
-        List<PlaceStepSnapshot> placeStepSnapshots = gameHandler.placeUnits(new int[]{AIDecisionService.choosePlacementHandIndex()});
+        List<PlaceStepSnapshot> placeStepSnapshots = gameHandler.placeUnits(new int[]{aiDecisionService.choosePlacementHandIndex()});
 
         System.out.print(printer.formatPlace(placeStepSnapshots));
         printBoardAndShow();
     }
 
     private void executeUnitAction() throws CrownOfFarmlandException {
-        UnitActionDecision decision = AIDecisionService.chooseNextUnitAction();
+        UnitActionDecision decision = aiDecisionService.chooseNextUnitAction();
 
         while (decision != null) {
             gameHandler.setSelected(decision.getSource());
@@ -104,7 +118,7 @@ public final class AITurnController {
                     throw new CrownOfFarmlandException("Invalid action type");
             }
 
-            decision = AIDecisionService.chooseNextUnitAction();
+            decision = aiDecisionService.chooseNextUnitAction();
         }
     }
 
@@ -113,7 +127,7 @@ public final class AITurnController {
 
         EndTurnSnapshot endTurnSnapshot;
         if (game.isHandFull(game.getCurrentTeamID())) {
-            int discardIndex = AIDecisionService.chooseDiscardIndex();
+            int discardIndex = aiDecisionService.chooseDiscardIndex();
             endTurnSnapshot = gameHandler.tryEndTurnWithDiscard(discardIndex);
         } else {
             endTurnSnapshot = gameHandler.tryEndTurn();

@@ -15,6 +15,10 @@ public class FlipOutputFormatter extends AbstractOutputFormatter<EntityOnPositio
 
     private static final String COMMAND_OUTPUT_FORMAT = "%s was flipped on %s!";
 
+    /**
+     * Creates a new FlipOutputFormatter.
+     * @param entityFormatter the EntityFormatter
+     */
     public FlipOutputFormatter(EntityFormatter entityFormatter) {
         super(entityFormatter);
     }

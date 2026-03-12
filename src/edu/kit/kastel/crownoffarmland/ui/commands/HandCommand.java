@@ -25,6 +25,7 @@ public class HandCommand extends Command {
      * Creates a new hand command object.
      * @param commandHandler The command handler to which this command belongs
      * @param gameHandler The game handler that provides access to the game state and logic
+     * @param gameOutputPrinter The game output printer that provides methods to format the output of the command
      */
     public HandCommand(CommandHandler commandHandler, GameHandler gameHandler, GameOutputPrinter gameOutputPrinter) {
         super(COMMAND_NAME, commandHandler, gameHandler, gameOutputPrinter);
