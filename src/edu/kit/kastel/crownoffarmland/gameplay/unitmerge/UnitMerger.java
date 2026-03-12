@@ -28,7 +28,7 @@ public class UnitMerger {
      * @param unit1 the first unit involved in the merge
      * @param unit2 the second unit involved in the merge
      * @return a MergeResult object that indicates the type of merge that occurred (if any) and the resulting merged unit, or null if the
-     * units are incompatible
+     *      units are incompatible
      */
     public MergeResult tryMerge(Unit unit1, Unit unit2) {
 
