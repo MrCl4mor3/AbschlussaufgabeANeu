@@ -108,7 +108,7 @@ public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
         }
 
         if (snapshot.attackerMovesToTarget()) {
-            output.append(String.format(MOVE_MESSAGE, attackerSummary, snapshot.getToPositionName()));
+            output.append(String.format(MOVE_MESSAGE, snapshot.getMovedEntity().getEntityName(), snapshot.getToPositionName()));
         }
 
         //ToDo GameOver Message implemeniteren
