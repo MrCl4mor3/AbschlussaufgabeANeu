@@ -68,6 +68,7 @@ public class CommandHandler {
                 }
 
                 if (!this.running || gameHandler.isGameOver()) {
+                    System.out.printf(WINNER_MESSAGE, gameHandler.getWinner());
                     break;
                 }
 
@@ -81,14 +82,6 @@ public class CommandHandler {
      */
     public void quit() {
         this.running = false;
-    }
-
-    /**
-     * Returns the entity formatter used by this command handler.
-     * @return the entity formatter used by this command handler
-     */
-    public EntityFormatter getEntityFormatter() {
-        return this.entityFormatter;
     }
 
     private void executeCommand(String inputString) {
