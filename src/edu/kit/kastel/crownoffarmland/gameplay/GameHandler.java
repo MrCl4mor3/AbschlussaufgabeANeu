@@ -67,17 +67,13 @@ public class GameHandler {
      *             components, such as the board, teams, and units, before being passed to the GameHandler constructor.
      */
     public GameHandler(Game game) {
-        this(game, new UnitMerger(), new SnapshotFactory(), new TurnState(), new DuelManager());
-    }
-    private GameHandler(Game game, UnitMerger unitMerger, SnapshotFactory snapshotFactory, TurnState turnState, DuelManager duelManager) {
         this.game = game;
-        this.unitMerger = unitMerger;
-        this.snapshotFactory = snapshotFactory;
-        this.turnState = turnState;
+        this.unitMerger = new UnitMerger();
+        this.snapshotFactory = new SnapshotFactory();
+        this.turnState = new TurnState();
         this.placementService = new PlacementService(game, unitMerger, turnState);
-        this.movementService = new MovementService(game, unitMerger, turnState, duelManager);
+        this.movementService = new MovementService(game, unitMerger, turnState, new DuelManager());
     }
-
     /**
      * Initializes the game by shuffling the decks, drawing opening hands for both teams, placing the Kings on their starting positions,
      * and starting the first turn. This method sets up the initial state of the game and prepares it for player interaction. It should
@@ -92,11 +88,13 @@ public class GameHandler {
         game.setOccupant(TEAM2_KING_START, game.getKing(TeamID.TEAM_2));
         startCurrentTurn();
     }
+
     private void drawCards(TeamID teamID, int amount) {
         for (int i = 0; i < amount; i++) {
             game.drawToHand(teamID);
         }
     }
+
     private void startCurrentTurn() {
         turnState.resetForNewTurn();
         TeamID currentTeam = game.getCurrentTeamID();
