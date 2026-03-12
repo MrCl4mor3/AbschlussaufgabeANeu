@@ -1,6 +1,6 @@
 package edu.kit.kastel.crownoffarmland.ui.renderer.board;
 
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.BoardCellSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardCellSnapshot;
 
 /**
  * Formats a {@link BoardCellSnapshot} into a string representation for display on the board.

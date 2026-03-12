@@ -1,10 +1,12 @@
 package edu.kit.kastel.crownoffarmland.gameplay.ai;
 
 import edu.kit.kastel.crownoffarmland.gameplay.TurnState;
+import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.UnitMerger;
 import edu.kit.kastel.crownoffarmland.model.Game;
 import edu.kit.kastel.crownoffarmland.model.board.Position;
 import edu.kit.kastel.crownoffarmland.model.team.TeamID;
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
+import edu.kit.kastel.crownoffarmland.model.units.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,24 +18,37 @@ import java.util.List;
  */
 public final class AIDecisionService {
 
-    private static final int ENEMY_WEIGHT_FACTOR = 2;
-    private static final int FELLOW_PRESENT_FACTOR = 3;
-    private static final int FELLOW_ON_FIELD_VALUE = 1;
-    private static final int NO_FELLOW_ON_FIELD_VALUE = 0;
+    private static final int KING_ENEMY_WEIGHT_FACTOR = 2;
+    private static final int KING_FELLOW_PRESENT_FACTOR = 3;
+    private static final int KING_FELLOW_ON_FIELD_VALUE = 1;
+    private static final int KING_NO_FELLOW_ON_FIELD_VALUE = 0;
     private static final int TIE_WEIGHT_VALUE = 1;
+
+    private static final int PLACEMENT_ENEMY_WEIGHT_FACTOR = 2;
+    private static final int PLACEMENT_TIE_WEIGHT = 1;
+    private static final int HAND_INDEX_OFFSET = 1;
+
+
+    private static final int BLOCK_MIN_SCORE = 1;
+    private static final int STAY_MIN_SCORE = 0;
+    private static final int DIVISOR_100 = 100;
+    private static final int HIDDEN_ENEMY_PENALTY = 500;
+    private static final int ADVANCE_STEPS_FACTOR = 10;
+    private static final int DUEL_FACTOR = 2;
+
+    private final UnitMerger unitMerger;
+
     private final Game game;
-    private final TurnState turnState;
     private final WeightedRandomSelector weightedRandomSelector;
 
     /**
      * Constructor for creating an EnemyDecisionService object with the specified game state, turn state, and weighted random selector.
      * @param game the current game state, used to evaluate potential moves, place units, and other game-related information
-     * @param turnState the current turn state, used to determine the phase of the turn and make decisions accordingly
      * @param weightedRandomSelector the weighted random selector, used to select a choice among multiple options with the same score
      */
-    public AIDecisionService(Game game, TurnState turnState, WeightedRandomSelector weightedRandomSelector) {
+    public AIDecisionService(Game game, UnitMerger unitMerger, WeightedRandomSelector weightedRandomSelector) {
         this.game = game;
-        this.turnState = turnState;
+        this.unitMerger = unitMerger;
         this.weightedRandomSelector = weightedRandomSelector;
     }
 
@@ -80,25 +95,56 @@ public final class AIDecisionService {
         }
     }
 
+    public Position choosePlacementPosition() {
+        TeamID currentTeam = game.getCurrentTeamID();
+        Position kingPosition = game.getKingPosition(currentTeam);
+
+        List<Position> candidates = game.getOrthogonalNeighbors(kingPosition);
+
+        if (candidates.isEmpty()) {
+            return null; // No valid placement positions available
+        }
+
+        int bestScore = Integer.MIN_VALUE;
+        List<Position> bestPositions = new ArrayList<>();
+
+        for (Position candidate : candidates) {
+            int score = scorePlacementPosition(candidate, currentTeam);
+            if (score > bestScore) {
+                bestScore = score;
+                bestPositions.clear();
+                bestPositions.add(candidate);
+            } else if (score == bestScore) {
+                bestPositions.add(candidate);
+            }
+        }
+
+        if (bestPositions.size() == 1) {
+            return bestPositions.get(0);
+        }
+
+        List<Integer> tieWeights = createTieWeights(bestPositions.size(), PLACEMENT_TIE_WEIGHT);
+        int selectedIndex = weightedRandomSelector.selectWeightedRandom(tieWeights);
+        return bestPositions.get(selectedIndex);
+    }
+
+    public int choosePlacementHandIndex() {
+        TeamID currentTeam = game.getCurrentTeamID();
+        List<Integer> atkWeights = new ArrayList<>();
+
+        for (int handIndex = 0; handIndex < game.getHandSize(currentTeam); handIndex++) {
+            atkWeights.add(game.getHandCardAt(currentTeam, handIndex).getAtk());
+        }
+
+        int selectedIndex = weightedRandomSelector.selectWeightedRandom(atkWeights);
+        return selectedIndex + HAND_INDEX_OFFSET;
+    }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public UnitActionDecision chooseNextUnitAction() {
+        TeamID currentTeam = game.getCurrentTeamID();
+        List<UnitCandidate> candidates = getMoveableUnitCandidates(currentTeam);
+    }
 
 
 
@@ -114,9 +160,18 @@ public final class AIDecisionService {
         int distance = manhattanDistance(candidate, kingPosition);
         int enemies = countAdjacentEntitiesFromTeam(candidate, game.getEnemyTeamID(), true);
         int fellows = countAdjacentEntitiesFromTeam(candidate, currentTeam, false);
-        int fellowPresent = hasOwnUnitOnField(candidate, currentTeam) ? FELLOW_ON_FIELD_VALUE : NO_FELLOW_ON_FIELD_VALUE;
-        return fellows - ENEMY_WEIGHT_FACTOR * enemies - distance - FELLOW_PRESENT_FACTOR * fellowPresent;
+        int fellowPresent = hasOwnUnitOnField(candidate, currentTeam) ? KING_FELLOW_ON_FIELD_VALUE : KING_NO_FELLOW_ON_FIELD_VALUE;
+        return fellows - KING_ENEMY_WEIGHT_FACTOR * enemies - distance - KING_FELLOW_PRESENT_FACTOR * fellowPresent;
     }
+
+    private int scorePlacementPosition(Position candidate, TeamID currentTeam) {
+        Position enemyKingPosition = game.getKingPosition(game.getEnemyTeamID());
+        int steps = manhattanDistance(candidate, enemyKingPosition);
+        int enemies = countAdjacentEntitiesFromTeam(candidate, currentTeam, true);
+        int fellows = countAdjacentEntitiesFromTeam(candidate, currentTeam, false);
+        return -steps + PLACEMENT_ENEMY_WEIGHT_FACTOR * enemies - fellows;
+    }
+
 
     private int manhattanDistance(Position a, Position b) {
         return Math.abs(a.getRow() - b.getRow()) + Math.abs(a.getColumn() - b.getColumn());
@@ -148,5 +203,39 @@ public final class AIDecisionService {
         }
         return weights;
     }
+
+
+    private List<UnitCandidate> getMoveableUnitCandidates(TeamID currentTeam) {
+        List<UnitCandidate> candidates = new ArrayList<>();
+
+        for (int row = 0; row < game.getBoardSize(); row++) {
+            for (int column = 0; column < game.getBoardSize(); column++) {
+                Position source = game.getPositionAt(row, column);
+                BoardEntity occupant = game.getOccupant(source);
+
+                if (occupant != null && occupant.getOwner().equals(currentTeam) &&  !occupant.isFarmerKing() && !turnState.hasMoved(occupant)) {
+                    Unit unit = (Unit) occupant;
+                    candidates.add(evaluateUnit(source, unit, currentTeam));
+                }
+            }
+        }
+        return candidates;
+    }
+
+    private UnitCandidate evaluateUnit(Position source, Unit unit, TeamID currentTeam) {
+        List<ActionScore> actionScores = evaluatePossibleActions(source, unit, currentTeam);
+        int totalScore = 0;
+        for (ActionScore actionScore : actionScores) {
+            totalScore += actionScore.getScore();
+        }
+
+        return new UnitCandidate(source, actionScores, totalScore);
+    }
+
+    private List<ActionScore> evaluatePossibleActions(Position source, Unit unit, TeamID team) {
+        List<ActionScore> actionScores = new ArrayList<>();
+        return null;
+    }
+
 
 }

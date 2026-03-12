@@ -1,0 +1,222 @@
+public UnitActionDecision chooseNextUnitAction() {
+    TeamID currentTeam = game.getCurrentTeamID();
+    List<UnitCandidate> candidates = getMovableUnitCandidates(currentTeam);
+
+    if (candidates.isEmpty()) {
+        return null;
+    }
+
+    UnitCandidate bestCandidate = candidates.get(0);
+    for (int i = 1; i < candidates.size(); i++) {
+        UnitCandidate currentCandidate = candidates.get(i);
+        if (currentCandidate.getTotalScore() > bestCandidate.getTotalScore()) {
+            bestCandidate = currentCandidate;
+        }
+    }
+
+    List<Integer> actionWeights = new ArrayList<>();
+    for (ActionScore actionScore : bestCandidate.getActionScores()) {
+        actionWeights.add(actionScore.getScore());
+    }
+
+    int selectedIndex = weightedRandomSelector.selectWeightedRandom(actionWeights);
+    ActionScore selectedAction = bestCandidate.getActionScores().get(selectedIndex);
+
+    return new UnitActionDecision(
+            bestCandidate.getSource(),
+            selectedAction.getActionType(),
+            selectedAction.getTarget()
+    );
+}
+
+
+private List<UnitCandidate> getMovableUnitCandidates(TeamID currentTeam) {
+    List<UnitCandidate> candidates = new ArrayList<>();
+
+    for (int rowIndex = 0; rowIndex < game.getBoardSize(); rowIndex++) {
+        for (int columnIndex = 0; columnIndex < game.getBoardSize(); columnIndex++) {
+            Position source = game.getPositionAt(rowIndex, columnIndex);
+            BoardEntity entity = game.getOccupant(source);
+
+            if (entity == null) {
+                continue;
+            }
+            if (!entity.getOwner().equals(currentTeam)) {
+                continue;
+            }
+            if (entity.isFarmerKing()) {
+                continue;
+            }
+            if (turnState.hasMoved(entity)) {
+                continue;
+            }
+
+            Unit unit = (Unit) entity;
+            candidates.add(evaluateUnit(source, unit, currentTeam));
+        }
+    }
+
+    return candidates;
+}
+
+
+private UnitCandidate evaluateUnit(Position source, Unit unit, TeamID currentTeam) {
+    List<ActionScore> actionScores = evaluatePossibleActions(source, unit, currentTeam);
+    int totalScore = 0;
+
+    for (ActionScore actionScore : actionScores) {
+        totalScore += actionScore.getScore();
+    }
+
+    return new UnitCandidate(source, actionScores, totalScore);
+}
+
+
+private List<ActionScore> evaluatePossibleActions(Position source, Unit unit, TeamID currentTeam) {
+    List<ActionScore> actionScores = new ArrayList<>();
+
+    addDirectionalAction(actionScores, source, new Position(source.getRow() + 1, source.getColumn()), unit, currentTeam); // oben
+    addDirectionalAction(actionScores, source, new Position(source.getRow(), (char) (source.getColumn() + 1)), unit, currentTeam); // rechts
+    addDirectionalAction(actionScores, source, new Position(source.getRow() - 1, source.getColumn()), unit, currentTeam); // unten
+    addDirectionalAction(actionScores, source, new Position(source.getRow(), (char) (source.getColumn() - 1)), unit, currentTeam); // links
+
+    int blockScore = scoreBlockAction(source, unit, currentTeam);
+    int stayScore = scoreStayAction(source, unit, currentTeam);
+
+    actionScores.add(new ActionScore(UnitActionType.BLOCK, source, blockScore));
+    actionScores.add(new ActionScore(UnitActionType.STAY, source, stayScore));
+
+    return actionScores;
+}
+
+
+private void addDirectionalAction(List<ActionScore> actionScores, Position source, Position target,
+                                  Unit unit, TeamID currentTeam) {
+    if (!isInsideBoard(target)) {
+        return;
+    }
+
+    BoardEntity targetEntity = game.getOccupant(target);
+
+    if (targetEntity != null
+            && targetEntity.getOwner().equals(currentTeam)
+            && targetEntity.isFarmerKing()) {
+        return;
+    }
+
+    int score = scoreDirectionalAction(source, target, unit, currentTeam);
+    actionScores.add(new ActionScore(UnitActionType.MOVE, target, score));
+}
+
+
+private int scoreDirectionalAction(Position source, Position target, Unit unit, TeamID currentTeam) {
+    BoardEntity targetEntity = game.getOccupant(target);
+    TeamID enemyTeam = currentTeam.getNext();
+
+    if (targetEntity == null) {
+        int steps = manhattanDistance(target, game.getKingPosition(enemyTeam));
+        int enemies = countOrthogonalEnemyUnits(target, enemyTeam);
+        return ADVANCE_STEPS_FACTOR * steps - enemies;
+    }
+
+    if (targetEntity.getOwner().equals(currentTeam)) {
+        Unit targetUnit = (Unit) targetEntity;
+        MergeResult mergeResult = unitMerger.tryMerge(unit, targetUnit);
+
+        if (mergeResult.isSuccessful()) {
+            Unit mergedUnit = mergeResult.getUnit();
+            return mergedUnit.getAtk() + mergedUnit.getDef() - unit.getAtk() - unit.getDef();
+        }
+
+        return -targetUnit.getAtk() - targetUnit.getDef();
+    }
+
+    if (targetEntity.isFarmerKing()) {
+        return unit.getAtk();
+    }
+
+    Unit enemyUnit = (Unit) targetEntity;
+
+    if (!enemyUnit.isRevealed()) {
+        return unit.getAtk() - HIDDEN_ENEMY_PENALTY;
+    }
+
+    if (enemyUnit.isBlocked()) {
+        return unit.getAtk() - enemyUnit.getDef();
+    }
+
+    return DUEL_FACTOR * (unit.getAtk() - enemyUnit.getAtk());
+}
+
+private int scoreBlockAction(Position source, Unit unit, TeamID currentTeam) {
+    int strongestEnemyAtk = strongestEnemyAtkInStraightLine(source, currentTeam.getNext());
+    return Math.max(BLOCK_MIN_SCORE, (unit.getDef() - strongestEnemyAtk) / DIVISOR_100);
+}
+
+private int scoreStayAction(Position source, Unit unit, TeamID currentTeam) {
+    int strongestEnemyAtk = strongestEnemyAtkInStraightLine(source, currentTeam.getNext());
+    return Math.max(STAY_MIN_SCORE, (unit.getAtk() - strongestEnemyAtk) / DIVISOR_100);
+}
+
+private int strongestEnemyAtkInStraightLine(Position source, TeamID enemyTeam) {
+    int strongestAtk = 0;
+
+    strongestAtk = Math.max(strongestAtk, strongestEnemyAtkAlongRay(source, 1, 0, enemyTeam));
+    strongestAtk = Math.max(strongestAtk, strongestEnemyAtkAlongRay(source, 0, 1, enemyTeam));
+    strongestAtk = Math.max(strongestAtk, strongestEnemyAtkAlongRay(source, -1, 0, enemyTeam));
+    strongestAtk = Math.max(strongestAtk, strongestEnemyAtkAlongRay(source, 0, -1, enemyTeam));
+
+    return strongestAtk;
+}
+
+private int strongestEnemyAtkAlongRay(Position source, int rowDelta, int columnDelta, TeamID enemyTeam) {
+    int strongestAtk = 0;
+    Position current = new Position(source.getRow() + rowDelta, (char) (source.getColumn() + columnDelta));
+
+    while (isInsideBoard(current)) {
+        BoardEntity occupant = game.getOccupant(current);
+
+        if (occupant != null
+                && occupant.getOwner().equals(enemyTeam)
+                && !occupant.isFarmerKing()) {
+            Unit enemyUnit = (Unit) occupant;
+            strongestAtk = Math.max(strongestAtk, enemyUnit.getAtk());
+        }
+
+        current = new Position(current.getRow() + rowDelta, (char) (current.getColumn() + columnDelta));
+    }
+
+    return strongestAtk;
+}
+
+private int countOrthogonalEnemyUnits(Position center, TeamID enemyTeam) {
+    int count = 0;
+
+    for (Position neighbor : game.getOrthogonalNeighbors(center)) {
+        BoardEntity occupant = game.getOccupant(neighbor);
+
+        if (occupant != null
+                && occupant.getOwner().equals(enemyTeam)
+                && !occupant.isFarmerKing()) {
+            count++;
+        }
+    }
+
+    return count;
+}
+
+private boolean isInsideBoard(Position position) {
+    if (position == null) {
+        return false;
+    }
+
+    int row = position.getRow();
+    char column = position.getColumn();
+
+    return row >= 1
+            && row <= game.getBoardSize()
+            && column >= 'A'
+            && column < 'A' + game.getBoardSize();
+}
+
+

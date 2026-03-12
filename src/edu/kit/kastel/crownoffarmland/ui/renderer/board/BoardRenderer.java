@@ -5,8 +5,8 @@ import edu.kit.kastel.crownoffarmland.startup.config.Verbosity;
 import edu.kit.kastel.crownoffarmland.ui.renderer.board.boardsymbols.BoardSymbolSet;
 import edu.kit.kastel.crownoffarmland.ui.renderer.board.boardsymbols.JunctionType;
 import edu.kit.kastel.crownoffarmland.ui.renderer.board.boardsymbols.SelectedRelative;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.BoardCellSnapshot;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.BoardSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardCellSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardSnapshot;
 
 /**
  * Renders a visual representation of a board snapshot as a string, using a specified set of symbols and formatting rules.
@@ -68,6 +68,7 @@ public class BoardRenderer {
 
         appendColumnLabels(output, boardSize);
 
+        output.append(System.lineSeparator());
         return output.toString();
     }
 

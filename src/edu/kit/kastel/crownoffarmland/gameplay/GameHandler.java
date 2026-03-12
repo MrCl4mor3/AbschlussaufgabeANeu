@@ -19,7 +19,7 @@ import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.MoveSnapsh
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.SnapshotFactory;
 import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.UnitMerger;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.BoardSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.TeamStateSnapshot;
 import edu.kit.kastel.crownoffarmland.model.Game;
@@ -27,6 +27,7 @@ import edu.kit.kastel.crownoffarmland.model.board.Position;
 import edu.kit.kastel.crownoffarmland.model.team.TeamID;
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
 import edu.kit.kastel.crownoffarmland.model.units.Unit;
+
 
 
 import java.util.List;
@@ -51,7 +52,7 @@ public class GameHandler {
     private final TurnState turnState;
     private final PlacementService placementService;
     private final MovementService movementService;
-    private final AITurnController AITurnController;
+    private final AITurnController aiTurnController;
     /**
      * Constructs a new GameHandler instance with the specified Game model. The GameHandler initializes the DuelManager and UnitMerger,
      * and sets up the initial state of the game. The selected position is initially set to null, and the placedThisTurn flag is set to
@@ -71,8 +72,7 @@ public class GameHandler {
         this.placementService = new PlacementService(game, unitMerger, turnState);
         this.movementService = new MovementService(game, unitMerger, turnState, duelManager);
         WeightedRandomSelector weightedRandomSelector = new WeightedRandomSelector(game.getRandomGenerator());
-        AIDecisionService AIDecisionService = new AIDecisionService(game, turnState, weightedRandomSelector);
-        this.AITurnController = new AITurnController(this, game, AIDecisionService);
+        this.aiTurnController = new AITurnController(this, game, new AIDecisionService(game, unitMerger, weightedRandomSelector));
     }
 
     /**
@@ -336,10 +336,14 @@ public class GameHandler {
     }
 
     public void executeAITurn() {
-        AITurnController.executeTurn();
+        aiTurnController.executeTurn();
     }
 
     public boolean isCurrentPlayerAI() {
         return getCurrentTeamID() == TeamID.TEAM_2;
+    }
+
+    public void endTurn() {
+        nextRound();
     }
 }

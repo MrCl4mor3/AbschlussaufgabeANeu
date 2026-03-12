@@ -1,4 +1,4 @@
-package edu.kit.kastel.crownoffarmland.gameplay.snapshots;
+package edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot;
 
 
 import edu.kit.kastel.crownoffarmland.model.board.Position;

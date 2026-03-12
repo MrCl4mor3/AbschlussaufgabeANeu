@@ -1,4 +1,4 @@
-package edu.kit.kastel.crownoffarmland.gameplay.snapshots;
+package edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot;
 
 /**
  * Immutable snapshot of a single board cell for rendering purposes.

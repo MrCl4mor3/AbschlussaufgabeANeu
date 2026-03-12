@@ -30,7 +30,6 @@ public class CommandHandler {
 
     private final Map<String, Command> commands;
     private final GameHandler gameHandler;
-    private final BoardRenderer boardRenderer;
     private final EntityFormatter entityFormatter;
     private final GameOutputPrinter gameOutputPrinter;
     private boolean running = false;
@@ -43,7 +42,6 @@ public class CommandHandler {
      */
     public CommandHandler(GameHandler gameHandler, BoardRenderer boardRenderer) {
         this.gameHandler = gameHandler;
-        this.boardRenderer = boardRenderer;
         this.entityFormatter = new EntityFormatter();
         this.gameOutputPrinter = new GameOutputPrinter(boardRenderer, entityFormatter);
         commands = new LinkedHashMap<>();

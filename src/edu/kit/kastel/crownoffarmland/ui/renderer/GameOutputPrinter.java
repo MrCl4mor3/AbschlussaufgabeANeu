@@ -1,6 +1,6 @@
 package edu.kit.kastel.crownoffarmland.ui.renderer;
 
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.BoardSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.TeamStateSnapshot;

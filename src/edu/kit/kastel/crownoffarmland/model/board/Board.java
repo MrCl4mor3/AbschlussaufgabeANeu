@@ -20,6 +20,10 @@ public class Board {
     private static final char START_COLUMN_NAME = 'A';
     private static final int ROW_OFFSET = '0';
     private static final int MIN_ROW = 1;
+    private static final int[][] DIRECTIONS_CLOCKWISE = {
+            {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}
+    };
+
     private final Field[][] grid;
 
     /**
@@ -165,8 +169,6 @@ public class Board {
 
     public List<Position> getOrthogonalNeighbors(Position position) {
         List<Position> neighbors = new ArrayList<>();
-        int rowIndex = rowIndex(position);
-        int columnIndex = columnIndex(position);
 
         Position up = new Position(position.getRow() + NEIGHBOR_DISTANCE, position.getColumn());
         Position down = new Position(position.getRow() - NEIGHBOR_DISTANCE, position.getColumn());
@@ -181,16 +183,15 @@ public class Board {
         return  neighbors;
     }
 
-    public List<Position> getSurroundingPositions(Position position) {
+    public List<Position> getSurroundingPositions(Position center) {
         List<Position> surroundingPositions = new ArrayList<>();
 
-        for (int rowOffset = -NEIGHBOR_DISTANCE; rowOffset <= NEIGHBOR_DISTANCE; rowOffset++) {
-            for (int columnOffset = -NEIGHBOR_DISTANCE; columnOffset <= NEIGHBOR_DISTANCE; columnOffset++) {
-                if (rowOffset == 0 && columnOffset == 0) {
-                    continue; // Skip the original position
-                }
-                Position neighbor = new Position(position.getRow() + rowOffset, (char) (position.getColumn() + columnOffset));
-                addIfValid(surroundingPositions, neighbor);
+        for (int[] direction : DIRECTIONS_CLOCKWISE) {
+            int row = center.getRow() + direction[0];
+            int column = center.getColumn() + direction[1];
+            Position position = new Position(row, (char) column);
+            if (isValidPosition(position)) {
+                surroundingPositions.add(position);
             }
         }
         return surroundingPositions;
