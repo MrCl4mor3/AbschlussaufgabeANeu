@@ -19,81 +19,66 @@ public class UnitMerger {
     private static final int G3T_PRIME_THRESHOLD = 100;
     private static final int PRIME_DIVISOR = 100;
 
-
     /**
      * Tries to merge two units based on their attributes. The method checks for various merging conditions such as symbiosis, alignment,
      * and prime compatibility, and returns a MergeResult indicating the outcome of the merging attempt. If the units are incompatible,
      * the result will indicate that as well. The merged unit, if created, will have combined attributes based on the merging rules
      * defined in the method.
-     * @param incoming the unit that is attempting to merge with the target unit
-     * @param target the unit that is being targeted for merging with the incoming unit
+     *
+     * @param unit1 the first unit involved in the merge
+     * @param unit2 the second unit involved in the merge
      * @return a MergeResult object that indicates the type of merge that occurred (if any) and the resulting merged unit, or null if the
      *     units are incompatible
      */
-    public MergeResult tryMerge(Unit incoming, Unit target) {
+    public MergeResult tryMerge(Unit unit1, Unit unit2) {
 
-        if (incoming == null || target == null) {
+        if (unit1 == null || unit2 == null) {
             return new MergeResult(MergeType.INCOMPATIBLE, null);
         }
 
-        if (incoming.getName().equals(target.getName())) {
+        if (unit1.getName().equals(unit2.getName())) {
             return new MergeResult(MergeType.INCOMPATIBLE, null);
         }
-        int atkA;
-        int defA;
-        int atkB;
-        int defB;
 
-        if (incoming.getAtk() > target.getAtk()) {
-            atkA = incoming.getAtk();
-            defA = incoming.getDef();
-            defB = target.getDef();
-            atkB = target.getAtk();
-        } else {
-            atkA = target.getAtk();
-            defA = target.getDef();
-            defB = incoming.getDef();
-            atkB = incoming.getAtk();
-        }
+        Unit unitA = unit1.getAtk() >= unit2.getAtk() ? unit1 : unit2;
+        Unit unitB = unitA == unit1 ? unit2 : unit1;
 
         // Check for Symbiosis first
-        if (isSymbiosis(atkA, defA, atkB, defB)) {
-            Unit mergedUnit = buildMergedUnit(incoming, target, atkA, defB);
+        if (isSymbiosis(unitA, unitB)) {
+            Unit mergedUnit = buildMergedUnit(unitA, unitB, unitA.getAtk(), unitB.getDef());
             return new MergeResult(MergeType.SYMBIOSIS, mergedUnit);
         }
 
-
-        int g3t = computeG3t(atkA, defA, atkB, defB);
-
+        int g3t = computeG3t(unitA, unitB);
 
         // Check for Alignment if g3t is greater than the threshold
         if (g3t > G3T_PRIME_THRESHOLD) {
-            int mergedAtk = atkA + atkB - g3t;
-            int mergedDef = defA + defB - g3t;
-            Unit mergedUnit = buildMergedUnit(incoming, target, mergedAtk, mergedDef);
+            int mergedAtk = unitA.getAtk() + unitB.getAtk() - g3t;
+            int mergedDef = unitA.getDef() + unitB.getDef() - g3t;
+            Unit mergedUnit = buildMergedUnit(unitA, unitB, mergedAtk, mergedDef);
             return new MergeResult(MergeType.PRIME, mergedUnit);
         }
 
         // Check for Prime Compatibility if g3t is equal to the threshold
-        if (g3t == G3T_PRIME_THRESHOLD && isPrimeCompatible(atkA, defA, atkB, defB)) {
-            int mergedAtk = (atkA + atkB) / PRIME_DIVISOR;
-            int mergedDef = (defA + defB) / PRIME_DIVISOR;
-            Unit mergedUnit = buildMergedUnit(incoming, target, mergedAtk, mergedDef);
+        if (g3t == G3T_PRIME_THRESHOLD && isPrimeCompatible(unitA, unitB)) {
+            int mergedAtk = (unitA.getAtk() + unitB.getAtk()) / PRIME_DIVISOR;
+            int mergedDef = (unitA.getDef() + unitB.getDef()) / PRIME_DIVISOR;
+            Unit mergedUnit = buildMergedUnit(unitA, unitB, mergedAtk, mergedDef);
             return new MergeResult(MergeType.ALIGNMENT, mergedUnit);
         }
+
         // if none of the above conditions are met, the units are incompatible
         return new MergeResult(MergeType.INCOMPATIBLE, null);
     }
 
-
-    private boolean isSymbiosis(int atkA, int defA, int atkB, int defB) {
-        return (atkA == defB && defA == atkB);
+    private boolean isSymbiosis(Unit unitA, Unit unitB) {
+        return unitA.getAtk() == unitB.getDef() && unitA.getDef() == unitB.getAtk();
     }
 
-    private Unit buildMergedUnit(Unit incoming, Unit resident, int atk, int def) {
-        String mergedQualificator = mergeQualificator(incoming.getQualificator(), resident.getQualificator());
-        String mergedRole = mergeRole(incoming.getRole(), resident.getRole());
-        return new Unit(incoming.getOwner(), new UnitName(mergedRole, mergedQualificator), new StatusValue(atk, def));
+    private Unit buildMergedUnit(Unit unitA, Unit unitB, int atk, int def) {
+        String mergedQualificator = mergeQualificator(unitA.getQualificator(), unitB.getQualificator());
+        String mergedRole = mergeRole(unitA.getRole(), unitB.getRole());
+        return new Unit(unitA.getOwner(), new UnitName(mergedRole, mergedQualificator), new StatusValue(atk, def));
     }
 
     private String mergeQualificator(String qualificatorA, String qualificatorB) {
@@ -104,8 +89,11 @@ public class UnitMerger {
         return roleB;
     }
 
-    private int computeG3t(int atkA, int defA, int atkB, int defB) {
-        return Math.max(ggT(atkA, atkB), ggT(defA, defB));
+    private int computeG3t(Unit unitA, Unit unitB) {
+        return Math.max(
+                ggT(unitA.getAtk(), unitB.getAtk()),
+                ggT(unitA.getDef(), unitB.getDef())
+        );
     }
 
     private int ggT(int a, int b) {
@@ -119,9 +107,11 @@ public class UnitMerger {
         return absA;
     }
 
-    private boolean isPrimeCompatible(int atkA, int defA, int atkB, int defB) {
-        boolean atkSide = divisibleByDivisorAndQuotientPrime(atkA) && divisibleByDivisorAndQuotientPrime(atkB);
-        boolean defSide = divisibleByDivisorAndQuotientPrime(defA) && divisibleByDivisorAndQuotientPrime(defB);
+    private boolean isPrimeCompatible(Unit unitA, Unit unitB) {
+        boolean atkSide = divisibleByDivisorAndQuotientPrime(unitA.getAtk())
+                && divisibleByDivisorAndQuotientPrime(unitB.getAtk());
+        boolean defSide = divisibleByDivisorAndQuotientPrime(unitA.getDef())
+                && divisibleByDivisorAndQuotientPrime(unitB.getDef());
         return atkSide || defSide;
     }
 
@@ -140,4 +130,3 @@ public class UnitMerger {
         }
         return true;
     }
-}
