@@ -32,8 +32,8 @@ public class BlockCommand extends Command {
     public void execute(String[] commandArguments) throws CrownOfFarmlandException {
         ensureNoArguments(commandArguments);
 
-        System.out.printf(gameOutputPrinter.formatBlock(gameHandler.blockSelected()));
-        System.out.printf(gameOutputPrinter.formatBoard(gameHandler.createBoardSnapshot()));
+        System.out.println(gameOutputPrinter.formatBlock(gameHandler.blockSelected()));
+        System.out.println(gameOutputPrinter.formatBoard(gameHandler.createBoardSnapshot()));
         System.out.println(gameOutputPrinter.formatShow(gameHandler.createEntitySnapshot()));
     }
 }

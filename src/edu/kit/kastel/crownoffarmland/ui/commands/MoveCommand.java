@@ -36,7 +36,7 @@ public class MoveCommand extends  Command {
         Position targetPosition = Position.fromString(commandArgs[0]);
         MoveSnapshot result = gameHandler.moveUnit(targetPosition);
 
-        System.out.println(gameOutputPrinter.formatMove(result));
+        System.out.print(gameOutputPrinter.formatMove(result));
 
         if (!gameHandler.isGameOver()) {
             System.out.println(gameOutputPrinter.formatBoard(gameHandler.createBoardSnapshot()));
