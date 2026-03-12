@@ -43,7 +43,7 @@ public final class Application {
         StartupResult<StartupContext> result = loader.createStartupContext(args);
 
         if (result.isError()) {
-            System.err.print(StartupError.formatErrorMessage(result.getErrorMessage()));
+            System.err.println(StartupError.formatErrorMessage(result.getErrorMessage()));
             return;
         }
 
