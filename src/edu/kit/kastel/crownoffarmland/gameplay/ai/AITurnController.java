@@ -112,7 +112,7 @@ public final class AITurnController {
                     printBoardAndShow();
                     break;
                 case STAY:
-                    gameHandler.markSelectedUnitAsActed();
+                    gameHandler.moveUnit(decision.getTarget());
                     break;
                 default:
                     throw new CrownOfFarmlandException("Invalid action type");

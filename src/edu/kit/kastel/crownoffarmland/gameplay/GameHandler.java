@@ -119,14 +119,6 @@ public class GameHandler {
         return game.getCurrentTeamID();
     }
     /**
-     * Returns the name of the current player whose turn it is.
-     * @return The name of the current player
-     */
-    public String getCurrentTeamName() {
-        return game.getTeamName(game.getCurrentTeamID());
-    }
-
-    /**
      * Flips the currently selected entity on the board, revealing its details. If the selected entity is already revealed, an exception
      * is thrown.
      * @return An EntitySnapshot containing the details of the flipped entity after it has been revealed.
@@ -197,9 +189,9 @@ public class GameHandler {
      * Creates a snapshot of the currently selected entity on the board, including its details and state, along with its position. This
      * snapshot can be used for rendering the selected entity's information along with its location on the board.
      * @return a En.
-     * @throws InvalidGameStateException
+     * @throws InvalidGameStateException w
      */
-    public EntityOnPositionSnapshot createEntitySnapshotAtSelected() throws InvalidGameStateException {
+    private EntityOnPositionSnapshot createEntitySnapshotAtSelected() throws InvalidGameStateException {
         return snapshotFactory.createEntitySnapshotAtSelected(game, getSelectedPos());
     }
 
@@ -370,20 +362,6 @@ public class GameHandler {
      */
     public boolean isCurrentPlayerAI() {
         return getCurrentTeamID() == TeamID.TEAM_2;
-    }
-
-    /**
-     * marks the entity wich is selected als moved without triggering the move command.
-     * @throws InvalidGameStateException if a
-     */
-    public void markSelectedUnitAsActed() throws InvalidGameStateException {
-        BoardEntity entity = getSelectedEntity();
-
-        if (entity.isFarmerKing()) {
-            throw new InvalidGameStateException("Farmer king cannot use unit stay action.");
-        }
-
-        turnState.markMoved(entity);
     }
     /**
      * Initialize the AI.
