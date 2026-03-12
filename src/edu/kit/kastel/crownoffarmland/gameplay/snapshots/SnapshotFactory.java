@@ -56,6 +56,13 @@ public class SnapshotFactory {
         return new EntityOnPositionSnapshot(createEntitySnapshot(game, selected), selected.toString());
     }
 
+    /**
+     * Creates an entitySnapshot.
+     * @param game the current game.
+     * @param selected the position wich is selected
+     * @return a EntitySnapshot of the selected position, or a no-unit snapshot if the field is empty
+     * @throws NoSelectionException if no field is selected
+     */
     public EntitySnapshot createEntitySnapshot(Game game, Position selected) throws NoSelectionException {
         if (selected == null) {
             throw new NoSelectionException();

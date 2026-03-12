@@ -163,6 +163,11 @@ public class GameHandler {
     }
 
 
+    /**
+     * Set the selected Pointer to the selected field.
+     * @param position the selected position
+     * @throws InvalidPositionException if a invalid position was selected
+     */
     public void setSelected(Position position) throws InvalidPositionException {
         if (!game.isValidPosition(position)) {
             throw new InvalidPositionException(position.toString());
@@ -190,6 +195,12 @@ public class GameHandler {
     }
 
 
+    /**
+     * Creates a snapshot of the currently selected entity on the board, including its details and state, along with its position. This
+     * snapshot can be used for rendering the selected entity's information along with its location on the board.
+     * @return a En.
+     * @throws InvalidGameStateException
+     */
     public EntityOnPositionSnapshot createEntitySnapshotAtSelected() throws InvalidGameStateException {
         return snapshotFactory.createEntitySnapshotAtSelected(game, getSelectedPos());
     }
@@ -244,7 +255,8 @@ public class GameHandler {
      * Attempts to end the current player's turn. If the player's hand is full, the yield restriction is activated, and a YieldException
      * is thrown, indicating that the player must discard a card before they can end their turn. If the player's hand is not full, the
      * turn is successfully ended, and the next round begins.
-     * @return true if the turn was successfully ended and the next round has begun, false if the turn could not be ended due to a full hand
+     * @return An EndTurnSnapshot representing the result of ending the turn, including any relevant information about the turn
+     *      transition and game state.
      * @throws InvalidGameStateException if there is a problem with the game state that prevents ending the turn
      * @throws YieldException if the player's hand is full, indicating that they must discard a card before they can end their turn
      */
@@ -297,7 +309,6 @@ public class GameHandler {
         return endTurnSnapshot;
     }
 
-
     /**
      * Checks if the game is over by determining if there is a winner.
      * @return true if the game is over and there is a winner, false otherwise
@@ -330,7 +341,6 @@ public class GameHandler {
     public List<PlaceStepSnapshot> placeUnits(int[] userIndices) throws InvalidGameStateException {
         return placementService.placeUnits(userIndices);
     }
-
     /**
      * Attempts to move the currently selected unit on the board to a target position specified by the player. The method validates the
      * target position for movement.
@@ -347,7 +357,6 @@ public class GameHandler {
 
         return movementService.moveUnit(target, getCurrentTeamID());
     }
-
     /**
      * Execute the AI turn.
      * @throws CrownOfFarmlandException if there is a problem with the game state that prevents the AI from taking its turn, or if there
@@ -356,7 +365,6 @@ public class GameHandler {
     public void executeAITurn() throws CrownOfFarmlandException {
         turnController.executeTurn();
     }
-
     /**
      * Checks if the current player is an AI-controlled player. This method determines whether the current player's team is controlled by
      * the AI, which can be used to decide whether to allow player input or to execute the AI's turn automatically.
@@ -366,7 +374,10 @@ public class GameHandler {
         return getCurrentTeamID() == TeamID.TEAM_2;
     }
 
-
+    /**
+     * marks the entity wich is selected als moved without triggering the move command.
+     * @throws InvalidGameStateException if a
+     */
     public void markSelectedUnitAsActed() throws InvalidGameStateException {
         BoardEntity entity = getSelectedEntity();
 
@@ -376,9 +387,13 @@ public class GameHandler {
 
         turnState.markMoved(entity);
     }
-
+    /**
+     * Initialize the AI.
+     * @param gameOutputPrinter the printer for ui
+     */
     public void initializeAI(GameOutputPrinter gameOutputPrinter) {
         WeightedRandomSelector weightedRandomSelector = new WeightedRandomSelector(game.getRandomGenerator());
-        this.turnController = new AITurnController(this, game, new AIDecisionService(game, turnState, unitMerger, weightedRandomSelector), gameOutputPrinter);
+        this.turnController = new AITurnController(this, game,
+                new AIDecisionService(game, turnState, unitMerger, weightedRandomSelector), gameOutputPrinter);
     }
 }
