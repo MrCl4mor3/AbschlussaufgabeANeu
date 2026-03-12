@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author ucgdi
  */
-public class Team {
+public class Team implements GameTeamView {
     private static final int START_LP = 8000;
 
     private final String name;
@@ -46,22 +46,16 @@ public class Team {
      * Returns the name of the team.
      * @return the name of the team
      */
+    @Override
     public String getName() {
         return name;
-    }
-
-    /**
-     * Returns the unique identifier of the team.
-     * @return the team ID
-     */
-    public TeamID getTeamID() {
-        return teamID;
     }
 
     /**
      * Returns the current life points of the team.
      * @return the current life points
      */
+
     public int getLifePoints() {
         return lifePoints;
     }

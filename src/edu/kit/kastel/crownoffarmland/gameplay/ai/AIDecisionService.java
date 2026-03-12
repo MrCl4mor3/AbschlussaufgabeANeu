@@ -74,7 +74,7 @@ public final class AIDecisionService {
         Position kingPosition = game.getKingPosition(currentTeam);
 
         List<Position> candidates = new ArrayList<>();
-        for (Position candidate : game.getOrthogonalNeighbors(kingPosition)) {
+        for (Position candidate : game.boardView().getOrthogonalNeighbors(kingPosition)) {
             if (isValidKingTarget(candidate, currentTeam)) {
                 candidates.add(candidate);
             }
@@ -113,7 +113,7 @@ public final class AIDecisionService {
         TeamID currentTeam = game.getCurrentTeamID();
         Position kingPosition = game.getKingPosition(currentTeam);
 
-        List<Position> candidates = game.getOrthogonalNeighbors(kingPosition);
+        List<Position> candidates = game.boardView().getOrthogonalNeighbors(kingPosition);
 
         if (candidates.isEmpty()) {
             return null; // No valid placement positions available
@@ -212,7 +212,7 @@ public final class AIDecisionService {
     }
 
     private boolean isValidKingTarget(Position candidate, TeamID currentTeam) {
-        BoardEntity occupant = game.getOccupant(candidate);
+        BoardEntity occupant = game.boardView().getOccupant(candidate);
         return occupant == null || occupant.getOwner().equals(currentTeam);
     }
 
@@ -240,8 +240,8 @@ public final class AIDecisionService {
     private int countAdjacentEntitiesFromTeam(Position center, TeamID team, boolean includeKing) {
         int count = 0;
 
-        for (Position neighbor : game.getSurroundingPositions(center)) {
-            BoardEntity occupant = game.getOccupant(neighbor);
+        for (Position neighbor : game.boardView().getSurroundingPositions(center)) {
+            BoardEntity occupant = game.boardView().getOccupant(neighbor);
             if (occupant != null && occupant.getOwner().equals(team)) {
                 if (includeKing || !occupant.isFarmerKing()) {
                     count++;
@@ -252,7 +252,7 @@ public final class AIDecisionService {
     }
 
     private boolean hasOwnUnitOnField(Position candidate, TeamID team) {
-        BoardEntity occupant = game.getOccupant(candidate);
+        BoardEntity occupant = game.boardView().getOccupant(candidate);
         return occupant != null && occupant.getOwner().equals(team) && !occupant.isFarmerKing();
     }
 
@@ -268,10 +268,10 @@ public final class AIDecisionService {
     private List<UnitCandidate> getMoveableUnitCandidates(TeamID currentTeam) {
         List<UnitCandidate> candidates = new ArrayList<>();
 
-        for (int row = 0; row < game.getBoardSize(); row++) {
-            for (int column = 0; column < game.getBoardSize(); column++) {
-                Position source = game.getPositionAt(row, column);
-                BoardEntity occupant = game.getOccupant(source);
+        for (int row = 0; row < game.boardView().getBoardSize(); row++) {
+            for (int column = 0; column < game.boardView().getBoardSize(); column++) {
+                Position source = game.boardView().getPositionAt(row, column);
+                BoardEntity occupant = game.boardView().getOccupant(source);
 
                 if (occupant != null && occupant.getOwner().equals(currentTeam) &&  !occupant.isFarmerKing()
                         && !turnState.hasMoved(occupant)) {
@@ -294,7 +294,7 @@ public final class AIDecisionService {
     private List<ActionScore> evaluatePossibleActions(Position source, Unit unit, TeamID team) {
         List<ActionScore> actionScores = new ArrayList<>();
 
-        for (Position target : game.getOrthogonalNeighbors(source)) {
+        for (Position target : game.boardView().getOrthogonalNeighbors(source)) {
             addDirectionalAction(actionScores, source, target, unit, team);
         }
 
@@ -307,10 +307,10 @@ public final class AIDecisionService {
         return actionScores;
     }
     private void addDirectionalAction(List<ActionScore> actionScores, Position source, Position target, Unit unit, TeamID currentTeam) {
-        if (!game.isValidPosition(target)) {
+        if (!game.boardView().isValidPosition(target)) {
             return;
         }
-        BoardEntity targetEntity = game.getOccupant(target);
+        BoardEntity targetEntity = game.boardView().getOccupant(target);
         if (targetEntity != null && targetEntity.isFarmerKing() && targetEntity.getOwner().equals(currentTeam)) {
             return;
         }
@@ -318,7 +318,7 @@ public final class AIDecisionService {
         actionScores.add(new ActionScore(UnitActionType.MOVE, target, score));
     }
     private int scoreDirectionalAction(Position source, Position target, Unit unit, TeamID team) {
-        BoardEntity targetEntity = game.getOccupant(target);
+        BoardEntity targetEntity = game.boardView().getOccupant(target);
         TeamID enemyTeam = game.getEnemyTeamID();
         if (targetEntity == null) {
             int steps = manhattanDistance(target, game.getKingPosition(enemyTeam));
@@ -367,8 +367,8 @@ public final class AIDecisionService {
     private int getStrongestEnemyAtkAlongRay(Position source, int rowDelta, int columnDelta, TeamID enemyTeam) {
         int strongestAtk = 0;
         Position current = new Position(source.getRow() + rowDelta, (char)  (source.getColumn() + columnDelta));
-        while (game.isValidPosition(current)) {
-            BoardEntity occupant = game.getOccupant(current);
+        while (game.boardView().isValidPosition(current)) {
+            BoardEntity occupant = game.boardView().getOccupant(current);
             if (occupant != null && occupant.getOwner().equals(enemyTeam) && !occupant.isFarmerKing()) {
                 Unit enemyUnit = (Unit) occupant;
                 strongestAtk = Math.max(strongestAtk, enemyUnit.getAtk());

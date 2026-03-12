@@ -2,6 +2,7 @@ package edu.kit.kastel.crownoffarmland.model;
 
 
 import edu.kit.kastel.crownoffarmland.model.board.Board;
+import edu.kit.kastel.crownoffarmland.model.board.GameBoardView;
 import edu.kit.kastel.crownoffarmland.model.board.Position;
 import edu.kit.kastel.crownoffarmland.model.team.Team;
 import edu.kit.kastel.crownoffarmland.model.team.TeamID;
@@ -22,8 +23,10 @@ public class Game {
     private final RandomGenerator generator;
     private final Board board;
     private final Map<TeamID, Team> teams;
+
     private TeamID currentTeamID;
     private TeamID winner;
+
 
     /**
      * Creates a new game with two teams and a random generator.
@@ -84,33 +87,9 @@ public class Game {
         this.winner = winner;
     }
 
-    /**
-     * Returns the size of the game board, which is determined by the Board class.
-     * @return the size of the game board
-     */
-    public int getBoardSize() {
-        return board.getBoardSize();
-    }
 
-    /**
-     * Returns the Position object at the specified row and column indices on the game board. This method allows you to access specific
-     * positions on the board by providing their row and column indices.
-     * @param rowIndex the index of the row on the game board
-     * @param columnIndex the index of the column on the game board
-     * @return the Position object located at the specified row and column indices on the game board
-     */
-    public Position getPositionAt(int rowIndex, int columnIndex) {
-        return board.getPositionAt(rowIndex, columnIndex);
-    }
-
-    /**
-     * Returns the BoardEntity that occupies the specified position on the game board. If the position is unoccupied, this method may
-     * return null or a specific value indicating that the position is empty.
-     * @param position the Position object representing the location on the game board for which to retrieve the occupant
-     * @return the BoardEntity that occupies the specified position on the game board, or null if the position is unoccupied
-     */
-    public BoardEntity getOccupant(Position position) {
-        return board.getOccupant(position);
+    public GameBoardView boardView() {
+        return board;
     }
 
 
@@ -189,10 +168,10 @@ public class Game {
     public Position getKingPosition(TeamID teamID) {
         BoardEntity king = getKing(teamID);
 
-        for (int rowIndex = 0; rowIndex < getBoardSize(); rowIndex++) {
-            for (int columnIndex = 0; columnIndex < getBoardSize(); columnIndex++) {
-                Position position = getPositionAt(rowIndex, columnIndex);
-                if (getOccupant(position) == king) {
+        for (int rowIndex = 0; rowIndex < boardView().getBoardSize(); rowIndex++) {
+            for (int columnIndex = 0; columnIndex < boardView().getBoardSize(); columnIndex++) {
+                Position position = boardView().getPositionAt(rowIndex, columnIndex);
+                if (boardView().getOccupant(position) == king) {
                     return position;
                 }
             }
@@ -284,17 +263,6 @@ public class Game {
         teams.get(teamID).shuffleDrawPile(generator);
     }
 
-
-    /**
-     * Checks if the specified position on the game board is valid. A valid position is one that falls within the bounds of the board and
-     * can be occupied by units or other entities during the game.
-     * @param position the Position object representing the location on the game board to check for validity
-     * @return true if the specified position is valid on the game board, false otherwise
-     */
-    public boolean isValidPosition(Position position) {
-        return board.isValidPosition(position);
-    }
-
     /**
      * Counts the number of units (excluding the Farmer King) that the specified team has placed on the board. This method iterates
      * through all positions on the board and counts the units that belong to the specified team, excluding any Farmer King units.
@@ -303,34 +271,16 @@ public class Game {
      */
     public int getUnitsPlaced(TeamID teamID) {
         int count = 0;
-        for (int rowIndex = 0; rowIndex < getBoardSize(); rowIndex++) {
-            for (int columnIndex = 0; columnIndex < getBoardSize(); columnIndex++) {
-                Position position = getPositionAt(rowIndex, columnIndex);
-                BoardEntity entity = getOccupant(position);
+        for (int rowIndex = 0; rowIndex < boardView().getBoardSize(); rowIndex++) {
+            for (int columnIndex = 0; columnIndex < boardView().getBoardSize(); columnIndex++) {
+                Position position = boardView().getPositionAt(rowIndex, columnIndex);
+                BoardEntity entity = boardView().getOccupant(position);
                 if (entity != null && entity.getOwner() == teamID && !entity.isFarmerKing()) {
                     count++;
                 }
             }
         }
         return count;
-    }
-
-    /**
-     * Getter for the OrthogonalNeighbors.
-     * @param position the Center Position
-     * @return a List of neighbors
-     */
-    public List<Position> getOrthogonalNeighbors(Position position) {
-        return board.getOrthogonalNeighbors(position);
-    }
-
-    /**
-     * Getter for SurroundingPosition.
-     * @param position the Center Position
-     * @return a List of neighbors
-     */
-    public List<Position> getSurroundingPositions(Position position) {
-        return board.getSurroundingPositions(position);
     }
 
     /**

@@ -97,7 +97,7 @@ public final class MovementService {
 
 
     private MoveSnapshot resolveUnitMove(Position source, Position target, BoardEntity selectedEntity, boolean wasBlocked) {
-        BoardEntity targetEntity = game.getOccupant(target);
+        BoardEntity targetEntity = game.boardView().getOccupant(target);
         if (targetEntity == null) {
             return executeSimpleMove(source, target, selectedEntity, wasBlocked);
         } else if (targetEntity.getOwner().equals(selectedEntity.getOwner())) {
@@ -200,7 +200,7 @@ public final class MovementService {
         }
 
         // Selected Entity is not allowed to move to the Position of his own King
-        BoardEntity targetEntity = game.getOccupant(target);
+        BoardEntity targetEntity = game.boardView().getOccupant(target);
 
         if (!(targetEntity == null)) {
             // If the selected entity is a Farmer King, it cannot move onto a position occupied by an enemy unit
@@ -230,7 +230,7 @@ public final class MovementService {
     }
 
     private BoardEntity requireSelectedEntity(Position position, TeamID currentTeam) throws InvalidGameStateException {
-        BoardEntity entity = game.getOccupant(position);
+        BoardEntity entity = game.boardView().getOccupant(position);
         if (entity == null) {
             throw new NoSelectionException();
         }

@@ -147,7 +147,7 @@ public class GameHandler {
         if (turnState.getSelectedPos() == null) {
             throw new NoSelectionException();
         }
-        BoardEntity entity = game.getOccupant(turnState.getSelectedPos());
+        BoardEntity entity = game.boardView().getOccupant(turnState.getSelectedPos());
         if (entity == null) {
             throw new EmptySelectedFieldException(turnState.getSelectedPos().toString());
         }
@@ -167,7 +167,7 @@ public class GameHandler {
      * @throws InvalidPositionException if a invalid position was selected
      */
     public void setSelected(Position position) throws InvalidPositionException {
-        if (!game.isValidPosition(position)) {
+        if (!game.boardView().isValidPosition(position)) {
             throw new InvalidPositionException(position.toString());
         }
         turnState.setSelectedPos(position);
@@ -349,7 +349,7 @@ public class GameHandler {
      * @throws InvalidPositionException if the Position is invalid
      */
     public MoveSnapshot moveUnit(Position target) throws InvalidGameStateException {
-        if (!game.isValidPosition(target)) {
+        if (!game.boardView().isValidPosition(target)) {
             throw new InvalidPositionException(target.toString());
         }
 

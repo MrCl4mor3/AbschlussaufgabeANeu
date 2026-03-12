@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author ucgdi
  */
-public class Board {
+public class Board implements GameBoardView {
     private static final int NEIGHBOR_DISTANCE = 1;
     private static final int BOARD_SIZE = 7;
     private static final char START_COLUMN_NAME = 'A';
@@ -52,6 +52,7 @@ public class Board {
      * Returns the size of the board (number of rows and columns).
      * @return the size of the board
      */
+    @Override
     public int getBoardSize() {
         return BOARD_SIZE;
     }
@@ -92,6 +93,7 @@ public class Board {
      * @param columnIndex the column index to convert
      * @return the Position corresponding to the given row and column indices
      */
+    @Override
     public Position getPositionAt(int rowIndex, int columnIndex) {
         char columnName = (char) (START_COLUMN_NAME + columnIndex);
         int rowNumber = BOARD_SIZE - rowIndex;
@@ -107,6 +109,7 @@ public class Board {
      * @param position the position of the field to check
      * @return the BoardEntity occupying the field, or null if the field is empty
      */
+    @Override
     public BoardEntity getOccupant(Position position) {
         return getField(position).getOccupant();
     }
@@ -121,17 +124,6 @@ public class Board {
         getField(position).setOccupant(null);
         return occupant;
     }
-
-
-    /**
-     * Checks if the field at the given position is empty (i.e., has no occupant).
-     * @param position the position of the field to check
-     * @return true if the field is empty, false otherwise
-     */
-    public boolean isFieldEmpty(Position position) {
-        return getField(position).isEmpty();
-    }
-
     /**
      * Sets the occupant of the field at the given position to the specified BoardEntity. If the position is invalid, an
      * InvalidPositionException is thrown.
@@ -147,6 +139,7 @@ public class Board {
      * @param position the Position to validate
      * @return true, if the position is valid, false otherwise
      */
+    @Override
     public boolean isValidPosition(Position position) {
         if (position == null) {
             return false;
@@ -169,6 +162,7 @@ public class Board {
      * @param center the center to look for neighbors
      * @return a List of neighboring positions that are orthogonally adjacent to the given center and within the bounds of the board
      */
+    @Override
     public List<Position> getOrthogonalNeighbors(Position center) {
         List<Position> neighbors = new ArrayList<>();
 
@@ -192,6 +186,7 @@ public class Board {
      * @return a List of neighboring positions that are adjacent (including diagonals) to the given center and within the bounds of the
      *      board
      */
+    @Override
     public List<Position> getSurroundingPositions(Position center) {
         List<Position> surroundingPositions = new ArrayList<>();
 
@@ -212,6 +207,7 @@ public class Board {
             neighbors.add(position);
         }
     }
+
 
 
 

@@ -79,7 +79,7 @@ public final class PlacementService {
             throw new InvalidGameStateException("You can only place a unit adjacent to your King.");
         }
 
-        BoardEntity occupant = game.getOccupant(targetPosition);
+        BoardEntity occupant = game.boardView().getOccupant(targetPosition);
         if (occupant != null && occupant.getOwner() != game.getCurrentTeamID()) {
             throw new InvalidGameStateException("You cannot place on an enemy occupied field.");
         }
@@ -129,7 +129,7 @@ public final class PlacementService {
 
     private PlaceStepSnapshot placeSingleUnit(Unit incomingUnit) throws InvalidGameStateException {
         Position targetPosition = turnState.getSelectedPos();
-        BoardEntity occupant = game.getOccupant(targetPosition);
+        BoardEntity occupant = game.boardView().getOccupant(targetPosition);
         String teamName = game.getTeamName(game.getCurrentTeamID());
         String incomingUnitName = incomingUnit.getName().toString();
 
@@ -178,10 +178,10 @@ public final class PlacementService {
 
     private int countUnitsOnBoard(TeamID teamID) {
         int count = 0;
-        for (int rowIndex = 0; rowIndex < game.getBoardSize(); rowIndex++) {
-            for (int columnIndex = 0; columnIndex < game.getBoardSize(); columnIndex++) {
-                Position position = game.getPositionAt(rowIndex, columnIndex);
-                BoardEntity entity = game.getOccupant(position);
+        for (int rowIndex = 0; rowIndex < game.boardView().getBoardSize(); rowIndex++) {
+            for (int columnIndex = 0; columnIndex < game.boardView().getBoardSize(); columnIndex++) {
+                Position position = game.boardView().getPositionAt(rowIndex, columnIndex);
+                BoardEntity entity = game.boardView().getOccupant(position);
                 if (entity != null && entity.getOwner() == teamID && !entity.isFarmerKing()) {
                     count++;
                 }

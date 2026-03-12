@@ -31,12 +31,12 @@ public class SnapshotFactory {
     * @return the board snapshot
     */
     public BoardSnapshot createBoardSnapshot(Game game, Position selected, Set<BoardEntity> movedEntities) {
-        int boardSize = game.getBoardSize();
+        int boardSize = game.boardView().getBoardSize();
         BoardCellSnapshot[][] cells = new BoardCellSnapshot[boardSize][boardSize];
 
         for (int rowIndex = 0; rowIndex < boardSize; rowIndex++) {
             for (int columnIndex = 0; columnIndex < boardSize; columnIndex++) {
-                Position position = game.getPositionAt(rowIndex, columnIndex);
+                Position position = game.boardView().getPositionAt(rowIndex, columnIndex);
                 cells[rowIndex][columnIndex] = createBoardCellSnapshot(game, position, movedEntities, game.getCurrentTeamID());
             }
         }
@@ -68,7 +68,7 @@ public class SnapshotFactory {
             throw new NoSelectionException();
         }
 
-        BoardEntity entity = game.getOccupant(selected);
+        BoardEntity entity = game.boardView().getOccupant(selected);
         if (entity == null) {
             return EntitySnapshot.noUnit();
         }
@@ -115,7 +115,7 @@ public class SnapshotFactory {
     }
 
     private BoardCellSnapshot createBoardCellSnapshot(Game game, Position position, Set<BoardEntity> movedEntities, TeamID currentTeamID) {
-        BoardEntity occupant = game.getOccupant(position);
+        BoardEntity occupant = game.boardView().getOccupant(position);
 
         if (occupant == null) {
             return BoardCellSnapshot.empty();
