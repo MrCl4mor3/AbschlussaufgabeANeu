@@ -40,10 +40,10 @@ public class CommandHandler {
      * @param gameHandler the game handler to execute the commands on
      * @param boardRenderer the board renderer to print the board when the board command is executed
      */
-    public CommandHandler(GameHandler gameHandler, BoardRenderer boardRenderer) {
+    public CommandHandler(GameHandler gameHandler, BoardRenderer boardRenderer, EntityFormatter entityFormatter, GameOutputPrinter gameOutputPrinter) {
         this.gameHandler = gameHandler;
-        this.entityFormatter = new EntityFormatter();
-        this.gameOutputPrinter = new GameOutputPrinter(boardRenderer, entityFormatter);
+        this.entityFormatter = entityFormatter;
+        this.gameOutputPrinter = gameOutputPrinter;
         commands = new LinkedHashMap<>();
         initCommands();
     }
@@ -56,12 +56,19 @@ public class CommandHandler {
     public void handleUserInput() {
         this.running = true;
         System.out.println(startHelpMessage());
+
         try (Scanner scanner = new Scanner(System.in)) {
             while (this.running) {
-                while (!gameHandler.isCurrentPlayerAI()) {
-                    executeCommand(scanner.nextLine());
+
+                while (this.running && gameHandler.isCurrentPlayerAI() && !gameHandler.isGameOver()) {
+                    executeAITurn();
                 }
-                executeAITurn();
+
+                if (!this.running || gameHandler.isGameOver()) {
+                    break;
+                }
+
+                executeCommand(scanner.nextLine());
             }
         }
     }
@@ -116,11 +123,16 @@ public class CommandHandler {
         }
     }
 
-    private void  executeAITurn() throws CrownOfFarmlandException {
-        gameHandler.executeAITurn();
+    private void executeAITurn() {
+        try {
+            gameHandler.executeAITurn();
 
-        if (gameHandler.isGameOver()) {
-            System.out.printf(WINNER_MESSAGE, gameHandler.getWinner());
+            if (gameHandler.isGameOver()) {
+                System.out.printf(WINNER_MESSAGE, gameHandler.getWinner());
+                quit();
+            }
+        } catch (CrownOfFarmlandException e) {
+            System.err.println(COMMAND_ERROR_PREFIX + e.getMessage());
             quit();
         }
     }

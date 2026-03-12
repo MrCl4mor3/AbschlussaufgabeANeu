@@ -15,7 +15,8 @@ import edu.kit.kastel.crownoffarmland.gameplay.ai.AIDecisionService;
 import edu.kit.kastel.crownoffarmland.gameplay.ai.AITurnController;
 import edu.kit.kastel.crownoffarmland.gameplay.ai.WeightedRandomSelector;
 import edu.kit.kastel.crownoffarmland.gameplay.combat.DuelManager;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.EntityOnPositionSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EndTurnSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntityOnPositionSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.MoveSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.SnapshotFactory;
@@ -29,7 +30,6 @@ import edu.kit.kastel.crownoffarmland.model.team.TeamID;
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
 import edu.kit.kastel.crownoffarmland.model.units.Unit;
 import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
-import edu.kit.kastel.crownoffarmland.ui.renderer.board.BoardRenderer;
 
 
 import java.util.List;
@@ -54,7 +54,9 @@ public class GameHandler {
     private final TurnState turnState;
     private final PlacementService placementService;
     private final MovementService movementService;
-    private final AITurnController aiTurnController;
+    private AITurnController turnController;
+    private final UnitMerger unitMerger;
+
     /**
      * Constructs a new GameHandler instance with the specified Game model. The GameHandler initializes the DuelManager and UnitMerger,
      * and sets up the initial state of the game. The selected position is initially set to null, and the placedThisTurn flag is set to
@@ -69,13 +71,11 @@ public class GameHandler {
     }
     private GameHandler(Game game, UnitMerger unitMerger, SnapshotFactory snapshotFactory, TurnState turnState, DuelManager duelManager) {
         this.game = game;
+        this.unitMerger = unitMerger;
         this.snapshotFactory = snapshotFactory;
         this.turnState = turnState;
         this.placementService = new PlacementService(game, unitMerger, turnState);
         this.movementService = new MovementService(game, unitMerger, turnState, duelManager);
-        WeightedRandomSelector weightedRandomSelector = new WeightedRandomSelector(game.getRandomGenerator());
-        this.aiTurnController = new AITurnController(this, game, new AIDecisionService(game, turnState, unitMerger,
-                weightedRandomSelector));
     }
 
     /**
@@ -164,7 +164,10 @@ public class GameHandler {
 
 
     public void setSelected(Position position) throws InvalidPositionException {
-        turnState.setSelectedPos(game.validatePosition(position));
+        if (game.validatePosition(position)) {
+            throw new InvalidPositionException(position.toString());
+        }
+        turnState.setSelectedPos(position);
     }
 
     /**
@@ -245,13 +248,12 @@ public class GameHandler {
      * @throws InvalidGameStateException if there is a problem with the game state that prevents ending the turn
      * @throws YieldException if the player's hand is full, indicating that they must discard a card before they can end their turn
      */
-    public boolean tryEndTurn() throws InvalidGameStateException {
+    public EndTurnSnapshot tryEndTurn() throws InvalidGameStateException {
         if (game.isHandFull(game.getCurrentTeamID())) {
             turnState.activateYieldRestriction();
             throw new YieldException(game.getTeamName(game.getCurrentTeamID()));
         } else {
-            nextRound();
-            return true;
+            return finishTurn(null);
         }
     }
     /**
@@ -265,7 +267,7 @@ public class GameHandler {
      * @throws YieldException if the player's hand is not full, indicating that they cannot end their turn by discarding a card
      */
     //ToDo: Exceptions noch richtig werfen!
-    public EntitySnapshot tryEndTurnWithDiscard(int index) throws InvalidGameStateException {
+    public EndTurnSnapshot tryEndTurnWithDiscard(int index) throws InvalidGameStateException {
         if (!game.isHandFull(getCurrentTeamID())) {
             turnState.activateYieldRestriction();
             throw new YieldException(game.getTeamName(game.getCurrentTeamID()));
@@ -282,16 +284,19 @@ public class GameHandler {
             if (discardedCard == null) {
                 throw new InvalidGameStateException("Cannot discard from an empty hand.");
             }
-            EntitySnapshot output = new EntitySnapshot(discardedCard, game.getTeamName(game.getCurrentTeamID()));
-            nextRound();
+            EntitySnapshot snapshot = new EntitySnapshot(discardedCard, game.getTeamName(game.getCurrentTeamID()));
 
-            return output;
+            return finishTurn(snapshot);
         }
     }
-    private void nextRound() {
+
+    private EndTurnSnapshot finishTurn(EntitySnapshot discardedCard) throws InvalidGameStateException {
+        EndTurnSnapshot endTurnSnapshot = new EndTurnSnapshot(discardedCard, game.getTeamName(game.getEnemyTeamID()), isGameOver());
         game.nextTurn();
         startCurrentTurn();
+        return endTurnSnapshot;
     }
+
 
     /**
      * Checks if the game is over by determining if there is a winner.
@@ -335,11 +340,15 @@ public class GameHandler {
      * @throws InvalidGameStateException if there is a problem with the game state that prevents moving the unit
      */
     public MoveSnapshot moveUnit(Position target) throws InvalidGameStateException {
-        return movementService.moveUnit(game.validatePosition(target), getCurrentTeamID());
+        if (game.validatePosition(target)) {
+            throw new InvalidPositionException(target.toString());
+        }
+
+        return movementService.moveUnit(target, getCurrentTeamID());
     }
 
     public void executeAITurn() throws CrownOfFarmlandException {
-        aiTurnController.executeTurn();
+        turnController.executeTurn();
     }
 
     public boolean isCurrentPlayerAI() {
@@ -355,5 +364,10 @@ public class GameHandler {
         }
 
         turnState.markMoved(entity);
+    }
+
+    public void initializeAI(GameOutputPrinter gameOutputPrinter) {
+        WeightedRandomSelector weightedRandomSelector = new WeightedRandomSelector(game.getRandomGenerator());
+        this.turnController = new AITurnController(this, game, new AIDecisionService(game, turnState, unitMerger, weightedRandomSelector), gameOutputPrinter);
     }
 }

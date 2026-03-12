@@ -8,8 +8,10 @@ import edu.kit.kastel.crownoffarmland.startup.context.StartupOutput;
 import edu.kit.kastel.crownoffarmland.startup.result.StartupError;
 import edu.kit.kastel.crownoffarmland.startup.result.StartupResult;
 import edu.kit.kastel.crownoffarmland.ui.commands.CommandHandler;
+import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
 import edu.kit.kastel.crownoffarmland.ui.renderer.board.BoardEntityTokenFormatter;
 import edu.kit.kastel.crownoffarmland.ui.renderer.board.BoardRenderer;
+import edu.kit.kastel.crownoffarmland.ui.renderer.entity.EntityFormatter;
 
 /**
  * This is the main entry class for the program.
@@ -47,8 +49,6 @@ public final class Application {
 
         StartupContext context = result.getValue();
 
-        GameFactory factory = new GameFactory(context);
-        GameHandler gameHandler = factory.createGameHandler();
 
         StartupOutput output = context.getOutput();
         BoardRenderer boardRenderer = new BoardRenderer(
@@ -57,7 +57,15 @@ public final class Application {
                 output.getVerbosity()
         );
 
-        CommandHandler commandHandler = new CommandHandler(gameHandler, boardRenderer);
+        EntityFormatter entityFormatter = new EntityFormatter();
+        GameOutputPrinter gameOutputPrinter = new GameOutputPrinter(boardRenderer, entityFormatter);
+
+
+        GameFactory factory = new GameFactory(context);
+        GameHandler gameHandler = factory.createGameHandler();
+        gameHandler.initializeAI(gameOutputPrinter);
+
+        CommandHandler commandHandler = new CommandHandler(gameHandler, boardRenderer, entityFormatter, gameOutputPrinter);
         commandHandler.handleUserInput();
     }
 }

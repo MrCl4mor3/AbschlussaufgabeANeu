@@ -2,10 +2,11 @@ package edu.kit.kastel.crownoffarmland.gameplay.ai;
 
 import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EndTurnSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardSnapshot;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.EntityOnPositionSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntityOnPositionSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.MoveSnapshot;
 import edu.kit.kastel.crownoffarmland.model.Game;
 import edu.kit.kastel.crownoffarmland.model.board.Position;
@@ -109,16 +110,16 @@ public final class AITurnController {
 
 
     private void executeYield() throws CrownOfFarmlandException {
-        EntitySnapshot discardedCard = null;
 
+        EndTurnSnapshot endTurnSnapshot;
         if (game.isHandFull(game.getCurrentTeamID())) {
             int discardIndex = AIDecisionService.chooseDiscardIndex();
-            discardedCard = gameHandler.tryEndTurnWithDiscard(discardIndex);
+            endTurnSnapshot = gameHandler.tryEndTurnWithDiscard(discardIndex);
         } else {
-            gameHandler.tryEndTurn();
+            endTurnSnapshot = gameHandler.tryEndTurn();
         }
 
-        System.out.print(printer.formatYield(discardedCard));
+        System.out.print(printer.formatYield(endTurnSnapshot));
     }
 
 

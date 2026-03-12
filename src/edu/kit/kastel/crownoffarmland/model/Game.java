@@ -286,7 +286,7 @@ public class Game {
     }
 
 
-    public Position validatePosition(Position position) throws InvalidPositionException {
+    public boolean validatePosition(Position position) {
         return board.validatePosition(position);
     }
 

@@ -134,11 +134,8 @@ public class Board {
     }
 
 
-    public Position validatePosition(Position position) throws InvalidPositionException {
-        if (!isValidPosition(position)) {
-            throw new InvalidPositionException(position.toString());
-        }
-        return position;
+    public boolean validatePosition(Position position) {
+        return isValidPosition(position);
     }
 
     /**
