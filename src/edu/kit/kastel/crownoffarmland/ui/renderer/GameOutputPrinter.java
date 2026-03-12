@@ -1,10 +1,11 @@
 package edu.kit.kastel.crownoffarmland.ui.renderer;
 
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EndTurnSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.TeamStateSnapshot;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.EntityOnPositionSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntityOnPositionSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.MoveSnapshot;
 import edu.kit.kastel.crownoffarmland.ui.renderer.board.BoardRenderer;
 import edu.kit.kastel.crownoffarmland.ui.renderer.entity.EntityFormatter;
@@ -77,7 +78,7 @@ public final class GameOutputPrinter {
         return placeOutputFormatter.format(placeStepSnapshots);
     }
 
-    public String formatYield(EntitySnapshot entitySnapshot) {
-        return yieldOutputFormatter.format(entitySnapshot);
+    public String formatYield(EndTurnSnapshot endTurnSnapshot) {
+        return yieldOutputFormatter.format(endTurnSnapshot);
     }
 }

@@ -1,6 +1,4 @@
-package edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot;
-
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
+package edu.kit.kastel.crownoffarmland.gameplay.snapshots;
 
 
 public final class EntityOnPositionSnapshot {

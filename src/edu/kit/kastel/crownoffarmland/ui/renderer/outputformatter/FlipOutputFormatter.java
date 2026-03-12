@@ -1,12 +1,12 @@
 package edu.kit.kastel.crownoffarmland.ui.renderer.outputformatter;
 
 
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.EntityOnPositionSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntityOnPositionSnapshot;
 import edu.kit.kastel.crownoffarmland.ui.renderer.entity.EntityFormatter;
 
 public class FlipOutputFormatter extends AbstractOutputFormatter<EntityOnPositionSnapshot> {
 
-    private static final String COMMAND_OUTPUT_FORMAT = "%s was flipped on %s!%n";
+    private static final String COMMAND_OUTPUT_FORMAT = "%s was flipped on %s!";
 
     public FlipOutputFormatter(EntityFormatter entityFormatter) {
         super(entityFormatter);
