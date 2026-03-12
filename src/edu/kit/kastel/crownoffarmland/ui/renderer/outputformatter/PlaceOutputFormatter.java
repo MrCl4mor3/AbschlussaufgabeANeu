@@ -30,7 +30,7 @@ public class PlaceOutputFormatter implements OutputFormatter<List<PlaceStepSnaps
         output.append(String.format(PLACE_MESSAGE, snapshot.getTeamName(), snapshot.getPlacedUnitName(), snapshot.getTargetPosition()));
 
         if (snapshot.getExistingUnitName() != null) {
-            output.append(String.format(MERGING_MESSAGE, snapshot.getExistingUnitName(), snapshot.getPlacedUnitName(),
+            output.append(String.format(MERGING_MESSAGE, snapshot.getPlacedUnitName(), snapshot.getExistingUnitName(),
                     snapshot.getTargetPosition()));
             if (snapshot.getEliminatedUnitName() == null) {
                 output.append(MERGING_UNIT_SUCCESS_MESSAGE);
