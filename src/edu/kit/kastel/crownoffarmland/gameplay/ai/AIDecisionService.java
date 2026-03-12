@@ -8,10 +8,8 @@ import edu.kit.kastel.crownoffarmland.model.board.Position;
 import edu.kit.kastel.crownoffarmland.model.team.TeamID;
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
 import edu.kit.kastel.crownoffarmland.model.units.Unit;
-
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * Test.
  *
@@ -28,7 +26,6 @@ public final class AIDecisionService {
     private static final int PLACEMENT_ENEMY_WEIGHT_FACTOR = 2;
     private static final int PLACEMENT_TIE_WEIGHT = 1;
     private static final int HAND_INDEX_OFFSET = 1;
-
 
     private static final int[][] ORTHOGONAL_DELTAS = {
             {1, 0},   // oben
@@ -113,7 +110,7 @@ public final class AIDecisionService {
         TeamID currentTeam = game.getCurrentTeamID();
         Position kingPosition = game.getKingPosition(currentTeam);
 
-        List<Position> candidates = game.boardView().getOrthogonalNeighbors(kingPosition);
+        List<Position> candidates = game.boardView().getSurroundingPositions(kingPosition);
 
         if (candidates.isEmpty()) {
             return null; // No valid placement positions available
@@ -227,8 +224,8 @@ public final class AIDecisionService {
     private int scorePlacementPosition(Position candidate, TeamID currentTeam) {
         Position enemyKingPosition = game.getKingPosition(game.getEnemyTeamID());
         int steps = manhattanDistance(candidate, enemyKingPosition);
-        int enemies = countAdjacentEntitiesFromTeam(candidate, game.getEnemyTeamID(), true);
-        int fellows = countAdjacentEntitiesFromTeam(candidate, currentTeam, false);
+        int enemies = countOrthogonalEntitiesFromTeam(candidate, game.getEnemyTeamID(), true);
+        int fellows = countOrthogonalEntitiesFromTeam(candidate, currentTeam, true);
         return -steps + PLACEMENT_ENEMY_WEIGHT_FACTOR * enemies - fellows;
     }
 
@@ -241,6 +238,20 @@ public final class AIDecisionService {
         int count = 0;
 
         for (Position neighbor : game.boardView().getSurroundingPositions(center)) {
+            BoardEntity occupant = game.boardView().getOccupant(neighbor);
+            if (occupant != null && occupant.getOwner().equals(team)) {
+                if (includeKing || !occupant.isFarmerKing()) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    private int countOrthogonalEntitiesFromTeam(Position center, TeamID team, boolean includeKing) {
+        int count = 0;
+
+        for (Position neighbor : game.boardView().getOrthogonalNeighbors(center)) {
             BoardEntity occupant = game.boardView().getOccupant(neighbor);
             if (occupant != null && occupant.getOwner().equals(team)) {
                 if (includeKing || !occupant.isFarmerKing()) {

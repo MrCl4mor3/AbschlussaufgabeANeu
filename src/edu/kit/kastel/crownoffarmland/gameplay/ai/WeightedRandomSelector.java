@@ -73,13 +73,10 @@ public final class WeightedRandomSelector {
     }
 
     private int getIndexForRoll(List<Integer> weights, int roll) {
-        System.out.println("Roll: " + roll);
         int prefixSum = 0;
         for (int i = 0; i < weights.size(); i++) {
-            System.out.println(prefixSum);
             prefixSum += weights.get(i);
             if (roll <= prefixSum) {
-                System.out.println(i);
                 return i;
             }
         }
