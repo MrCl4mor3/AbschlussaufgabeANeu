@@ -11,7 +11,7 @@ import edu.kit.kastel.crownoffarmland.ui.renderer.entity.EntityFormatter;
 public class YieldOutputFormatter extends AbstractOutputFormatter<EndTurnSnapshot> {
 
     private static final String SUCCESSFULLY_ENDED_TURN_MESSAGE = "It is %s's turn!";
-    private static final String DISCARDING_CARD_MESSAGE = "%s discarded %s.";
+    private static final String DISCARDING_CARD_MESSAGE = "%s discarded %s.%n";
     private static final String NO_CARD_LEFT_MESSAGE = "%s has no cards left in the deck!";
 
     /**

@@ -45,6 +45,7 @@ public final class AITurnController {
      * @throws CrownOfFarmlandException if a invalid Move triggert.
      */
     public void executeTurn() throws CrownOfFarmlandException {
+        System.out.println(printer.formatHand(gameHandler.createHandSnapshot()));
         executeKingMove();
 
         if (gameHandler.isGameOver()) {

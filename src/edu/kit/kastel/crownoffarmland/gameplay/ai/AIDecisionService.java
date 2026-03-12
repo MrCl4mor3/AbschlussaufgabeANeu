@@ -134,7 +134,7 @@ public final class AIDecisionService {
         }
 
         if (bestPositions.size() == 1) {
-            return bestPositions.get(0);
+            return bestPositions.getFirst();
         }
 
         List<Integer> tieWeights = createTieWeights(bestPositions.size(), PLACEMENT_TIE_WEIGHT);
@@ -171,7 +171,7 @@ public final class AIDecisionService {
             return null;
         }
 
-        UnitCandidate bestCandidate = candidates.get(0);
+        UnitCandidate bestCandidate = candidates.getFirst();
         for (UnitCandidate candidate : candidates) {
             if (candidate.getTotalScore() > bestCandidate.getTotalScore()) {
                 bestCandidate = candidate;
@@ -336,7 +336,7 @@ public final class AIDecisionService {
             }
         }
         if (targetEntity.isFarmerKing()) {
-            return -unit.getAtk();
+            return unit.getAtk();
         }
         Unit enemyUnit = (Unit) targetEntity;
         if (!enemyUnit.isFarmerKing()) {
