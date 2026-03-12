@@ -106,24 +106,8 @@ public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
             output.append(String.format(MOVE_MESSAGE, snapshot.getMovedEntity().getEntityName(), snapshot.getToPositionName()));
         }
 
-        //ToDo GameOver Message implemeniteren
-
-        boolean isGameOver = false;
-        if (isGameOver) {
-            String winner = "";
-            // //getWinner();
-
-            String attackerTeam = snapshot.getMovedEntity().getTeamName();
-            String defenderTeam = snapshot.getTargetEntity().getTeamName();
-
-            String losingTeam;
-            if (winner.equals(attackerTeam)) {
-                losingTeam = defenderTeam;
-            } else {
-                losingTeam = attackerTeam;
-            }
-
-            System.out.printf(LIFE_ZERO_MESSAGE, losingTeam);
+        if (snapshot.isGameOver()) {
+            output.append(String.format(LIFE_ZERO_MESSAGE, snapshot.getWinnerName()));
         }
     }
 }

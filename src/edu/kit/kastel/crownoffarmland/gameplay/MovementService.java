@@ -131,11 +131,9 @@ public final class MovementService {
         revealIfHidden(attacker);
 
         DuelResult duelResult = duelManager.resolveDuel(attacker, defender);
-
         updateGameStateAfterDuel(source, target, attacker, defender, duelResult);
-
         return new DuelMoveSnapshot(sourceEntitySnapshot, targetEntitySnapshot, source.toString(), target.toString(), wasBlocked,
-                duelResult);
+                duelResult, game.getWinnerName());
     }
 
 

@@ -304,7 +304,7 @@ public class GameHandler {
      * @return true if the game is over and there is a winner, false otherwise
      */
     public boolean isGameOver() {
-        return game.getWinner() != null;
+        return game.getWinnerID() != null;
     }
 
     /**
@@ -313,7 +313,7 @@ public class GameHandler {
      */
     public String getWinner() {
         if (isGameOver()) {
-            return game.getTeamName(game.getWinner());
+            return game.getTeamName(game.getWinnerID());
         }
         return null;
     }

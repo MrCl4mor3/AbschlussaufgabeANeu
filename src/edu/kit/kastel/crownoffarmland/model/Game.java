@@ -73,8 +73,12 @@ public class Game {
      * Returns the ID of the team that has won the game, or null if there is no winner yet.
      * @return the ID of the winning team, or null if there is no winner yet
      */
-    public TeamID getWinner() {
+    public TeamID getWinnerID() {
         return winner;
+    }
+
+    public String getWinnerName() {
+        return winner == null ? null : winner.toString();
     }
 
     /**

@@ -15,6 +15,7 @@ public final class DuelMoveSnapshot extends  MoveSnapshot {
     private final String fromPositionName;
     private final DuelResult result;
     private final EntitySnapshot targetEntity;
+    private final String winnerName;
 
 
     /**
@@ -25,17 +26,33 @@ public final class DuelMoveSnapshot extends  MoveSnapshot {
      * @param toPositionName the name of the position to which the entity was moved
      * @param wasBlocked indicates whether the move was blocked by another entity
      * @param result the result of the duel, including information about damage dealt and whether any entities were eliminated
+     * @param winnerName indicates whether the game has ended as a result of this duel (i.e., whether there is a winner)
      */
     public DuelMoveSnapshot(EntitySnapshot movedEntity, EntitySnapshot targetEntity, String fromPositionName, String toPositionName,
-                            boolean wasBlocked,
-                            DuelResult result) {
+                            boolean wasBlocked, DuelResult result, String winnerName) {
         super(movedEntity, toPositionName, wasBlocked, MOVE_TYPE);
         this.result = result;
         this.targetEntity = targetEntity;
         this.fromPositionName = fromPositionName;
+        this.winnerName =  winnerName;
     }
 
 
+    /**
+     * Getter for the isGameOver field, indicating whether the game has ended as a result of this duel.
+     * @return true, if there is a winner, false otherwise
+     */
+    public boolean isGameOver() {
+        return winnerName != null;
+    }
+
+    /**
+     * Gets the name of the winner if the game has ended as a result of this duel.
+     * @return the Team Name, who wons.
+     */
+    public String getWinnerName() {
+        return winnerName;
+    }
     /**
      * Returns the name of the position from which the entity was moved.
      * @return the name of the position from which the entity was moved
