@@ -247,6 +247,6 @@ public final class MovementService {
     }
 
     private EntitySnapshot createEntitySnapshot(BoardEntity entity) {
-        return new EntitySnapshot(entity, game.getTeamName(entity.getOwner()), entity.isFarmerKing(), entity.isRevealed());
+        return new EntitySnapshot(entity, game.getTeamName(entity.getOwner()), entity.isFarmerKing(), !entity.isRevealed());
     }
 }

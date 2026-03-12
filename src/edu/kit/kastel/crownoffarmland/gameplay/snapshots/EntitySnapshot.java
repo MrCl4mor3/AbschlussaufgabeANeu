@@ -56,12 +56,12 @@ public final class EntitySnapshot {
      * @param entity the entity to create the snapshot for
      * @param teamName the name of the team the entity belongs to
      * @param isKing true if the entity is a farmer king, false otherwise
-     * @param isRevealed true if the entity is revealed, false if it is hidden
+     * @param hidden true if the entity is revealed, false if it is hidden
      */
-    public EntitySnapshot(BoardEntity entity, String teamName, boolean isKing, boolean isRevealed) {
+    public EntitySnapshot(BoardEntity entity, String teamName, boolean isKing, boolean hidden) {
         this(true,
                 isKing,
-                !isRevealed,
+                hidden,
                 teamName,
                 entity.getName().toString(),
                 !isKing ? ((Unit) entity).getAtk() : 0,
