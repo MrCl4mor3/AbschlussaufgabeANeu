@@ -107,7 +107,7 @@ public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
         }
 
         if (snapshot.isGameOver()) {
-            output.append(String.format(LIFE_ZERO_MESSAGE, snapshot.getWinnerName()));
+            output.append(String.format(LIFE_ZERO_MESSAGE, snapshot.getLoserName()));
         }
     }
 }
