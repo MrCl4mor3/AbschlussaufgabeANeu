@@ -19,35 +19,38 @@ public class UnitMerger {
     private static final int G3T_PRIME_THRESHOLD = 100;
     private static final int PRIME_DIVISOR = 100;
 
+
     /**
      * Tries to merge two units based on their attributes. The method checks for various merging conditions such as symbiosis, alignment,
      * and prime compatibility, and returns a MergeResult indicating the outcome of the merging attempt. If the units are incompatible,
      * the result will indicate that as well. The merged unit, if created, will have combined attributes based on the merging rules
      * defined in the method.
-     *
-     * @param unit1 the first unit involved in the merge
-     * @param unit2 the second unit involved in the merge
+     * @param incoming the unit that is attempting to merge with the target unit
+     * @param target the unit that is being targeted for merging with the incoming unit
      * @return a MergeResult object that indicates the type of merge that occurred (if any) and the resulting merged unit, or null if the
-     *      units are incompatible
+     *     units are incompatible
      */
-    public MergeResult tryMerge(Unit unit1, Unit unit2) {
+    public MergeResult tryMerge(Unit incoming, Unit target) {
 
-        if (unit1 == null || unit2 == null) {
+        if (incoming == null || target == null) {
             return new MergeResult(MergeType.INCOMPATIBLE, null);
         }
 
-        if (unit1.getName().equals(unit2.getName())) {
+        if (incoming.getName().equals(target.getName())) {
             return new MergeResult(MergeType.INCOMPATIBLE, null);
         }
 
-        Unit unitA = unit1.getAtk() >= unit2.getAtk() ? unit1 : unit2;
-        Unit unitB = unitA == unit1 ? unit2 : unit1;
+
+        Unit unitA = incoming.getAtk() >= target.getAtk() ? incoming : target;
+        Unit unitB = unitA == incoming ? target : incoming;
+
 
         // Check for Symbiosis first
         if (isSymbiosis(unitA, unitB)) {
-            Unit mergedUnit = buildMergedUnit(unitA, unitB, unitA.getAtk(), unitB.getDef());
+            Unit mergedUnit = buildMergedUnit(incoming, target, unitA.getAtk(), unitB.getDef());
             return new MergeResult(MergeType.SYMBIOSIS, mergedUnit);
         }
+
 
         int g3t = computeG3t(unitA, unitB);
 
@@ -55,7 +58,7 @@ public class UnitMerger {
         if (g3t > G3T_PRIME_THRESHOLD) {
             int mergedAtk = unitA.getAtk() + unitB.getAtk() - g3t;
             int mergedDef = unitA.getDef() + unitB.getDef() - g3t;
-            Unit mergedUnit = buildMergedUnit(unitA, unitB, mergedAtk, mergedDef);
+            Unit mergedUnit = buildMergedUnit(incoming, target, mergedAtk, mergedDef);
             return new MergeResult(MergeType.PRIME, mergedUnit);
         }
 
@@ -63,11 +66,9 @@ public class UnitMerger {
         if (g3t == G3T_PRIME_THRESHOLD && isPrimeCompatible(unitA, unitB)) {
             int mergedAtk = (unitA.getAtk() + unitB.getAtk()) / PRIME_DIVISOR;
             int mergedDef = (unitA.getDef() + unitB.getDef()) / PRIME_DIVISOR;
-            Unit mergedUnit = buildMergedUnit(unitA, unitB, mergedAtk, mergedDef);
+            Unit mergedUnit = buildMergedUnit(incoming, target, mergedAtk, mergedDef);
             return new MergeResult(MergeType.ALIGNMENT, mergedUnit);
         }
-
-        // if none of the above conditions are met, the units are incompatible
         return new MergeResult(MergeType.INCOMPATIBLE, null);
     }
 
@@ -75,10 +76,10 @@ public class UnitMerger {
         return unitA.getAtk() == unitB.getDef() && unitA.getDef() == unitB.getAtk();
     }
 
-    private Unit buildMergedUnit(Unit unitA, Unit unitB, int atk, int def) {
-        String mergedQualificator = mergeQualificator(unitA.getQualificator(), unitB.getQualificator());
-        String mergedRole = mergeRole(unitA.getRole(), unitB.getRole());
-        return new Unit(unitA.getOwner(), new UnitName(mergedRole, mergedQualificator), new StatusValue(atk, def));
+    private Unit buildMergedUnit(Unit incoming, Unit resident, int atk, int def) {
+        String mergedQualificator = mergeQualificator(incoming.getQualificator(), resident.getQualificator());
+        String mergedRole = mergeRole(incoming.getRole(), resident.getRole());
+        return new Unit(incoming.getOwner(), new UnitName(mergedRole, mergedQualificator), new StatusValue(atk, def));
     }
 
     private String mergeQualificator(String qualificatorA, String qualificatorB) {
