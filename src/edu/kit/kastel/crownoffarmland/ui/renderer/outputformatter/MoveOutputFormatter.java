@@ -85,7 +85,7 @@ public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
             defenderRevealed = defenderSummary;
         }
 
-        output.append(String.format(ATTACK_MESSAGE, attackerSummary, defenderSummary, snapshot.getToPositionName()));
+        output.append(String.format(ATTACK_MESSAGE, attackerSummary, defenderRevealed, snapshot.getToPositionName()));
 
         if (snapshot.attackerWasFlipped()) {
             output.append(String.format(FLIP_MESSAGE, attackerSummary, snapshot.getFromPositionName()));
