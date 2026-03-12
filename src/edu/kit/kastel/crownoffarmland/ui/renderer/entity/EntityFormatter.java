@@ -22,6 +22,9 @@ public class EntityFormatter {
      *      values in a concise format (e.g., "EntityName (ATK/DEF)")
      */
     public String formatEntitySummary(EntitySnapshot entitySnapshot) {
+        if (entitySnapshot.isFarmerKing()) {
+            return entitySnapshot.getEntityName();
+        }
         return String.format(ENTITY_SUMMARY_FORMAT, entitySnapshot.getEntityName(), entitySnapshot.getAttack(),
                 entitySnapshot.getDefense());
     }
