@@ -88,13 +88,6 @@ public class GameHandler {
         drawCards(TeamID.TEAM_2, OPENING_HAND_SIZE);
         game.setOccupant(TEAM1_KING_START, game.getKing(TeamID.TEAM_1));
         game.setOccupant(TEAM2_KING_START, game.getKing(TeamID.TEAM_2));
-
-        Unit unit1 = new Unit(TeamID.TEAM_2, new UnitName("Knight", "A"), new StatusValue(1, 1));
-        game.setOccupant(new Position(3, 'D'), unit1);
-
-
-
-
         startCurrentTurn();
     }
 
