@@ -25,12 +25,11 @@ public class CommandHandler {
     private static final String COMMAND_DELIMITER_REPLACEMENT = " ";
     private static final String HELP_COMMAND = "Use one of the following commands: %s.";
     private static final String COMMAND_NOT_ALLOWED_AFTER_YIELD = "Cannot execute the command '%s', you must discard!%n";
-    private static final String WINNER_MESSAGE = "%s wins!";
+    private static final String WINNER_MESSAGE = "%s wins!%n";
 
 
     private final Map<String, Command> commands;
     private final GameHandler gameHandler;
-    private final EntityFormatter entityFormatter;
     private final GameOutputPrinter gameOutputPrinter;
     private boolean running = false;
 
@@ -45,7 +44,6 @@ public class CommandHandler {
     public CommandHandler(GameHandler gameHandler, BoardRenderer boardRenderer, EntityFormatter entityFormatter,
         GameOutputPrinter gameOutputPrinter) {
         this.gameHandler = gameHandler;
-        this.entityFormatter = entityFormatter;
         this.gameOutputPrinter = gameOutputPrinter;
         commands = new LinkedHashMap<>();
         initCommands();
@@ -67,9 +65,12 @@ public class CommandHandler {
                     executeAITurn();
                 }
 
-                if (!this.running || gameHandler.isGameOver()) {
-                    System.out.printf(WINNER_MESSAGE, gameHandler.getWinner());
+                if (!this.running) {
                     break;
+                }
+
+                if (gameHandler.isGameOver()) {
+                    System.out.printf(WINNER_MESSAGE, gameHandler.getWinner());
                 }
 
                 executeCommand(scanner.nextLine());
