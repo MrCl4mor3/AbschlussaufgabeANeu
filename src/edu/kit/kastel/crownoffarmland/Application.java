@@ -65,7 +65,7 @@ public final class Application {
         GameHandler gameHandler = factory.createGameHandler();
         gameHandler.initializeAI(gameOutputPrinter);
 
-        CommandHandler commandHandler = new CommandHandler(gameHandler, boardRenderer, entityFormatter, gameOutputPrinter);
+        CommandHandler commandHandler = new CommandHandler(gameHandler, gameOutputPrinter);
         commandHandler.handleUserInput();
     }
 }

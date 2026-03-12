@@ -23,6 +23,7 @@ public class DeckFileParser implements ContentParser<int[]> {
     private static final String INVALID_DECK_SIZE_ERROR = "Invalid deck size: expected %d cards, but got %d.";
     private static final String DECK_FILE_EMPTY_ERROR = "The deck file is empty.";
     private static final String INVALID_ENTRY_ERROR = "Invalid vard count in deck file: '%s' is not a valid non-negative integer.";
+    private static final int MUST_NOT_NEGATIVE = 0;
 
 
     private final int expectedLines;
@@ -72,7 +73,7 @@ public class DeckFileParser implements ContentParser<int[]> {
     private StartupResult<Integer> parseNonNegativeInt(String rawContent) {
         try {
             int value = Integer.parseInt(rawContent);
-            if (value < 0) {
+            if (value < MUST_NOT_NEGATIVE) {
                 return StartupError.error("Negative card count in deck file: '%s' is not allowed.", rawContent);
             }
             return StartupResult.success(value);
