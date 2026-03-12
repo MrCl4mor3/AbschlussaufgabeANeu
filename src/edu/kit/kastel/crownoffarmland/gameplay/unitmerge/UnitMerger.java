@@ -39,12 +39,22 @@ public class UnitMerger {
         if (incoming.getName().equals(target.getName())) {
             return new MergeResult(MergeType.INCOMPATIBLE, null);
         }
+        int atkA;
+        int defA;
+        int atkB;
+        int defB;
 
-        int atkA = incoming.getAtk();
-        int defA = incoming.getDef();
-        int defB = target.getDef();
-        int atkB = target.getAtk();
-
+        if (incoming.getAtk() > target.getAtk()) {
+            atkA = incoming.getAtk();
+            defA = incoming.getDef();
+            defB = target.getDef();
+            atkB = target.getAtk();
+        } else {
+            atkA = target.getAtk();
+            defA = target.getDef();
+            defB = incoming.getDef();
+            atkB = incoming.getAtk();
+        }
 
         // Check for Symbiosis first
         if (isSymbiosis(atkA, defA, atkB, defB)) {
@@ -77,7 +87,7 @@ public class UnitMerger {
 
 
     private boolean isSymbiosis(int atkA, int defA, int atkB, int defB) {
-        return (atkA > atkB && atkA == defB && defA == atkB);
+        return (atkA == defB && defA == atkB);
     }
 
     private Unit buildMergedUnit(Unit incoming, Unit resident, int atk, int def) {
