@@ -48,7 +48,7 @@ public class GameHandler {
     private static final Position TEAM1_KING_START = new Position(1, 'D');
     private static final Position TEAM2_KING_START = new Position(7, 'D');
     private static final int HAND_INDEX_OFFSET = 1;
-    private static final int OPENING_HAND_SIZE = 4;
+    private static final int OPENING_HAND_SIZE = 5;
     private final Game game;
     private final SnapshotFactory snapshotFactory;
     private final TurnState turnState;
