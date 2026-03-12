@@ -138,7 +138,6 @@ public final class AIDecisionService {
         int selectedIndex = weightedRandomSelector.selectWeightedRandom(tieWeights);
         return bestPositions.get(selectedIndex);
     }
-
     /**
      * Choose a Handcard to place.
      * @return Index of the chosen Handcard, starting with 1 for the first card in hand
@@ -154,8 +153,6 @@ public final class AIDecisionService {
         int selectedIndex = weightedRandomSelector.selectWeightedRandom(atkWeights);
         return selectedIndex + HAND_INDEX_OFFSET;
     }
-
-
     /**
      * Choose next Unit action.
      * @return the Unit action.
@@ -189,8 +186,6 @@ public final class AIDecisionService {
         ActionScore selectedAction = bestCandidate.getActionScores().get(selectedIndex);
         return new UnitActionDecision(bestCandidate.getSource(), selectedAction.getActionType(), selectedAction.getTarget());
     }
-
-
     /**
      * Choose wich card should drop.
      * @return the index of the card to drop, starting with 1 for the first card in hand
@@ -212,7 +207,6 @@ public final class AIDecisionService {
         BoardEntity occupant = game.boardView().getOccupant(candidate);
         return occupant == null || occupant.getOwner().equals(currentTeam);
     }
-
     private int scoreKingTarget(Position candidate, Position kingPosition, TeamID currentTeam) {
         int distance = manhattanDistance(candidate, kingPosition);
         int enemies = countAdjacentEntitiesFromTeam(candidate, game.getEnemyTeamID(), true);
@@ -220,7 +214,6 @@ public final class AIDecisionService {
         int fellowPresent = hasOwnUnitOnField(candidate, currentTeam) ? KING_FELLOW_ON_FIELD_VALUE : KING_NO_FELLOW_ON_FIELD_VALUE;
         return fellows - KING_ENEMY_WEIGHT_FACTOR * enemies - distance - KING_FELLOW_PRESENT_FACTOR * fellowPresent;
     }
-
     private int scorePlacementPosition(Position candidate, TeamID currentTeam) {
         Position enemyKingPosition = game.getKingPosition(game.getEnemyTeamID());
         int steps = manhattanDistance(candidate, enemyKingPosition);
@@ -228,12 +221,9 @@ public final class AIDecisionService {
         int fellows = countOrthogonalEntitiesFromTeam(candidate, currentTeam, true);
         return -steps + PLACEMENT_ENEMY_WEIGHT_FACTOR * enemies - fellows;
     }
-
-
     private int manhattanDistance(Position a, Position b) {
         return Math.abs(a.getRow() - b.getRow()) + Math.abs(a.getColumn() - b.getColumn());
     }
-
     private int countAdjacentEntitiesFromTeam(Position center, TeamID team, boolean includeKing) {
         int count = 0;
 
@@ -247,7 +237,6 @@ public final class AIDecisionService {
         }
         return count;
     }
-
     private int countOrthogonalEntitiesFromTeam(Position center, TeamID team, boolean includeKing) {
         int count = 0;
 
@@ -261,12 +250,10 @@ public final class AIDecisionService {
         }
         return count;
     }
-
     private boolean hasOwnUnitOnField(Position candidate, TeamID team) {
         BoardEntity occupant = game.boardView().getOccupant(candidate);
         return occupant != null && occupant.getOwner().equals(team) && !occupant.isFarmerKing();
     }
-
     private List<Integer> createTieWeights(int size, int score) {
         List<Integer> weights = new ArrayList<>();
         for (int i = 0; i < size; i++) {
@@ -274,8 +261,6 @@ public final class AIDecisionService {
         }
         return weights;
     }
-
-
     private List<UnitCandidate> getMoveableUnitCandidates(TeamID currentTeam) {
         List<UnitCandidate> candidates = new ArrayList<>();
 
@@ -325,38 +310,42 @@ public final class AIDecisionService {
         if (targetEntity != null && targetEntity.isFarmerKing() && targetEntity.getOwner().equals(currentTeam)) {
             return;
         }
-        int score = scoreDirectionalAction(source, target, unit, currentTeam);
+        int score = scoreDirectionalAction(source, target, unit, currentTeam, targetEntity);
         actionScores.add(new ActionScore(UnitActionType.MOVE, target, score));
     }
-    private int scoreDirectionalAction(Position source, Position target, Unit unit, TeamID team) {
-        BoardEntity targetEntity = game.boardView().getOccupant(target);
-        TeamID enemyTeam = game.getEnemyTeamID();
+    //TargetEntity kann leer sein, eigenes Team, oder Gegner, ABER: Nicht eigener König!
+    private int scoreDirectionalAction(Position source, Position target, Unit unit, TeamID currentTeam, BoardEntity targetEntity) {
+        int score = 0;
+        
         if (targetEntity == null) {
-            int steps = manhattanDistance(target, game.getKingPosition(enemyTeam));
-            int enemies = countAdjacentEntitiesFromTeam(target, enemyTeam, true);
+            Position enemyKingPosition = game.getKingPosition(game.getEnemyTeamID());
+            int steps = manhattanDistance(target, enemyKingPosition);
+            int enemies = countOrthogonalEntitiesFromTeam(target, game.getEnemyTeamID(), true);
             return ADVANCE_STEPS_FACTOR * steps - enemies;
         }
-        if (targetEntity.getOwner().equals(team) && !targetEntity.isFarmerKing()) {
-            Unit targetUnit =  (Unit) targetEntity;
+        if (targetEntity.getOwner().equals(currentTeam)) {
+            Unit targetUnit = (Unit) targetEntity;
             MergeResult mergeResult = unitMerger.tryMerge(unit, targetUnit);
-
             if (mergeResult.isSuccessful()) {
                 return mergeResult.getUnit().getAtk() + mergeResult.getUnit().getDef() - unit.getAtk() - unit.getDef();
             } else {
-                return -unit.getAtk() - targetUnit.getDef();
+                return -targetUnit.getAtk() - targetUnit.getDef();
             }
+        }  else {
+            if (targetEntity.isFarmerKing()) {
+                return unit.getAtk();
+            }
+            Unit targetUnit = (Unit) targetEntity;
+
+            if (!targetUnit.isRevealed()) {
+                return unit.getAtk() - HIDDEN_ENEMY_PENALTY;
+            }
+
+            if (targetUnit.isBlocked()) {
+                return unit.getAtk() - targetUnit.getDef();
+            }
+            return DUEL_FACTOR * (unit.getAtk() - targetUnit.getDef());
         }
-        if (targetEntity.isFarmerKing()) {
-            return unit.getAtk();
-        }
-        Unit enemyUnit = (Unit) targetEntity;
-        if (!enemyUnit.isFarmerKing()) {
-            return enemyUnit.getAtk() - HIDDEN_ENEMY_PENALTY;
-        }
-        if (enemyUnit.isBlocked()) {
-            return unit.getAtk() - enemyUnit.getDef();
-        }
-        return DUEL_FACTOR * (unit.getAtk() - enemyUnit.getDef());
     }
     private int scoreBlockAction(Position source, Unit unit, TeamID currentTeam) {
         int strongestEnemyAtk = getStrongestEnemyAtkInStraightLine(source, currentTeam.getNext());
