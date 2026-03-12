@@ -78,14 +78,9 @@ public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
         String attackerSummary = entityFormatter.formatEntitySummary(snapshot.getMovedEntity());
         String defenderSummary = entityFormatter.formatEntitySummary(snapshot.getTargetEntity());
 
-        String defenderRevealed;
-        if (snapshot.defenderWasEliminated()) {
-            defenderRevealed = NOT_REVEALED_UNIT;
-        } else {
-            defenderRevealed = defenderSummary;
-        }
+        String defenderDisplay = snapshot.getTargetEntity().isHidden() ? NOT_REVEALED_UNIT : defenderSummary;
 
-        output.append(String.format(ATTACK_MESSAGE, attackerSummary, defenderRevealed, snapshot.getToPositionName()));
+        output.append(String.format(ATTACK_MESSAGE, attackerSummary, defenderDisplay, snapshot.getToPositionName()));
 
         if (snapshot.attackerWasFlipped()) {
             output.append(String.format(FLIP_MESSAGE, attackerSummary, snapshot.getFromPositionName()));
