@@ -6,6 +6,14 @@ import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.MoveSnapsh
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.MoveType;
 import edu.kit.kastel.crownoffarmland.ui.renderer.entity.EntityFormatter;
 
+/**
+ * This class is responsible for formatting the output of move actions in the game. It takes a MoveSnapshot as input and generates a
+ * string representation of the move, including details about the entities involved, the type of move, and the outcome of the move (e.g.,
+ * whether it was blocked, whether a merge was successful, or the results of a duel). The output is designed to be informative and
+ * engaging for the player, providing a clear narrative of the events that occurred during the move.
+ *
+ * @author ucgdi
+ */
 public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
 
     private static final String MERGING_MESSAGE = "%s and %s on %s join forces!%n";
@@ -20,6 +28,10 @@ public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
     private static final String LIFE_ZERO_MESSAGE = "%s's life points dropped to 0!%n";
 
 
+    /**
+     *  Creates a new MoveOutputFormatter with the given EntityFormatter.
+     * @param entityFormatter the EntityFormatter used to format entity summaries in the output
+     */
     public MoveOutputFormatter(EntityFormatter entityFormatter) {
         super(entityFormatter);
     }

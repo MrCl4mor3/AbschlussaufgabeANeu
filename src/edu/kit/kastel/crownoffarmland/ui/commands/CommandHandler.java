@@ -108,7 +108,6 @@ public class CommandHandler {
         }
 
 
-        //public void executeCommandNew(Command command, String[] commandArguments) {
         try {
             command.execute(commandArguments);
 

@@ -3,6 +3,11 @@ package edu.kit.kastel.crownoffarmland.ui.renderer.outputformatter;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
 import edu.kit.kastel.crownoffarmland.ui.renderer.entity.EntityFormatter;
 
+/**
+ * Formats.
+ *
+ * @author ucgdi
+ */
 public class ShowOutputFormatter extends AbstractOutputFormatter<EntitySnapshot> {
 
 
@@ -14,6 +19,10 @@ public class ShowOutputFormatter extends AbstractOutputFormatter<EntitySnapshot>
     private static final String ATK_PREFIX = "ATK: ";
     private static final String DEF_PREFIX = "DEF: ";
 
+    /**
+     * Creates a new Formatter.
+     * @param entityFormatter for formatting the entity name, attack and defense values.
+     */
     public ShowOutputFormatter(EntityFormatter  entityFormatter) {
         super(entityFormatter);
     }

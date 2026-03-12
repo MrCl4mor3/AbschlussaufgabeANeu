@@ -119,7 +119,7 @@ public final class AITurnController {
             endTurnSnapshot = gameHandler.tryEndTurn();
         }
 
-        System.out.print(printer.formatYield(endTurnSnapshot));
+        System.out.println(printer.formatYield(endTurnSnapshot));
     }
 
 

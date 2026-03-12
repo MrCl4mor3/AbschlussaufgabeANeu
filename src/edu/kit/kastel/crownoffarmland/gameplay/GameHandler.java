@@ -338,6 +338,7 @@ public class GameHandler {
      * @return A MoveSnapshot representing the result of the move action, including any combat or merges that occurred as a result of the
      *      move.
      * @throws InvalidGameStateException if there is a problem with the game state that prevents moving the unit
+     * @throws InvalidPositionException if the Position is invalid
      */
     public MoveSnapshot moveUnit(Position target) throws InvalidGameStateException {
         if (!game.isValidPosition(target)) {
@@ -347,10 +348,20 @@ public class GameHandler {
         return movementService.moveUnit(target, getCurrentTeamID());
     }
 
+    /**
+     * Execute the AI turn.
+     * @throws CrownOfFarmlandException if there is a problem with the game state that prevents the AI from taking its turn, or if there
+     *      is an error in the AI's decision-making process.
+     */
     public void executeAITurn() throws CrownOfFarmlandException {
         turnController.executeTurn();
     }
 
+    /**
+     * Checks if the current player is an AI-controlled player. This method determines whether the current player's team is controlled by
+     * the AI, which can be used to decide whether to allow player input or to execute the AI's turn automatically.
+     * @return true if the current player is an AI-controlled player, false otherwise
+     */
     public boolean isCurrentPlayerAI() {
         return getCurrentTeamID() == TeamID.TEAM_2;
     }

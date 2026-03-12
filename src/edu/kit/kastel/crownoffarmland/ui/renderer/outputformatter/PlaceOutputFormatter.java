@@ -4,6 +4,11 @@ import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
 
 import java.util.List;
 
+/**
+ * Formats.
+ *
+ * @author ucgdi
+ */
 public class PlaceOutputFormatter implements OutputFormatter<List<PlaceStepSnapshot>> {
 
     private static final String PLACE_MESSAGE = "%s places %s on %s.%n";

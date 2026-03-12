@@ -52,6 +52,8 @@ public final class AIDecisionService {
      * Constructor for creating an EnemyDecisionService object with the specified game state, turn state, and weighted random selector.
      * @param game the current game state, used to evaluate potential moves, place units, and other game-related information
      * @param weightedRandomSelector the weighted random selector, used to select a choice among multiple options with the same score
+     * @param turnState the current turn state, used to determine which units have already moved and which actions are still available
+     * @param unitMerger the unit merger, used to evaluate potential merges when scoring moves and actions
      */
     public AIDecisionService(Game game, TurnState turnState, UnitMerger unitMerger, WeightedRandomSelector weightedRandomSelector) {
         this.game = game;
@@ -103,6 +105,10 @@ public final class AIDecisionService {
         }
     }
 
+    /**
+     * Choose a Placement Position.
+     * @return a Position
+     */
     public Position choosePlacementPosition() {
         TeamID currentTeam = game.getCurrentTeamID();
         Position kingPosition = game.getKingPosition(currentTeam);
@@ -136,6 +142,10 @@ public final class AIDecisionService {
         return bestPositions.get(selectedIndex);
     }
 
+    /**
+     * Choose a Handcard to place.
+     * @return Index of the chosen Handcard, starting with 1 for the first card in hand
+     */
     public int choosePlacementHandIndex() {
         TeamID currentTeam = game.getCurrentTeamID();
         List<Integer> atkWeights = new ArrayList<>();
@@ -149,7 +159,10 @@ public final class AIDecisionService {
     }
 
 
-
+    /**
+     * Choose next Unit action.
+     * @return the Unit action.
+     */
     public UnitActionDecision chooseNextUnitAction() {
         TeamID currentTeam = game.getCurrentTeamID();
         List<UnitCandidate> candidates = getMoveableUnitCandidates(currentTeam);
@@ -181,8 +194,21 @@ public final class AIDecisionService {
     }
 
 
+    /**
+     * Choose wich card should drop.
+     * @return the index of the card to drop, starting with 1 for the first card in hand
+     */
     public int chooseDiscardIndex() {
-        return 0;
+        List<Integer> discardWeights = new ArrayList<>();
+        TeamID currentTeam = game.getCurrentTeamID();
+
+        for (int handIndex = 0; handIndex < game.getHandSize(currentTeam); handIndex++) {
+            Unit handCard = game.getHandCardAt(currentTeam, handIndex);
+            discardWeights.add(handCard.getAtk() + handCard.getDef());
+        }
+
+        int selectedIndex = weightedRandomSelector.selectInverseWeightedRandom(discardWeights);
+        return selectedIndex +  HAND_INDEX_OFFSET;
     }
 
     private boolean isValidKingTarget(Position candidate, TeamID currentTeam) {
@@ -201,7 +227,7 @@ public final class AIDecisionService {
     private int scorePlacementPosition(Position candidate, TeamID currentTeam) {
         Position enemyKingPosition = game.getKingPosition(game.getEnemyTeamID());
         int steps = manhattanDistance(candidate, enemyKingPosition);
-        int enemies = countAdjacentEntitiesFromTeam(candidate, currentTeam, true);
+        int enemies = countAdjacentEntitiesFromTeam(candidate, game.getEnemyTeamID(), true);
         int fellows = countAdjacentEntitiesFromTeam(candidate, currentTeam, false);
         return -steps + PLACEMENT_ENEMY_WEIGHT_FACTOR * enemies - fellows;
     }
@@ -368,7 +394,7 @@ public final class AIDecisionService {
                 Unit enemyUnit = (Unit) occupant;
                 strongestAtk = Math.max(strongestAtk, enemyUnit.getAtk());
             }
-            current = new Position(source.getRow() + rowDelta, (char) (source.getColumn() + columnDelta));
+            current = new Position(current.getRow() + rowDelta, (char) (current.getColumn() + columnDelta));
         }
         return strongestAtk;
     }

@@ -4,6 +4,11 @@ import edu.kit.kastel.crownoffarmland.gameplay.snapshots.TeamStateSnapshot;
 
 import java.util.List;
 
+/**
+ * Formats.
+ *
+ * @author ucgdi
+ */
 public class StateOutputFormatter implements OutputFormatter<List<TeamStateSnapshot>> {
 
     private static final String LIFE_POINTS_FORMAT = "%d/8000 LP";
