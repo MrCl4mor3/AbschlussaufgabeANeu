@@ -61,7 +61,7 @@ public final class EntitySnapshot {
     public EntitySnapshot(BoardEntity entity, String teamName, boolean isKing, boolean isRevealed) {
         this(true,
                 isKing,
-                isRevealed,
+                !isRevealed,
                 teamName,
                 entity.getName().toString(),
                 !isKing ? ((Unit) entity).getAtk() : 0,
