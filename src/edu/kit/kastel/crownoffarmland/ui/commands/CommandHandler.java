@@ -3,8 +3,6 @@ package edu.kit.kastel.crownoffarmland.ui.commands;
 import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
-import edu.kit.kastel.crownoffarmland.ui.renderer.board.BoardRenderer;
-import edu.kit.kastel.crownoffarmland.ui.renderer.entity.EntityFormatter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,12 +35,9 @@ public class CommandHandler {
     /**
      * Creates a new command handler object and initializes its program.commands.
      * @param gameHandler the game handler to execute the commands on
-     * @param boardRenderer the board renderer to print the board when the board command is executed
-     * @param entityFormatter the entity formatter to print the entities when the show command is executed
      * @param gameOutputPrinter the game output printer to print the output of the commands
      */
-    public CommandHandler(GameHandler gameHandler, BoardRenderer boardRenderer, EntityFormatter entityFormatter,
-        GameOutputPrinter gameOutputPrinter) {
+    public CommandHandler(GameHandler gameHandler, GameOutputPrinter gameOutputPrinter) {
         this.gameHandler = gameHandler;
         this.gameOutputPrinter = gameOutputPrinter;
         commands = new LinkedHashMap<>();
