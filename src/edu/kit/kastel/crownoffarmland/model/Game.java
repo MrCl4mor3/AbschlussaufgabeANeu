@@ -82,7 +82,10 @@ public class Game {
      * @return The team name, who wins
      */
     public String getWinnerName() {
-        return winner == null ? null : winner.toString();
+        if (!(winner == null)) {
+            return teams.get(winner).getName();
+        }
+        return null;
     }
 
     /**
