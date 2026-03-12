@@ -11,8 +11,8 @@ import edu.kit.kastel.crownoffarmland.model.units.FarmerKing;
 import edu.kit.kastel.crownoffarmland.model.units.Unit;
 
 import java.util.EnumMap;
-import java.util.List;
 import java.util.Map;
+
 
 /**
  * Represents the complete game state.
@@ -88,6 +88,10 @@ public class Game {
     }
 
 
+    /**
+     * Wrapper for board.
+     * @return the view of a board
+     */
     public GameBoardView boardView() {
         return board;
     }
