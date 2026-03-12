@@ -94,7 +94,7 @@ public final class AIDecisionService {
         }
 
         if (bestPositions.size() == 1) {
-            return bestPositions.get(0);
+            return bestPositions.getFirst();
         } else {
             List<Integer> tieWeights = createTieWeights(bestPositions.size(), TIE_WEIGHT_VALUE);
             int selectedIndex = weightedRandomSelector.selectWeightedRandom(tieWeights);

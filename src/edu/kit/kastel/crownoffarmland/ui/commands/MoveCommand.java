@@ -16,6 +16,7 @@ import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
  */
 public class MoveCommand extends  Command {
     private static final String COMMAND_NAME = "move";
+    private static final String WINNER_MESSAGE = "%s wins!%n";
 
 
     /**
@@ -39,6 +40,7 @@ public class MoveCommand extends  Command {
         System.out.print(gameOutputPrinter.formatMove(result));
 
         if (!gameHandler.isGameOver()) {
+            System.out.printf(WINNER_MESSAGE, gameHandler.getWinner());
             System.out.println(gameOutputPrinter.formatBoard(gameHandler.createBoardSnapshot()));
             System.out.println(gameOutputPrinter.formatShow(gameHandler.createEntitySnapshot()));
         }

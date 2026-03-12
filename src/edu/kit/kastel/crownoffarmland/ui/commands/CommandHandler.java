@@ -60,14 +60,9 @@ public class CommandHandler {
                     executeAITurn();
                 }
 
-                if (!this.running) {
+                if (!this.running || gameHandler.isGameOver()) {
                     break;
                 }
-
-                if (gameHandler.isGameOver()) {
-                    System.out.printf(WINNER_MESSAGE, gameHandler.getWinner());
-                }
-
                 executeCommand(scanner.nextLine());
             }
         }
@@ -102,13 +97,6 @@ public class CommandHandler {
 
         try {
             command.execute(commandArguments);
-
-
-            if (gameHandler.isGameOver()) {
-                System.out.printf(WINNER_MESSAGE, gameHandler.getWinner());
-                quit();
-            }
-
         } catch (CrownOfFarmlandException e) {
             System.err.println(COMMAND_ERROR_PREFIX + e.getMessage());
         }
