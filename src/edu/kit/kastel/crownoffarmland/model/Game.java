@@ -76,18 +76,6 @@ public class Game {
     public TeamID getWinnerID() {
         return winner;
     }
-
-    /**
-     * Getter for the winner name.
-     * @return The team name, who wins
-     */
-    public String getWinnerName() {
-        if (!(winner == null)) {
-            return teams.get(winner).getName();
-        }
-        return null;
-    }
-
     /**
      * Sets the winner of the game to the specified team ID. This method is used to declare a team as the winner when certain conditions
      * are met during the game, such as when the opposing team's life points reach zero. Once a winner is set, the game can be considered

@@ -133,9 +133,13 @@ public final class MovementService {
         DuelResult duelResult = duelManager.resolveDuel(attacker, defender);
         updateGameStateAfterDuel(source, target, attacker, defender, duelResult);
 
-        TeamID loserTeam = duelResult.isAttackerEliminated() ? attacker.getOwner() : defender.getOwner();
-        String loserName = game.getTeamName(loserTeam);
+        String loserName;
 
+        if (!(game.getWinnerID() == null)) {
+            loserName = game.getTeamName(game.getWinnerID().getNext());
+        } else {
+            loserName = null;
+        }
         return new DuelMoveSnapshot(sourceEntitySnapshot, targetEntitySnapshot, source.toString(), target.toString(), wasBlocked,
                 duelResult, loserName);
     }
