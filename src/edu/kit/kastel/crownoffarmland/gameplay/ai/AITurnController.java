@@ -99,9 +99,7 @@ public final class AITurnController {
 
             switch (decision.getActionType()) {
                 case MOVE:
-                    MoveSnapshot moveSnapshot = gameHandler.moveUnit(decision.getTarget());
-                    printMoveOutput(moveSnapshot);
-
+                    printMoveOutput(gameHandler.moveUnit(decision.getTarget()));
                     if (gameHandler.isGameOver()) {
                         return;
                     }
@@ -112,7 +110,7 @@ public final class AITurnController {
                     printBoardAndShow();
                     break;
                 case STAY:
-                    gameHandler.moveUnit(decision.getTarget());
+                    printMoveOutput(gameHandler.moveUnit(decision.getTarget()));
                     break;
                 default:
                     throw new CrownOfFarmlandException("Invalid action type");
