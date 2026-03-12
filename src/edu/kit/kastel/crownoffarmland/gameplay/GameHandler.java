@@ -164,7 +164,7 @@ public class GameHandler {
 
 
     public void setSelected(Position position) throws InvalidPositionException {
-        if (game.validatePosition(position)) {
+        if (!game.isValidPosition(position)) {
             throw new InvalidPositionException(position.toString());
         }
         turnState.setSelectedPos(position);
@@ -340,7 +340,7 @@ public class GameHandler {
      * @throws InvalidGameStateException if there is a problem with the game state that prevents moving the unit
      */
     public MoveSnapshot moveUnit(Position target) throws InvalidGameStateException {
-        if (game.validatePosition(target)) {
+        if (!game.isValidPosition(target)) {
             throw new InvalidPositionException(target.toString());
         }
 

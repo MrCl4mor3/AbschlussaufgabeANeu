@@ -133,11 +133,6 @@ public class Board {
         return getField(position).isEmpty();
     }
 
-
-    public boolean validatePosition(Position position) {
-        return isValidPosition(position);
-    }
-
     /**
      * Sets the occupant of the field at the given position to the specified BoardEntity. If the position is invalid, an
      * InvalidPositionException is thrown.
@@ -148,7 +143,7 @@ public class Board {
         getField(position).setOccupant(entity);
     }
 
-    private boolean isValidPosition(Position position) {
+    public boolean isValidPosition(Position position) {
         if (position == null) {
             return false;
         }

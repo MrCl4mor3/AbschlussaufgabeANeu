@@ -285,7 +285,7 @@ public final class AIDecisionService {
 
 
     private void addDirectionalAction(List<ActionScore> actionScores, Position source, Position target, Unit unit, TeamID currentTeam) {
-        if (!game.validatePosition(target)) {
+        if (!game.isValidPosition(target)) {
             return;
         }
 
@@ -361,7 +361,7 @@ public final class AIDecisionService {
         int strongestAtk = 0;
         Position current = new Position(source.getRow() + rowDelta, (char)  (source.getColumn() + columnDelta));
 
-        while (game.validatePosition(current)) {
+        while (game.isValidPosition(current)) {
             BoardEntity occupant = game.getOccupant(current);
 
             if (occupant != null && occupant.getOwner().equals(enemyTeam) && !occupant.isFarmerKing()) {

@@ -1,7 +1,6 @@
 package edu.kit.kastel.crownoffarmland.model;
 
 
-import edu.kit.kastel.crownoffarmland.exceptions.InvalidPositionException;
 import edu.kit.kastel.crownoffarmland.model.board.Board;
 import edu.kit.kastel.crownoffarmland.model.board.Position;
 import edu.kit.kastel.crownoffarmland.model.team.Team;
@@ -286,8 +285,8 @@ public class Game {
     }
 
 
-    public boolean validatePosition(Position position) {
-        return board.validatePosition(position);
+    public boolean isValidPosition(Position position) {
+        return board.isValidPosition(position);
     }
 
     /**
