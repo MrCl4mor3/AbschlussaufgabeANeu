@@ -87,7 +87,7 @@ public final class AITurnController {
         gameHandler.setSelected(target);
         List<PlaceStepSnapshot> placeStepSnapshots = gameHandler.placeUnits(new int[]{aiDecisionService.choosePlacementHandIndex()});
 
-        System.out.print(printer.formatPlace(placeStepSnapshots));
+        System.out.println(printer.formatPlace(placeStepSnapshots));
         printBoardAndShow();
     }
 
