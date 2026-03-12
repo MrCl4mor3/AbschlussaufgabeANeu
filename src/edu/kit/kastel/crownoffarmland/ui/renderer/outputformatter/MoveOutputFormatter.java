@@ -26,6 +26,7 @@ public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
     private static final String ELIMINATION_MESSAGE = "%s was eliminated!%n";
     private static final String DAMAGE_MESSAGE = "%s takes %d damage!%n";
     private static final String LIFE_ZERO_MESSAGE = "%s's life points dropped to 0!%n";
+    private static final String NOT_REVEALED_UNIT = "???";
 
 
     /**
@@ -76,6 +77,13 @@ public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
     private void formatDuelMove(DuelMoveSnapshot snapshot, StringBuilder output) {
         String attackerSummary = entityFormatter.formatEntitySummary(snapshot.getMovedEntity());
         String defenderSummary = entityFormatter.formatEntitySummary(snapshot.getTargetEntity());
+
+        String defenderRevealed;
+        if (snapshot.defenderWasEliminated()) {
+            defenderRevealed = NOT_REVEALED_UNIT;
+        } else {
+            defenderRevealed = defenderSummary;
+        }
 
         output.append(String.format(ATTACK_MESSAGE, attackerSummary, defenderSummary, snapshot.getToPositionName()));
 
