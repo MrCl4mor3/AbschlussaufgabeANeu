@@ -28,9 +28,7 @@ import edu.kit.kastel.crownoffarmland.model.Game;
 import edu.kit.kastel.crownoffarmland.model.board.Position;
 import edu.kit.kastel.crownoffarmland.model.team.TeamID;
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
-import edu.kit.kastel.crownoffarmland.model.units.StatusValue;
 import edu.kit.kastel.crownoffarmland.model.units.Unit;
-import edu.kit.kastel.crownoffarmland.model.units.UnitName;
 import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
 
 
