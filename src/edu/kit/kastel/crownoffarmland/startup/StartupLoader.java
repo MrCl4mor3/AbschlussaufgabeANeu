@@ -254,6 +254,6 @@ public final class StartupLoader {
     }
 
     private void printRawFileContent(String content) {
-        System.out.println(content);
+        System.out.print(content);
     }
 }
