@@ -14,7 +14,7 @@ public class PlaceOutputFormatter implements OutputFormatter<List<PlaceStepSnaps
     private static final String PLACE_MESSAGE = "%s places %s on %s.%n";
     private static final String MERGING_MESSAGE = "%s and %s on %s join forces!%n";
     private static final String MERGING_UNIT_SUCCESS_MESSAGE = "Success!";
-    private static final String MERGING_UNIT_FAILURE_MESSAGE = "Union failed. %s was eliminated%n.";
+    private static final String MERGING_UNIT_FAILURE_MESSAGE = "Union failed. %s was eliminated.%n";
     private static final String ELIMINATION_MESSAGE = "%s was eliminated!%n";
 
 
