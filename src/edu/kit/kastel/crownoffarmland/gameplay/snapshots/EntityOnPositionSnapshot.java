@@ -2,7 +2,7 @@ package edu.kit.kastel.crownoffarmland.gameplay.snapshots;
 
 
 /**
- * Creates a snapshot of an entity an his position.
+ * Creates a snapshot of an entity on his position.
  *
  * @author ucgdi
  */

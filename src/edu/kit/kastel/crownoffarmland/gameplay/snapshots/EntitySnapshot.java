@@ -10,7 +10,13 @@ import edu.kit.kastel.crownoffarmland.model.units.Unit;
  * @author ucgdi
  */
 public final class EntitySnapshot {
-    private static final EntitySnapshot NO_UNIT = new EntitySnapshot(false, false, false, null, null, 0, 0);
+    private static final boolean HAS_NO_ENTITY = false;
+    private static final boolean IS_NOT_FARMER_KING = false;
+    private static final boolean IS_NOT_HIDDEN = false;
+    private static final int NON_COMBAT_STAT = 0;
+
+    private static final EntitySnapshot NO_UNIT = new EntitySnapshot(HAS_NO_ENTITY, IS_NOT_FARMER_KING, IS_NOT_HIDDEN, null, null,
+            NON_COMBAT_STAT, NON_COMBAT_STAT);
 
     private final boolean hasEntity;
     private final boolean farmerKing;
@@ -64,8 +70,8 @@ public final class EntitySnapshot {
                 hidden,
                 teamName,
                 entity.getName().toString(),
-                !isKing ? ((Unit) entity).getAtk() : 0,
-                !isKing ? ((Unit) entity).getDef() : 0);
+                !isKing ? ((Unit) entity).getAtk() : NON_COMBAT_STAT,
+                !isKing ? ((Unit) entity).getDef() : NON_COMBAT_STAT);
     }
 
 
