@@ -11,6 +11,7 @@ import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
  */
 public final class DuelMoveSnapshot extends  MoveSnapshot {
     private static final MoveType MOVE_TYPE = MoveType.DUEL;
+    private static final int GOT_DAMAGE_THRESHOLD = 1;
 
     private final String fromPositionName;
     private final DuelResult result;
@@ -107,7 +108,7 @@ public final class DuelMoveSnapshot extends  MoveSnapshot {
      * @return true if damage was dealt to either the attacker or the defender, false otherwise
      */
     public boolean hasDamage() {
-        return result.getDamageToAttackerTeam() > 0 || result.getDamageToDefenderTeam() > 0;
+        return result.getDamageToAttackerTeam() >= GOT_DAMAGE_THRESHOLD || result.getDamageToDefenderTeam() >= GOT_DAMAGE_THRESHOLD;
     }
 
     /**
@@ -116,7 +117,7 @@ public final class DuelMoveSnapshot extends  MoveSnapshot {
      * @return the amount of damage dealt to either the attacker or the defender, or 0 if no damage was dealt
      */
     public int getDamageAmount() {
-        if (result.getDamageToAttackerTeam() > 0) {
+        if (result.getDamageToAttackerTeam() >= GOT_DAMAGE_THRESHOLD) {
             return result.getDamageToAttackerTeam();
         }
         return result.getDamageToDefenderTeam();
@@ -128,10 +129,10 @@ public final class DuelMoveSnapshot extends  MoveSnapshot {
      * @return the name of the team that was damaged as a result of the duel, or null if no damage was dealt
      */
     public String getDamagedTeamName() {
-        if (result.getDamageToAttackerTeam() > 0) {
+        if (result.getDamageToAttackerTeam() >= GOT_DAMAGE_THRESHOLD) {
             return getMovedEntity().getTeamName();
         }
-        if (result.getDamageToDefenderTeam() > 0) {
+        if (result.getDamageToDefenderTeam() >= GOT_DAMAGE_THRESHOLD) {
             return targetEntity.getTeamName();
         }
         return null;
