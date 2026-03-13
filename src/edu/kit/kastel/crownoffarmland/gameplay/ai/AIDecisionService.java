@@ -342,7 +342,7 @@ public final class AIDecisionService {
             if (targetUnit.isBlocked()) {
                 return unit.getAtk() - targetUnit.getDef();
             }
-            return DUEL_FACTOR * (unit.getAtk() - targetUnit.getDef());
+            return DUEL_FACTOR * (unit.getAtk() - targetUnit.getAtk());
         }
     }
     private int scoreBlockAction(Position source, Unit unit, TeamID currentTeam) {
