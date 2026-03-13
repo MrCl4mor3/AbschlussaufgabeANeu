@@ -20,7 +20,6 @@ import java.util.List;
  * @author ucgdi
  */
 public final class AITurnController {
-    private static final String WINNER_MESSAGE = "%s wins!%n";
     private final Game game;
     private final GameHandler gameHandler;
     private final AIDecisionService aiDecisionService;
@@ -49,21 +48,18 @@ public final class AITurnController {
         executeKingMove();
 
         if (gameHandler.isGameOver()) {
-            System.out.printf(WINNER_MESSAGE, gameHandler.getWinner());
             return;
         }
 
         executePlacementIfPossible();
 
         if (gameHandler.isGameOver()) {
-            System.out.printf(WINNER_MESSAGE, gameHandler.getWinner());
             return;
         }
 
         executeUnitAction();
 
         if (gameHandler.isGameOver()) {
-            System.out.printf(WINNER_MESSAGE, gameHandler.getWinner());
             return;
         }
 
@@ -141,7 +137,7 @@ public final class AITurnController {
 
     private void printMoveOutput(MoveSnapshot moveSnapshot) throws CrownOfFarmlandException {
         System.out.print(printer.formatMove(moveSnapshot));
-
+        printBoardAndShow();
         if (!gameHandler.isGameOver()) {
             printBoardAndShow();
         }
