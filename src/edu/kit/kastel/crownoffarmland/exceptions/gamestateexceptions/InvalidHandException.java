@@ -1,4 +1,6 @@
-package edu.kit.kastel.crownoffarmland.exceptions;
+package edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions;
+
+import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
 
 /**
  * This exception is thrown when the player tries to perform an action on the hand, but the hand index is not valid.

@@ -1,14 +1,14 @@
 package edu.kit.kastel.crownoffarmland.gameplay;
 
 import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
-import edu.kit.kastel.crownoffarmland.exceptions.EmptySelectedFieldException;
-import edu.kit.kastel.crownoffarmland.exceptions.EnemyUnitSelectedException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.EmptySelectedFieldException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.EnemyUnitSelectedException;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
-import edu.kit.kastel.crownoffarmland.exceptions.InvalidHandException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.InvalidHandException;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidPositionException;
 import edu.kit.kastel.crownoffarmland.exceptions.KingCannotBlockedException;
-import edu.kit.kastel.crownoffarmland.exceptions.NoSelectionException;
-import edu.kit.kastel.crownoffarmland.exceptions.UnitAlreadyActedException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.NoSelectionException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.UnitAlreadyActedException;
 import edu.kit.kastel.crownoffarmland.exceptions.UnitAlreadyRevealedException;
 import edu.kit.kastel.crownoffarmland.exceptions.YieldException;
 import edu.kit.kastel.crownoffarmland.gameplay.ai.AIDecisionService;
@@ -268,7 +268,6 @@ public class GameHandler {
      *      discard a card at the specified index.
      * @throws YieldException if the player's hand is not full, indicating that they cannot end their turn by discarding a card
      */
-    //ToDo: Exceptions noch richtig werfen!
     public EndTurnSnapshot tryEndTurnWithDiscard(int index) throws InvalidGameStateException {
         if (!game.isHandFull(getCurrentTeamID())) {
             turnState.activateYieldRestriction();
@@ -279,7 +278,7 @@ public class GameHandler {
             int internalIndex = index - HAND_INDEX_OFFSET;
 
             if (internalIndex < 0 || internalIndex >= handSize) {
-                throw new InvalidHandException("Invalid hand index: " + index);
+                throw new InvalidHandException(String.valueOf(index));
             }
 
             Unit discardedCard = game.removeHandCardAt(getCurrentTeamID(), internalIndex);
@@ -292,7 +291,7 @@ public class GameHandler {
         }
     }
 
-    private EndTurnSnapshot finishTurn(EntitySnapshot discardedCard) throws InvalidGameStateException {
+    private EndTurnSnapshot finishTurn(EntitySnapshot discardedCard) {
         EndTurnSnapshot endTurnSnapshot = new EndTurnSnapshot(discardedCard, game.getTeamName(game.getEnemyTeamID()), isGameOver());
         game.nextTurn();
         startCurrentTurn();

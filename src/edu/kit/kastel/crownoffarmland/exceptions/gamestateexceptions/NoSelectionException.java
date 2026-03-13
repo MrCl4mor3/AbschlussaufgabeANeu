@@ -1,4 +1,6 @@
-package edu.kit.kastel.crownoffarmland.exceptions;
+package edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions;
+
+import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
 
 /**
  * This exception is thrown when the player tries to perform an action that requires selecting an entity, but no selection has been made.

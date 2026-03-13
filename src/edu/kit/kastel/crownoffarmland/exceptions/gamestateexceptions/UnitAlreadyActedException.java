@@ -1,4 +1,6 @@
-package edu.kit.kastel.crownoffarmland.exceptions;
+package edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions;
+
+import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
 
 /**
  * This exception is thrown when the player tries to perform an action with a unit that has already acted in the current turn.
@@ -7,7 +9,7 @@ package edu.kit.kastel.crownoffarmland.exceptions;
  * @see InvalidGameStateException
  */
 public class UnitAlreadyActedException extends InvalidGameStateException {
-    private static final String MESSAGE_FORMAT = "Unit '%s' is already acted by another unit.";
+    private static final String MESSAGE_FORMAT = "Unit '%s' has already acted this turn.";
 
     /**
      * Creates a new UnitAlreadyActedException with the given entity name.

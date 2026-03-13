@@ -1,4 +1,6 @@
-package edu.kit.kastel.crownoffarmland.exceptions;
+package edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions;
+
+import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
 
 /**
  * This exception is thrown when the player tries to do an action that requires selecting a field, but the selected field is empty (i.e.,
