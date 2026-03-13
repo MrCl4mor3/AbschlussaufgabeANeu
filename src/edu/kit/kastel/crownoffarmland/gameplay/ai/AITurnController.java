@@ -20,6 +20,7 @@ import java.util.List;
  * @author ucgdi
  */
 public final class AITurnController {
+    private static final String UNEXPECTED_AI_ACTION_TYPE = "Unexpected AI action type";
     private static final String WINNER_MESSAGE = "%s wins!%n";
     private final Game game;
     private final GameHandler gameHandler;
@@ -116,7 +117,7 @@ public final class AITurnController {
                     printMoveOutput(gameHandler.moveUnit(decision.getTarget()));
                     break;
                 default:
-                    throw new CrownOfFarmlandException("Invalid action type");
+                    throw new CrownOfFarmlandException(UNEXPECTED_AI_ACTION_TYPE);
             }
 
             decision = aiDecisionService.chooseNextUnitAction();
