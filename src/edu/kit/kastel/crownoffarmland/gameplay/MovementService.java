@@ -80,12 +80,12 @@ public final class MovementService {
         }
 
 
-        return resolveUnitMove(source, target, (Unit) selectedEntity, wasBlocked);
+        return resolveUnitMove(source, target, selectedEntity, wasBlocked);
     }
 
 
     private MoveSnapshot resolveFarmerKingMove(Position source, Position target, BoardEntity selectedEntity, boolean wasBlocked) {
-        // ToDo evtl zurückgeben, dass die Einheit in Target Pos ersetzt wurde, falls nicht leer!
+        // ToDo evtl. zurückgeben, dass die Einheit in Target Pos ersetzt wurde, falls nicht leer!
         game.removeOccupant(source);
         game.setOccupant(target, selectedEntity);
         turnState.markMoved(selectedEntity);
@@ -229,7 +229,7 @@ public final class MovementService {
         }
     }
 
-    private boolean isAdjacentTo(Position source, Position target, int distance) throws InvalidGameStateException {
+    private boolean isAdjacentTo(Position source, Position target, int distance) {
         int rowDiff = Math.abs(source.getRow() - target.getRow());
         int colDiff = Math.abs(source.getColumn() - target.getColumn());
         return (rowDiff + colDiff) <= distance;
