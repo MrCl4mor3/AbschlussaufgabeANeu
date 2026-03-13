@@ -13,6 +13,10 @@ import edu.kit.kastel.crownoffarmland.model.units.Unit;
  * @author ucgdi
  */
 public class DuelManager {
+    private static final boolean WAS_ELIMINATED = true;
+    private static final boolean WAS_NOT_ELIMINATED = false;
+    private static final int NO_DAMAGE_TO_ATTACKER_TEAM = 0;
+    private static final int NO_DAMAGE_TO_DEFENDER_TEAM = 1;
 
     /**
      * Constructs a new DuelManager instance.
@@ -32,7 +36,7 @@ public class DuelManager {
      */
     public DuelResult resolveDuel(Unit attacker, BoardEntity defender) {
         if (defender.isFarmerKing()) {
-            return new DuelResult(DuelType.KING, false, false, 0, attacker.getAtk());
+            return new DuelResult(DuelType.KING, WAS_NOT_ELIMINATED, WAS_NOT_ELIMINATED, NO_DAMAGE_TO_ATTACKER_TEAM attacker.getAtk());
         }
 
         Unit def = (Unit) defender;
@@ -50,12 +54,12 @@ public class DuelManager {
         int defB = defender.getDef();
 
         if (atkA > defB) {
-            return new DuelResult(DuelType.BlOCKADE, false, true, 0, 0);
+            return new DuelResult(DuelType.BlOCKADE, WAS_NOT_ELIMINATED, WAS_ELIMINATED, NO_DAMAGE_TO_ATTACKER_TEAM, NO_DAMAGE_TO_DEFENDER_TEAM);
         } else  if (defB > atkA) {
             int damage = defB - atkA;
-            return new DuelResult(DuelType.BlOCKADE, true, false, damage, 0);
+            return new DuelResult(DuelType.BlOCKADE, WAS_ELIMINATED, WAS_NOT_ELIMINATED, damage, NO_DAMAGE_TO_DEFENDER_TEAM);
         } else  {
-            return new DuelResult(DuelType.BlOCKADE, false, false, 0, 0);
+            return new DuelResult(DuelType.BlOCKADE, WAS_NOT_ELIMINATED, WAS_ELIMINATED, NO_DAMAGE_TO_ATTACKER_TEAM, NO_DAMAGE_TO_DEFENDER_TEAM);
         }
     }
 
@@ -64,11 +68,11 @@ public class DuelManager {
         int atkB = defender.getAtk();
 
         if (atkA > atkB) {
-            return new DuelResult(DuelType.STANDARD, false, true, 0, atkA - atkB);
+            return new DuelResult(DuelType.STANDARD, WAS_NOT_ELIMINATED, WAS_ELIMINATED, NO_DAMAGE_TO_ATTACKER_TEAM, atkA - atkB);
         } else  if (atkB > atkA) {
-            return new DuelResult(DuelType.STANDARD, true, false, atkB - atkA, 0);
+            return new DuelResult(DuelType.STANDARD, WAS_ELIMINATED, WAS_NOT_ELIMINATED, atkB - atkA, NO_DAMAGE_TO_DEFENDER_TEAM);
         } else   {
-            return new DuelResult(DuelType.STANDARD, true, true, 0, 0);
+            return new DuelResult(DuelType.STANDARD, WAS_ELIMINATED, WAS_ELIMINATED, NO_DAMAGE_TO_ATTACKER_TEAM, NO_DAMAGE_TO_DEFENDER_TEAM);
         }
     }
 }
