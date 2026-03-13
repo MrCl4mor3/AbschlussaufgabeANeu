@@ -31,6 +31,7 @@ public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
     /**
      *  Creates a new MoveOutputFormatter with the given EntityFormatter.
      * @param entityFormatter the EntityFormatter used to format entity summaries in the output
+     * @param mergeOutputFormatter the MergeOutputFormatter used to format merge results in the output
      */
     public MoveOutputFormatter(EntityFormatter entityFormatter, MergeOutputFormatter mergeOutputFormatter) {
         super(entityFormatter);

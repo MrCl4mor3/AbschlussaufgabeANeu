@@ -19,7 +19,7 @@ public class PlaceOutputFormatter implements OutputFormatter<List<PlaceStepSnaps
 
     /**
      * Creates a new PlaceOutputFormatter with the given MergeOutputFormatter.
-     * @param mergeOutputFormatter to format the merge result
+     * @param mergeOutputFormatter to format the merge results in the output
      */
     public PlaceOutputFormatter(MergeOutputFormatter mergeOutputFormatter) {
         this.mergeOutputFormatter = mergeOutputFormatter;
