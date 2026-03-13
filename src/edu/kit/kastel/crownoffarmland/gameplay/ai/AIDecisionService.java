@@ -217,8 +217,8 @@ public final class AIDecisionService {
     private int scorePlacementPosition(Position candidate, TeamID currentTeam) {
         Position enemyKingPosition = game.getKingPosition(game.getEnemyTeamID());
         int steps = manhattanDistance(candidate, enemyKingPosition);
-        int enemies = countOrthogonalEntitiesFromTeam(candidate, game.getEnemyTeamID(), true);
-        int fellows = countOrthogonalEntitiesFromTeam(candidate, currentTeam, true);
+        int enemies = countOrthogonalEntitiesFromTeam(candidate, game.getEnemyTeamID());
+        int fellows = countOrthogonalEntitiesFromTeam(candidate, currentTeam);
         return -steps + PLACEMENT_ENEMY_WEIGHT_FACTOR * enemies - fellows;
     }
     private int manhattanDistance(Position a, Position b) {
@@ -237,15 +237,13 @@ public final class AIDecisionService {
         }
         return count;
     }
-    private int countOrthogonalEntitiesFromTeam(Position center, TeamID team, boolean includeKing) {
+    private int countOrthogonalEntitiesFromTeam(Position center, TeamID team) {
         int count = 0;
 
         for (Position neighbor : game.boardView().getOrthogonalNeighbors(center)) {
             BoardEntity occupant = game.boardView().getOccupant(neighbor);
             if (occupant != null && occupant.getOwner().equals(team)) {
-                if (includeKing || !occupant.isFarmerKing()) {
-                    count++;
-                }
+                count++;
             }
         }
         return count;
@@ -318,7 +316,7 @@ public final class AIDecisionService {
         if (targetEntity == null) {
             Position enemyKingPosition = game.getKingPosition(game.getEnemyTeamID());
             int steps = manhattanDistance(target, enemyKingPosition);
-            int enemies = countOrthogonalEntitiesFromTeam(target, game.getEnemyTeamID(), true);
+            int enemies = countOrthogonalEntitiesFromTeam(target, game.getEnemyTeamID());
             return ADVANCE_STEPS_FACTOR * steps - enemies;
         }
         if (targetEntity.getOwner().equals(currentTeam)) {
