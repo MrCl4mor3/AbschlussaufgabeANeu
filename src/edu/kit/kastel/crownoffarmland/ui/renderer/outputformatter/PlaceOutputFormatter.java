@@ -12,10 +12,18 @@ import java.util.List;
 public class PlaceOutputFormatter implements OutputFormatter<List<PlaceStepSnapshot>> {
 
     private static final String PLACE_MESSAGE = "%s places %s on %s.%n";
-    private static final String MERGING_MESSAGE = "%s and %s on %s join forces!%n";
-    private static final String MERGING_UNIT_SUCCESS_MESSAGE = "Success!";
-    private static final String MERGING_UNIT_FAILURE_MESSAGE = "Union failed. %s was eliminated.%n";
     private static final String ELIMINATION_MESSAGE = "%s was eliminated!%n";
+
+    private final MergeOutputFormatter mergeOutputFormatter;
+
+
+    /**
+     * Creates a new PlaceOutputFormatter with the given MergeOutputFormatter.
+     * @param mergeOutputFormatter to format the merge result
+     */
+    public PlaceOutputFormatter(MergeOutputFormatter mergeOutputFormatter) {
+        this.mergeOutputFormatter = mergeOutputFormatter;
+    }
 
 
     @Override
@@ -31,13 +39,9 @@ public class PlaceOutputFormatter implements OutputFormatter<List<PlaceStepSnaps
         output.append(String.format(PLACE_MESSAGE, snapshot.getTeamName(), snapshot.getPlacedUnitName(), snapshot.getTargetPosition()));
 
         if (snapshot.getExistingUnitName() != null) {
-            output.append(String.format(MERGING_MESSAGE, snapshot.getPlacedUnitName(),
-                    snapshot.getExistingUnitName(), snapshot.getTargetPosition()));
-            if (snapshot.getEliminatedUnitName() == null) {
-                output.append(MERGING_UNIT_SUCCESS_MESSAGE).append(System.lineSeparator());
-            } else {
-                output.append(String.format(MERGING_UNIT_FAILURE_MESSAGE, snapshot.getExistingUnitName()));
-            }
+            boolean mergeSuccess = snapshot.getEliminatedUnitName() == null;
+            output.append(mergeOutputFormatter.formatMergeOutput(mergeSuccess, snapshot.getExistingUnitName(),
+                    snapshot.getPlacedUnitName(), snapshot.getTargetPosition()));
         } else if (snapshot.getEliminatedUnitName() != null) {
             output.append(String.format(ELIMINATION_MESSAGE, snapshot.getEliminatedUnitName()));
         }

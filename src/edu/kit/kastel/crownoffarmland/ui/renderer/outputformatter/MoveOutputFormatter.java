@@ -16,9 +16,7 @@ import edu.kit.kastel.crownoffarmland.ui.renderer.entity.EntityFormatter;
  */
 public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
 
-    private static final String MERGING_MESSAGE = "%s and %s on %s join forces!%n";
-    private static final String MERGING_UNIT_SUCCESS_MESSAGE = "Success!";
-    private static final String MERGING_UNIT_FAILURE_MESSAGE = "Union failed. %s was eliminated.%n";
+
     private static final String MOVE_MESSAGE = "%s moves to %s.%n";
     private static final String REMOVE_BLOCK_MESSAGE = "%s no longer blocks.%n";
     private static final String ATTACK_MESSAGE = "%s attacks %s on %s!%n";
@@ -29,12 +27,14 @@ public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
     private static final String NOT_REVEALED_UNIT = "???";
 
 
+    private final MergeOutputFormatter mergeOutputFormatter;
     /**
      *  Creates a new MoveOutputFormatter with the given EntityFormatter.
      * @param entityFormatter the EntityFormatter used to format entity summaries in the output
      */
-    public MoveOutputFormatter(EntityFormatter entityFormatter) {
+    public MoveOutputFormatter(EntityFormatter entityFormatter, MergeOutputFormatter mergeOutputFormatter) {
         super(entityFormatter);
+        this.mergeOutputFormatter = mergeOutputFormatter;
     }
 
 
@@ -65,13 +65,8 @@ public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
 
 
     private void formatMergeResult(MergeMoveSnapshot snapshot, StringBuilder output) {
-        output.append(String.format(MERGING_MESSAGE, snapshot.getMovedEntity().getEntityName(),
-                snapshot.getTargetEntityName(), snapshot.getToPositionName()));
-        if (snapshot.isMergeSuccess()) {
-            output.append(MERGING_UNIT_SUCCESS_MESSAGE).append(System.lineSeparator());
-        } else {
-            output.append(String.format(MERGING_UNIT_FAILURE_MESSAGE, snapshot.getMovedEntity().getEntityName()));
-        }
+        output.append(mergeOutputFormatter.formatMergeOutput(snapshot.isMergeSuccess(), snapshot.getTargetEntityName(),
+                snapshot.getMovedEntity().getEntityName(), snapshot.getToPositionName()));
     }
 
     private void formatDuelMove(DuelMoveSnapshot snapshot, StringBuilder output) {

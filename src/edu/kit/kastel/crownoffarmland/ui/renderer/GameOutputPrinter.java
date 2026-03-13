@@ -12,6 +12,7 @@ import edu.kit.kastel.crownoffarmland.ui.renderer.entity.EntityFormatter;
 import edu.kit.kastel.crownoffarmland.ui.renderer.outputformatter.BlockOutputFormatter;
 import edu.kit.kastel.crownoffarmland.ui.renderer.outputformatter.FlipOutputFormatter;
 import edu.kit.kastel.crownoffarmland.ui.renderer.outputformatter.HandOutputFormatter;
+import edu.kit.kastel.crownoffarmland.ui.renderer.outputformatter.MergeOutputFormatter;
 import edu.kit.kastel.crownoffarmland.ui.renderer.outputformatter.MoveOutputFormatter;
 import edu.kit.kastel.crownoffarmland.ui.renderer.outputformatter.PlaceOutputFormatter;
 import edu.kit.kastel.crownoffarmland.ui.renderer.outputformatter.ShowOutputFormatter;
@@ -44,13 +45,17 @@ public final class GameOutputPrinter {
      */
     public GameOutputPrinter(BoardRenderer renderer,  EntityFormatter entityFormatter) {
         this.renderer = renderer;
-        this.moveOutputFormatter = new MoveOutputFormatter(entityFormatter);
+
         this.flipOutputFormatter = new FlipOutputFormatter(entityFormatter);
         this.showOutputFormatter = new ShowOutputFormatter(entityFormatter);
         this.handOutputFormatter = new HandOutputFormatter(entityFormatter);
         this.yieldOutputFormatter = new YieldOutputFormatter(entityFormatter);
 
-        this.placeOutputFormatter = new PlaceOutputFormatter();
+        MergeOutputFormatter  mergeOutputFormatter = new MergeOutputFormatter();
+
+        this.moveOutputFormatter = new MoveOutputFormatter(entityFormatter, mergeOutputFormatter);
+        this.placeOutputFormatter = new PlaceOutputFormatter(mergeOutputFormatter);
+
         this.stateOutputFormatter = new StateOutputFormatter();
         this.blockOutputFormatter = new BlockOutputFormatter();
 
