@@ -373,7 +373,7 @@ public final class AIDecisionService {
         Position current = new Position(source.getRow() + rowDelta, (char)  (source.getColumn() + columnDelta));
         while (game.boardView().isValidPosition(current)) {
             BoardEntity occupant = game.boardView().getOccupant(current);
-            if (occupant != null && occupant.getOwner().equals(enemyTeam) && !occupant.isFarmerKing()) {
+            if (occupant != null && occupant.getOwner().equals(enemyTeam) && !occupant.isFarmerKing() && occupant.isBlocked()) {
                 Unit enemyUnit = (Unit) occupant;
                 strongestAtk = Math.max(strongestAtk, enemyUnit.getAtk());
             }
