@@ -134,10 +134,16 @@ public final class PlacementService {
         String incomingUnitName = incomingUnit.getName().toString();
 
         if (occupant == null) {
-            game.setOccupant(targetPosition, incomingUnit);
-            if (countUnitsOnBoard(game.getCurrentTeamID()) > MAX_UNITS_ON_BOARD) {
-                game.setOccupant(targetPosition, null);
+            if (countUnitsOnBoard(game.getCurrentTeamID()) >= MAX_UNITS_ON_BOARD) {
+                return new PlaceStepSnapshot(
+                        teamName,
+                        incomingUnitName,
+                        null,
+                        incomingUnitName,
+                        targetPosition.toString()
+                );
             }
+            game.setOccupant(targetPosition, incomingUnit);
             return new PlaceStepSnapshot(
                     teamName,
                     incomingUnitName,
