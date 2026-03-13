@@ -10,13 +10,7 @@ import edu.kit.kastel.crownoffarmland.model.units.Unit;
  * @author ucgdi
  */
 public final class EntitySnapshot {
-    private static final boolean HAS_NO_ENTITY = false;
-    private static final boolean IS_NOT_FARMER_KING = false;
-    private static final boolean IS_NOT_HIDDEN = false;
     private static final int NON_COMBAT_STAT = 0;
-
-    private static final EntitySnapshot NO_UNIT = new EntitySnapshot(HAS_NO_ENTITY, IS_NOT_FARMER_KING, IS_NOT_HIDDEN, null, null,
-            NON_COMBAT_STAT, NON_COMBAT_STAT);
 
     private final boolean hasEntity;
     private final boolean farmerKing;
@@ -74,13 +68,22 @@ public final class EntitySnapshot {
                 !isKing ? ((Unit) entity).getDef() : NON_COMBAT_STAT);
     }
 
+    private EntitySnapshot() {
+        this.hasEntity = false;
+        this.farmerKing = false;
+        this.hidden = false;
+        this.teamName = null;
+        this.entityName = null;
+        this.attack = NON_COMBAT_STAT;
+        this.defense = NON_COMBAT_STAT;
+    }
 
     /**
      * Returns a shared snapshot representing the absence of an entity.
      * @return the no-unit snapshot
      */
     public static EntitySnapshot noUnit() {
-        return NO_UNIT;
+        return new EntitySnapshot();
     }
 
     /**
