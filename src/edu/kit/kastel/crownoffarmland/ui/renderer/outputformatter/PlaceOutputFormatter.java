@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class PlaceOutputFormatter implements OutputFormatter<List<PlaceStepSnapshot>> {
 
-    private static final String PLACE_MESSAGE = "%s places %s on %s.%n";
+    private static final String PLACE_MESSAGE = "%s places %s on %s.";
     private static final String MERGING_MESSAGE = "%s and %s on %s join forces!%n";
     private static final String MERGING_UNIT_SUCCESS_MESSAGE = "Success!";
     private static final String MERGING_UNIT_FAILURE_MESSAGE = "Union failed. %s was eliminated.%n";
