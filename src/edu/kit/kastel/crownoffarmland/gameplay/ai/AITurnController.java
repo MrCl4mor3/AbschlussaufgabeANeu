@@ -63,7 +63,6 @@ public final class AITurnController {
         executeUnitAction();
 
         if (gameHandler.isGameOver()) {
-            System.out.printf(WINNER_MESSAGE, gameHandler.getWinner());
             return;
         }
 
@@ -141,6 +140,9 @@ public final class AITurnController {
 
     private void printMoveOutput(MoveSnapshot moveSnapshot) throws CrownOfFarmlandException {
         System.out.print(printer.formatMove(moveSnapshot));
+        if (gameHandler.isGameOver()) {
+            System.out.printf(WINNER_MESSAGE, gameHandler.getWinner());
+        }
         printBoardAndShow();
     }
 
