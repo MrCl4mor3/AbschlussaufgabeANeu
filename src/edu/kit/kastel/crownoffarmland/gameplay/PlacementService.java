@@ -1,8 +1,8 @@
 package edu.kit.kastel.crownoffarmland.gameplay;
 
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
-import edu.kit.kastel.crownoffarmland.exceptions.InvalidHandException;
-import edu.kit.kastel.crownoffarmland.exceptions.NoSelectionException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.InvalidHandException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.NoSelectionException;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.MergeResult;
 import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.UnitMerger;

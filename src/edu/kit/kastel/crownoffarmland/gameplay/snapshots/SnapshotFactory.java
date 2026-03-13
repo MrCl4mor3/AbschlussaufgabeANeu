@@ -1,6 +1,6 @@
 package edu.kit.kastel.crownoffarmland.gameplay.snapshots;
 
-import edu.kit.kastel.crownoffarmland.exceptions.NoSelectionException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.NoSelectionException;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardCellSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardSnapshot;
 import edu.kit.kastel.crownoffarmland.model.Game;

@@ -1,9 +1,10 @@
 package edu.kit.kastel.crownoffarmland.gameplay;
 
-import edu.kit.kastel.crownoffarmland.exceptions.EnemyUnitSelectedException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.EmptySelectedFieldException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.EnemyUnitSelectedException;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
-import edu.kit.kastel.crownoffarmland.exceptions.NoSelectionException;
-import edu.kit.kastel.crownoffarmland.exceptions.UnitAlreadyActedException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.NoSelectionException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.UnitAlreadyActedException;
 import edu.kit.kastel.crownoffarmland.gameplay.combat.DuelManager;
 import edu.kit.kastel.crownoffarmland.gameplay.combat.DuelResult;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
@@ -246,7 +247,7 @@ public final class MovementService {
     private BoardEntity requireSelectedEntity(Position position, TeamID currentTeam) throws InvalidGameStateException {
         BoardEntity entity = game.boardView().getOccupant(position);
         if (entity == null) {
-            throw new NoSelectionException();
+            throw new EmptySelectedFieldException(position.toString());
         }
 
         if (entity.getOwner() != currentTeam) {

@@ -83,7 +83,7 @@ public final class Position {
      */
     public static Position fromString(String input) throws CrownOfFarmlandException {
         if (input == null) {
-            throw new InvalidPositionException(input);
+            throw new InvalidPositionException();
         }
 
         String trimmed = input.trim().toUpperCase();
