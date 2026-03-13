@@ -23,7 +23,6 @@ public class CommandHandler {
     private static final String COMMAND_DELIMITER_REPLACEMENT = " ";
     private static final String HELP_COMMAND = "Use one of the following commands: %s.";
     private static final String COMMAND_NOT_ALLOWED_AFTER_YIELD = "Cannot execute the command '%s', you must discard!%n";
-    private static final String WINNER_MESSAGE = "%s wins!%n";
 
 
     private final Map<String, Command> commands;
@@ -107,7 +106,6 @@ public class CommandHandler {
             gameHandler.executeAITurn();
 
             if (gameHandler.isGameOver()) {
-                System.out.printf(WINNER_MESSAGE, gameHandler.getWinner());
                 quit();
             }
         } catch (CrownOfFarmlandException e) {
