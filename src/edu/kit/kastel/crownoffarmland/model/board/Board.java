@@ -17,7 +17,6 @@ public class Board implements GameBoardView {
     private static final int NEIGHBOR_DISTANCE = 1;
     private static final int BOARD_SIZE = 7;
     private static final char START_COLUMN_NAME = 'A';
-    private static final int ROW_OFFSET = '0';
     private static final int MIN_ROW = 1;
     private static final int[][] DIRECTIONS_CLOCKWISE = {
             {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}
@@ -58,34 +57,6 @@ public class Board implements GameBoardView {
     }
 
     /**
-     * Returns the name of the starting column (the leftmost column).
-     * @return the name of the starting column
-     */
-    public char getStartColumnName() {
-        return START_COLUMN_NAME;
-    }
-
-    /**
-     * Converts a Position to its corresponding row index in the grid. The row index is calculated based on the row number of the
-     * position, with the bottom row (row 1) corresponding to index 6 and the top row (row 7) corresponding to index 0.
-     * @param position the position to convert
-     * @return the row index corresponding to the given position
-     */
-    public int rowIndex(Position position) {
-        return BOARD_SIZE - position.getRow();
-    }
-
-    /**
-     * Converts a Position to its corresponding column index in the grid. The column index is calculated based on the column name of the
-     * position, with column 'A' corresponding to index 0 and column 'G' corresponding to index 6.
-     * @param position the position to convert
-     * @return the column index corresponding to the given position
-     */
-    public int columnIndex(Position position) {
-        return position.getColumn() - START_COLUMN_NAME;
-    }
-
-    /**
      * Returns the Position corresponding to the given row and column indices. The column name is calculated based on the column index,
      * with index 0 corresponding to 'A' and index 6 corresponding to 'G'. The row number is calculated based on the row index, with
      * index 6 corresponding to row 1 and index 0 corresponding to row 7.
@@ -100,10 +71,6 @@ public class Board implements GameBoardView {
         return new Position(rowNumber, columnName);
     }
 
-    private Field getField(Position position) {
-        return grid[rowIndex(position)][columnIndex(position)];
-    }
-
     /**
      * Returns the BoardEntity occupying the field at the given position, or null if the field is empty.
      * @param position the position of the field to check
@@ -114,31 +81,6 @@ public class Board implements GameBoardView {
         return getField(position).getOccupant();
     }
 
-    /**
-     * Removes and returns the BoardEntity occupying the field at the given position, if any. If the field is empty, it returns null.
-     * @param position the position of the field from which to remove the occupant
-     * @return the BoardEntity that was occupying the field, or null if the field was empty
-     */
-    public BoardEntity removeOccupant(Position position) {
-        BoardEntity occupant = getOccupant(position);
-        getField(position).setOccupant(null);
-        return occupant;
-    }
-    /**
-     * Sets the occupant of the field at the given position to the specified BoardEntity. If the position is invalid, an
-     * InvalidPositionException is thrown.
-     * @param position the position of the field to set the occupant for
-     * @param entity the BoardEntity to set as the occupant of the field
-     */
-    public void setOccupant(Position position, BoardEntity entity) {
-        getField(position).setOccupant(entity);
-    }
-
-    /**
-     * Validates if the position is valid and in the range of the board size.
-     * @param position the Position to validate
-     * @return true, if the position is valid, false otherwise
-     */
     @Override
     public boolean isValidPosition(Position position) {
         if (position == null) {
@@ -146,15 +88,6 @@ public class Board implements GameBoardView {
         }
         return isValidRow(position.getRow()) && isValidColumn(position.getColumn());
     }
-
-    private boolean isValidRow(int row) {
-        return row >= MIN_ROW && row <= BOARD_SIZE;
-    }
-
-    private  boolean isValidColumn(int column) {
-        return column >= START_COLUMN_NAME && column < START_COLUMN_NAME + BOARD_SIZE;
-    }
-
 
     /**
      * Gets the neighbor position of a given center, wich is orthogonally adjacent (up, down, left, right) to the given center. If a
@@ -199,6 +132,59 @@ public class Board implements GameBoardView {
             }
         }
         return surroundingPositions;
+    }
+
+    /**
+     * Converts a Position to its corresponding row index in the grid. The row index is calculated based on the row number of the
+     * position, with the bottom row (row 1) corresponding to index 6 and the top row (row 7) corresponding to index 0.
+     * @param position the position to convert
+     * @return the row index corresponding to the given position
+     */
+    public int rowIndex(Position position) {
+        return BOARD_SIZE - position.getRow();
+    }
+
+    /**
+     * Converts a Position to its corresponding column index in the grid. The column index is calculated based on the column name of the
+     * position, with column 'A' corresponding to index 0 and column 'G' corresponding to index 6.
+     * @param position the position to convert
+     * @return the column index corresponding to the given position
+     */
+    public int columnIndex(Position position) {
+        return position.getColumn() - START_COLUMN_NAME;
+    }
+
+
+    private Field getField(Position position) {
+        return grid[rowIndex(position)][columnIndex(position)];
+    }
+
+    /**
+     * Removes and returns the BoardEntity occupying the field at the given position, if any. If the field is empty, it returns null.
+     * @param position the position of the field from which to remove the occupant
+     * @return the BoardEntity that was occupying the field, or null if the field was empty
+     */
+    public BoardEntity removeOccupant(Position position) {
+        BoardEntity occupant = getOccupant(position);
+        getField(position).setOccupant(null);
+        return occupant;
+    }
+    /**
+     * Sets the occupant of the field at the given position to the specified BoardEntity. If the position is invalid, an
+     * InvalidPositionException is thrown.
+     * @param position the position of the field to set the occupant for
+     * @param entity the BoardEntity to set as the occupant of the field
+     */
+    public void setOccupant(Position position, BoardEntity entity) {
+        getField(position).setOccupant(entity);
+    }
+
+    private boolean isValidRow(int row) {
+        return row >= MIN_ROW && row <= BOARD_SIZE;
+    }
+
+    private  boolean isValidColumn(int column) {
+        return column >= START_COLUMN_NAME && column < START_COLUMN_NAME + BOARD_SIZE;
     }
 
 
