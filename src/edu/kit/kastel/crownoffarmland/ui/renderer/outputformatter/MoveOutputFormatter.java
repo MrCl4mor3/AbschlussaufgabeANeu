@@ -27,7 +27,6 @@ public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
     private static final String DAMAGE_MESSAGE = "%s takes %d damage!%n";
     private static final String LIFE_ZERO_MESSAGE = "%s's life points dropped to 0!%n";
     private static final String NOT_REVEALED_UNIT = "???";
-    private static final String WINNER_MESSAGE = "%s wins!%n";
 
 
     /**
@@ -109,7 +108,6 @@ public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
 
         if (snapshot.isGameOver()) {
             output.append(String.format(LIFE_ZERO_MESSAGE, snapshot.getLoserName()));
-            output.append(String.format(WINNER_MESSAGE, snapshot.getWinnerName()));
         }
     }
 }
