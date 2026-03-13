@@ -42,7 +42,6 @@ public class BoardSymbolParser implements ContentParser<String> {
 
 
     private boolean containsLineBreak(String content) {
-        //ToDO: Konstanten für Zeilenumbrüche definieren und hier verwenden
         return content.indexOf(LINE_FEED) >= 0 || content.indexOf(CARRIAGE_RETURN) >= 0;
     }
 }
