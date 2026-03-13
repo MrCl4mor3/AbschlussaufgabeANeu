@@ -17,7 +17,7 @@ import edu.kit.kastel.crownoffarmland.ui.renderer.entity.EntityFormatter;
 public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
 
     private static final String MERGING_MESSAGE = "%s and %s on %s join forces!%n";
-    private static final String MERGING_UNIT_SUCCESS_MESSAGE = "Success!%n";
+    private static final String MERGING_UNIT_SUCCESS_MESSAGE = "Success!";
     private static final String MERGING_UNIT_FAILURE_MESSAGE = "Union failed. %s was eliminated.%n";
     private static final String MOVE_MESSAGE = "%s moves to %s.%n";
     private static final String REMOVE_BLOCK_MESSAGE = "%s no longer blocks.%n";
@@ -68,7 +68,7 @@ public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
         output.append(String.format(MERGING_MESSAGE, snapshot.getMovedEntity().getEntityName(),
                 snapshot.getTargetEntityName(), snapshot.getToPositionName()));
         if (snapshot.isMergeSuccess()) {
-            output.append(MERGING_UNIT_SUCCESS_MESSAGE);
+            output.append(MERGING_UNIT_SUCCESS_MESSAGE).append(System.lineSeparator());
         } else {
             output.append(String.format(MERGING_UNIT_FAILURE_MESSAGE, snapshot.getMovedEntity().getEntityName()));
         }
