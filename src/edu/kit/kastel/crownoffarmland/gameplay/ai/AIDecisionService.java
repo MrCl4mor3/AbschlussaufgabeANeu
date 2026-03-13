@@ -110,7 +110,15 @@ public final class AIDecisionService {
         TeamID currentTeam = game.getCurrentTeamID();
         Position kingPosition = game.getKingPosition(currentTeam);
 
-        List<Position> candidates = game.boardView().getSurroundingPositions(kingPosition);
+        //List<Position> candidates = game.boardView().getSurroundingPositions(kingPosition);
+        List<Position> candidates = new ArrayList<>();
+        for (Position position : game.boardView().getSurroundingPositions(kingPosition)) {
+            if (game.boardView().getOccupant(position).getOwner().equals(currentTeam)) {
+                candidates.add(position);
+            }
+        }
+
+
 
         if (candidates.isEmpty()) {
             return null; // No valid placement positions available
