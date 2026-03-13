@@ -138,9 +138,6 @@ public final class AITurnController {
     private void printMoveOutput(MoveSnapshot moveSnapshot) throws CrownOfFarmlandException {
         System.out.print(printer.formatMove(moveSnapshot));
         printBoardAndShow();
-        if (!gameHandler.isGameOver()) {
-            printBoardAndShow();
-        }
     }
 
     private void printBoardAndShow() throws CrownOfFarmlandException {
