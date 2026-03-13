@@ -113,7 +113,7 @@ public final class AIDecisionService {
         //List<Position> candidates = game.boardView().getSurroundingPositions(kingPosition);
         List<Position> candidates = new ArrayList<>();
         for (Position position : game.boardView().getSurroundingPositions(kingPosition)) {
-            if (game.boardView().getOccupant(position).getOwner().equals(currentTeam)) {
+            if (game.boardView().getOccupant(position) == null || game.boardView().getOccupant(position).getOwner().equals(currentTeam)) {
                 candidates.add(position);
             }
         }
