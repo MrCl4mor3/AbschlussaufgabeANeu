@@ -36,7 +36,7 @@ public class DuelManager {
      */
     public DuelResult resolveDuel(Unit attacker, BoardEntity defender) {
         if (defender.isFarmerKing()) {
-            return new DuelResult(DuelType.KING, WAS_NOT_ELIMINATED, WAS_NOT_ELIMINATED, NO_DAMAGE_TO_ATTACKER_TEAM attacker.getAtk());
+            return new DuelResult(DuelType.KING, WAS_NOT_ELIMINATED, WAS_NOT_ELIMINATED, NO_DAMAGE_TO_ATTACKER_TEAM, attacker.getAtk());
         }
 
         Unit def = (Unit) defender;
