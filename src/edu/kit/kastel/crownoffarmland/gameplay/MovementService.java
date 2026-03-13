@@ -119,6 +119,8 @@ public final class MovementService {
     private MoveSnapshot resolveMergeMove(Position source, Position target, Unit selectedUnit, Unit targetUnit, boolean wasBlocked) {
         MergeResult mergeResult = unitMerger.tryMerge(selectedUnit, targetUnit);
         turnState.setSelectedPos(target);
+        game.setOccupant(target, mergeResult.getUnit());
+        game.removeOccupant(source);
         return new MergeMoveSnapshot(createEntitySnapshot(selectedUnit), target.toString(), wasBlocked, mergeResult.isSuccessful(),
                 targetUnit.getName().toString());
     }
