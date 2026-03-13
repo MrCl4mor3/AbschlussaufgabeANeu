@@ -64,8 +64,8 @@ public class UnitMerger {
 
         // Check for Prime Compatibility if g3t is equal to the threshold
         if (g3t == G3T_PRIME_THRESHOLD && isPrimeCompatible(unitA, unitB)) {
-            int mergedAtk = (unitA.getAtk() + unitB.getAtk()) / PRIME_DIVISOR;
-            int mergedDef = (unitA.getDef() + unitB.getDef()) / PRIME_DIVISOR;
+            int mergedAtk = unitA.getAtk() + unitB.getAtk();
+            int mergedDef = unitA.getDef() + unitB.getDef();
             Unit mergedUnit = buildMergedUnit(incoming, target, mergedAtk, mergedDef);
             return new MergeResult(MergeType.ALIGNMENT, mergedUnit);
         }
