@@ -22,7 +22,7 @@ public class DeckFileParser implements ContentParser<int[]> {
 
     private static final String INVALID_DECK_SIZE_ERROR = "Invalid deck size: expected %d cards, but got %d.";
     private static final String DECK_FILE_EMPTY_ERROR = "The deck file is empty.";
-    private static final String INVALID_ENTRY_ERROR = "Invalid vard count in deck file: '%s' is not a valid non-negative integer.";
+    private static final String INVALID_ENTRY_ERROR = "Invalid card count in deck file: '%s' is not a valid non-negative integer.";
     private static final int MUST_NOT_NEGATIVE = 0;
 
 

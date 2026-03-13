@@ -14,6 +14,8 @@ import java.util.Objects;
  */
 public class BoardSymbolParser implements ContentParser<String> {
     private static final int BOARD_SYMBOL_COUNT = 29;
+    private static final char LINE_FEED = '\n';
+    private static final char CARRIAGE_RETURN = '\r';
     private static final String MORE_THAN_ONE_LINE_ERROR =
             "The Board file must contain exactly one line of symbols, but found multiple lines.";
 
@@ -41,6 +43,6 @@ public class BoardSymbolParser implements ContentParser<String> {
 
     private boolean containsLineBreak(String content) {
         //ToDO: Konstanten für Zeilenumbrüche definieren und hier verwenden
-        return content.contains("\n") || content.contains("\r");
+        return content.indexOf(LINE_FEED) >= 0 || content.indexOf(CARRIAGE_RETURN) >= 0;
     }
 }
