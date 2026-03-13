@@ -22,8 +22,8 @@ public class MoveCommand extends  Command {
     /**
      * Creates a new MoveCommand.
      *
-     * @param commandHandler the CommandHandler to handle this command
-     * @param gameHandler    the GameHandler to execute this command
+     * @param commandHandler    the CommandHandler to handle this command
+     * @param gameHandler       the GameHandler to execute this command
      * @param gameOutputPrinter the GameOutputPrinter to format the Output
      */
     public MoveCommand(CommandHandler commandHandler, GameHandler gameHandler, GameOutputPrinter gameOutputPrinter) {
@@ -39,10 +39,10 @@ public class MoveCommand extends  Command {
 
         System.out.print(gameOutputPrinter.formatMove(result));
 
-        if (!gameHandler.isGameOver()) {
-            System.out.printf(WINNER_MESSAGE, gameHandler.getWinner());
-            System.out.println(gameOutputPrinter.formatBoard(gameHandler.createBoardSnapshot()));
-            System.out.println(gameOutputPrinter.formatShow(gameHandler.createEntitySnapshot()));
+        if (gameHandler.isGameOver()) {
+            System.out.printf(WINNER_MESSAGE, targetPosition);
         }
+        System.out.println(gameOutputPrinter.formatBoard(gameHandler.createBoardSnapshot()));
+        System.out.println(gameOutputPrinter.formatShow(gameHandler.createEntitySnapshot()));
     }
 }
