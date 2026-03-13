@@ -15,7 +15,7 @@ import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
 import java.util.List;
 
 /**
- * Controlls the AI turn.
+ * Controls the AI turn.
  *
  * @author ucgdi
  */
@@ -32,7 +32,7 @@ public final class AITurnController {
      * @param gameHandler the gameHandler
      * @param game the model
      * @param aiDecisionService to decide the AI's actions
-     * @param printer to generate a output
+     * @param printer to generate an output
      */
     public AITurnController(GameHandler gameHandler, Game game, AIDecisionService aiDecisionService, GameOutputPrinter printer) {
         this.gameHandler = gameHandler;
@@ -43,7 +43,7 @@ public final class AITurnController {
 
     /**
      * Execute the AI turn.
-     * @throws CrownOfFarmlandException if a invalid Move triggert.
+     * @throws CrownOfFarmlandException if an invalid Move triggert.
      */
     public void executeTurn() throws CrownOfFarmlandException {
         executeKingMove();

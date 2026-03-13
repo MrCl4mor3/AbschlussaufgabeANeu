@@ -110,13 +110,7 @@ public final class AIDecisionService {
         TeamID currentTeam = game.getCurrentTeamID();
         Position kingPosition = game.getKingPosition(currentTeam);
 
-        //List<Position> candidates = game.boardView().getSurroundingPositions(kingPosition);
-        List<Position> candidates = new ArrayList<>();
-        for (Position position : game.boardView().getSurroundingPositions(kingPosition)) {
-            if (game.boardView().isValidPosition(position) && game.boardView().getOccupant(position) == null) {
-                candidates.add(position);
-            }
-        }
+        List<Position> candidates = game.boardView().getSurroundingPositions(kingPosition);
         if (candidates.isEmpty()) {
             return null; // No valid placement positions available
         }
@@ -222,8 +216,8 @@ public final class AIDecisionService {
     private int scorePlacementPosition(Position candidate, TeamID currentTeam) {
         Position enemyKingPosition = game.getKingPosition(game.getEnemyTeamID());
         int steps = manhattanDistance(candidate, enemyKingPosition);
-        int enemies = countOrthogonalEntitiesFromTeam(candidate, game.getEnemyTeamID(), true);
-        int fellows = countOrthogonalEntitiesFromTeam(candidate, currentTeam, true);
+        int enemies = countOrthogonalEntitiesFromTeam(candidate, game.getEnemyTeamID());
+        int fellows = countOrthogonalEntitiesFromTeam(candidate, currentTeam);
         return -steps + PLACEMENT_ENEMY_WEIGHT_FACTOR * enemies - fellows;
     }
     private int manhattanDistance(Position a, Position b) {
@@ -242,13 +236,13 @@ public final class AIDecisionService {
         }
         return count;
     }
-    private int countOrthogonalEntitiesFromTeam(Position center, TeamID team, boolean includeKing) {
+    private int countOrthogonalEntitiesFromTeam(Position center, TeamID team) {
         int count = 0;
 
         for (Position neighbor : game.boardView().getOrthogonalNeighbors(center)) {
             BoardEntity occupant = game.boardView().getOccupant(neighbor);
             if (occupant != null && occupant.getOwner().equals(team)) {
-                if (includeKing || !occupant.isFarmerKing()) {
+                if (!occupant.isFarmerKing()) {
                     count++;
                 }
             }
@@ -296,7 +290,7 @@ public final class AIDecisionService {
         List<ActionScore> actionScores = new ArrayList<>();
 
         for (Position target : game.boardView().getOrthogonalNeighbors(source)) {
-            addDirectionalAction(actionScores, source, target, unit, team);
+            addDirectionalAction(actionScores, target, unit, team);
         }
 
         int blockScore = scoreBlockAction(source, unit, team);
@@ -307,7 +301,7 @@ public final class AIDecisionService {
 
         return actionScores;
     }
-    private void addDirectionalAction(List<ActionScore> actionScores, Position source, Position target, Unit unit, TeamID currentTeam) {
+    private void addDirectionalAction(List<ActionScore> actionScores, Position target, Unit unit, TeamID currentTeam) {
         if (!game.boardView().isValidPosition(target)) {
             return;
         }
@@ -315,15 +309,15 @@ public final class AIDecisionService {
         if (targetEntity != null && targetEntity.isFarmerKing() && targetEntity.getOwner().equals(currentTeam)) {
             return;
         }
-        int score = scoreDirectionalAction(source, target, unit, currentTeam, targetEntity);
+        int score = scoreDirectionalAction(target, unit, currentTeam, targetEntity);
         actionScores.add(new ActionScore(UnitActionType.MOVE, target, score));
     }
-    //TargetEntity kann leer sein, eigenes Team, oder Gegner, ABER: Nicht eigener König!
-    private int scoreDirectionalAction(Position source, Position target, Unit unit, TeamID currentTeam, BoardEntity targetEntity) {
+    //TargetEntity kann leer sein, eigenes Team, oder Gegner, ABER: nicht eigener König!
+    private int scoreDirectionalAction(Position target, Unit unit, TeamID currentTeam, BoardEntity targetEntity) {
         if (targetEntity == null) {
             Position enemyKingPosition = game.getKingPosition(game.getEnemyTeamID());
             int steps = manhattanDistance(target, enemyKingPosition);
-            int enemies = countOrthogonalEntitiesFromTeam(target, game.getEnemyTeamID(), true);
+            int enemies = countOrthogonalEntitiesFromTeam(target, game.getEnemyTeamID());
             return ADVANCE_STEPS_FACTOR * steps - enemies;
         }
         if (targetEntity.getOwner().equals(currentTeam)) {
