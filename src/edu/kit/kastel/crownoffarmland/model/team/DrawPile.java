@@ -10,9 +10,8 @@ import java.util.Deque;
 import java.util.List;
 
 /**
- * Represents the draw pile of a team, which contains the units that can be drawn during the game.
- * The draw pile is initialized with a collection of units and provides methods to draw the top unit and shuffle the pile.
- *
+ * Represents a team's draw pile.
+ * It stores the units that can be drawn during the game.
  *
  * @author ucgdi
  */
@@ -22,9 +21,9 @@ public final class DrawPile {
     private final Deque<Unit> deck;
 
     /**
-     * Initializes the draw pile with a collection of units. The units are added to the pile in the order they are provided in the
-     * collection.
-     * @param initialCards the collection of units to initialize the draw pile with
+     * Constructs a draw pile with the given initial cards.
+     *
+     * @param initialCards the cards to add to the draw pile
      */
     public DrawPile(Collection<Unit> initialCards) {
         this.deck = new ArrayDeque<>(initialCards);
@@ -32,41 +31,45 @@ public final class DrawPile {
     }
 
     /**
-     * Returns the number of units currently in the draw pile.
-     * @return the size of the draw pile
+     * Returns the number of cards currently in the draw pile.
+     *
+     * @return the current draw pile size
      */
     public int size() {
         return deck.size();
     }
 
     /**
-     * Getter for the Start Size of the Draw Pile.
-     * @return The Size of the Draw Pile
+     * Returns the initial size of the draw pile.
+     *
+     * @return the initial draw pile size
      */
     public int getStartSize() {
         return startSize;
     }
 
     /**
-     * Draws the top unit from the draw pile. If the pile is empty, it returns null.
-     * @return the unit drawn from the top of the pile, or null if the pile is empty
+     * Draws and returns the top card of the draw pile.
+     *
+     * @return the top card, or {@code null} if the draw pile is empty
      */
     public Unit drawTop() {
-        return  deck.pollFirst();
+        return deck.pollFirst();
     }
 
     /**
-     * Checks if the draw pile is empty.
-     * @return true if the draw pile is empty, false otherwise
+     * Checks whether the draw pile is empty.
+     *
+     * @return {@code true} if the draw pile is empty, otherwise {@code false}
      */
     public boolean isEmpty() {
         return deck.isEmpty();
     }
 
     /**
-     * Shuffles the draw pile by randomizing the order of the units in the pile.
-     * This method creates a temporary list of the units, shuffles it, and then repopulates the draw pile with the shuffled units.
-     * @param generator the random generator used to shuffle the units in the draw pile
+     * Shuffles the cards in the draw pile.
+     *
+     * @param generator the random generator used for shuffling
      */
     public void shuffle(RandomGenerator generator) {
         List<Unit> toShuffle = new ArrayList<>(deck);
@@ -76,8 +79,9 @@ public final class DrawPile {
     }
 
     /**
-     * Getter for the default start size.
-     * @return the default start size of the draw pile
+     * Returns the default initial size of a draw pile.
+     *
+     * @return the default initial size
      */
     public static int getStartSizeDefault() {
         return START_SIZE_DEFAULT;

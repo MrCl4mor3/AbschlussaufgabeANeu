@@ -2,7 +2,6 @@ package edu.kit.kastel.crownoffarmland.model.board;
 
 
 import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
-import edu.kit.kastel.crownoffarmland.exceptions.InvalidCommandArgumentException;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidPositionException;
 
 import java.util.Objects;

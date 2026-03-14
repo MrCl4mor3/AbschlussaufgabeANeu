@@ -1,58 +1,64 @@
 package edu.kit.kastel.crownoffarmland.model.team;
 
-
 /**
- * Interface.
+ * Provides read-only access to a team's state.
  *
  * @author ucgdi
  */
 public interface GameTeamView {
     /**
-     * Getter for the name of a team.
-     * @return the Name of the selected team.
+     * Returns the name of the team.
+     *
+     * @return the team name
      */
     String getName();
 
     /**
-     * Getter for Life Points.
-     * @return The current Life Points of the selected team.
+     * Returns the current life points of the team.
+     *
+     * @return the current life points
      */
     int getLifePoints();
 
     /**
-     * Getter for the HandSize.
-     * @return the current Size of the hand.
+     * Returns the number of cards currently in the hand.
+     *
+     * @return the current hand size
      */
     int getHandSize();
 
     /**
-     * Check if the hand is full.
-     * @return true, if the hand is full, false otherwise
+     * Checks whether the team's hand is full.
+     *
+     * @return {@code true} if the hand is full, otherwise {@code false}
      */
     boolean isHandFull();
 
     /**
-     * Getter for the Size of the DrawPile.
-     * @return The Size of the Draw Pile
+     * Returns the number of cards currently in the draw pile.
+     *
+     * @return the current draw pile size
      */
     int getDrawPileSize();
 
     /**
-     * Getter for the Start Size of the DrawPile.
-     * @return the size of the DrawPile
+     * Returns the initial size of the draw pile.
+     *
+     * @return the initial draw pile size
      */
     int getStartDeckSize();
 
     /**
-     * Check if the Draw Pile is empty.
-     * @return true, if the DrawPile is empty, false otherwise
+     * Checks whether the draw pile is empty.
+     *
+     * @return {@code true} if the draw pile is empty, otherwise {@code false}
      */
     boolean isDrawPileEmpty();
 
     /**
-     * Getter for the maximal Number of Units that can place at the same time on the board.
-     * @return The MAximal Number of Units that can be placed at the same time on the board.
+     * Returns the maximum number of units the team may have on the board at the same time.
+     *
+     * @return the maximum number of units on the board
      */
     int getMaxUnitsOnBoard();
 }
-
