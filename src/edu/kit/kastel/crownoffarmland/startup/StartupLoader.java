@@ -26,12 +26,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Loads and validates all startup configuration from the command line arguments.
+ * Loads startup configuration from command line arguments.
  *
  * @author ucgdi
  */
 public final class StartupLoader {
-
     private static final String FILE_NOT_FOUND_ERROR = "File not found: %s";
     private static final int MAX_TEAM_NAME_LENGTH = 14;
     private static final String STANDARD_TEAM1_NAME = "Player";
@@ -47,7 +46,7 @@ public final class StartupLoader {
     private final UnitFileParser unitFileParser;
 
     /**
-     * Constructs a new StartupLoader instance.
+     * Creates a new startup loader.
      */
     public StartupLoader() {
         this.argsParser = new RawArgsParser();
@@ -57,10 +56,10 @@ public final class StartupLoader {
     }
 
     /**
-     * Creates a validated startup context from the raw command line arguments.
+     * Creates a validated startup context.
      *
      * @param args the raw command line arguments
-     * @return a startup result containing either the validated startup context or an error
+     * @return the startup context result
      */
     public StartupResult<StartupContext> createStartupContext(String[] args) {
         StartupResult<Map<StartupKey, String>> parseResult = argsParser.parseRawArgs(args);
@@ -139,8 +138,7 @@ public final class StartupLoader {
             return StartupError.error(boardResult.getErrorMessage());
         }
 
-        StartupOutput output = context.getOutput()
-                .withBoardSymbolSet(new CustomBoardSymbolSet(boardResult.getValue()));
+        StartupOutput output = context.getOutput().withBoardSymbolSet(new CustomBoardSymbolSet(boardResult.getValue()));
         return StartupResult.success(context.withOutput(output));
     }
 

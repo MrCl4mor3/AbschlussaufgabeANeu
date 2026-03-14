@@ -4,48 +4,53 @@ import java.util.EnumSet;
 import java.util.Set;
 
 /**
- * This enum represents the different keys that can be used during the startup process to configure the game.
- * Each key has a boolean value indicating whether it is required or optional, and a string value representing the key itself.
- * The enum provides methods to check if a key is required, to get the string representation of the key, and to convert a string to a
- * StartupKey.
+ * Defines the supported startup configuration keys.
  *
  * @author ucgdi
  */
 public enum StartupKey {
     /**
-     * The SEED key is required for the startup process and represents the seed for the random generator.
+     * Random seed configuration.
      */
     SEED(true, "seed"),
+
     /**
-     * The BOARD key is optional for the startup process and represents the configuration of the game board.
+     * Board configuration.
      */
     BOARD(false, "board"),
+
     /**
-     * The UNITS key is required for the startup process and represents the configuration of the units in the game.
+     * Unit configuration.
      */
     UNITS(true, "units"),
+
     /**
-     * The DECK key is optional for the startup process and represents the configuration of the deck used in the game.
+     * Shared deck configuration.
      */
     DECK(false, "deck"),
+
     /**
-     * The DECK1 key is optional for the startup process and represents the configuration of the first deck used in the game.
+     * First deck configuration.
      */
     DECK1(false, "deck1"),
+
     /**
-     * The DECK2 key is optional for the startup process and represents the configuration of the second deck used in the game.
+     * Second deck configuration.
      */
     DECK2(false, "deck2"),
+
     /**
-     * The TEAM1 key is optional for the startup process and represents the configuration of the first team in the game.
+     * First team configuration.
      */
     TEAM1(false, "team1"),
+
     /**
-     * The TEAM2 key is optional for the startup process and represents the configuration of the second team in the game.
+     * Second team configuration.
      */
     TEAM2(false, "team2"),
+
     /**
-     * The VERBOSITY key is optional for the startup process and represents the verbosity level of the game's output.
+     * Output verbosity configuration.
      */
     VERBOSITY(false, "verbosity");
 
@@ -58,25 +63,28 @@ public enum StartupKey {
     }
 
     /**
-     * Indicates whether this startup key is required for the startup process.
-     * @return true if this key is required, false otherwise
+     * Returns whether this key is required.
+     *
+     * @return {@code true} if this key is required, otherwise {@code false}
      */
     public boolean isRequired() {
         return this.required;
     }
 
     /**
-     * Returns the string representation of this startup key.
-     * @return the string representation of this startup key
+     * Returns the string representation of this key.
+     *
+     * @return the key string
      */
     public String getKey() {
         return this.key;
     }
 
     /**
-     * Converts a string to a StartupKey enum value. The comparison is case-insensitive.
-     * @param rawKey the string representation of the startup key to be converted
-     * @return the corresponding StartupKey enum value if the input string matches a key, or null if no match is found
+     * Returns the matching startup key for the given string.
+     *
+     * @param rawKey the key string
+     * @return the matching startup key, or {@code null} if none matches
      */
     public static StartupKey fromString(String rawKey) {
         for (StartupKey key : StartupKey.values()) {
@@ -88,8 +96,9 @@ public enum StartupKey {
     }
 
     /**
-     * Returns a set of all required StartupKey enum values.
-     * @return a set of all required StartupKey enum values
+     * Returns all required startup keys.
+     *
+     * @return the required startup keys
      */
     public static Set<StartupKey> getRequiredKeys() {
         EnumSet<StartupKey> requiredKeys = EnumSet.noneOf(StartupKey.class);

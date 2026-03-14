@@ -1,22 +1,18 @@
 package edu.kit.kastel.crownoffarmland.startup.config;
 
-
-
 /**
- * This enum represents the different verbosity levels that can be configured during the startup process.
- * It defines two levels: ALL and COMPACT.
- * The ALL level indicates that all output should be displayed, while the COMPACT level indicates that only essential output should be
- * displayed.
+ * Defines the available verbosity levels.
  *
  * @author ucgdi
  */
 public enum Verbosity {
     /**
-     * This level indicates that all output should be displayed.
+     * Full output.
      */
     ALL("all"),
+
     /**
-     * This level indicates that only essential output should be displayed.
+     * Reduced output.
      */
     COMPACT("compact");
 
@@ -27,10 +23,10 @@ public enum Verbosity {
     }
 
     /**
-     * Returns the string representation of the verbosity level.
+     * Returns the matching verbosity level for the given string.
      *
-     * @param rawKey the string representation of the verbosity level
-     * @return the corresponding Verbosity enum value, or null if no match is found
+     * @param rawKey the verbosity string
+     * @return the matching verbosity level, or {@code null} if none matches
      */
     public static Verbosity fromString(String rawKey) {
         for (Verbosity verbosity : Verbosity.values()) {

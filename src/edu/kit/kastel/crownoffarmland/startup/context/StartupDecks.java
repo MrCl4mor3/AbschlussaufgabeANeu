@@ -3,7 +3,7 @@ package edu.kit.kastel.crownoffarmland.startup.context;
 import java.util.Arrays;
 
 /**
- * Immutable deck configuration for both teams during startup.
+ * Stores startup deck configurations for both teams.
  *
  * @author ucgdi
  */
@@ -19,7 +19,7 @@ public final class StartupDecks {
     /**
      * Returns an empty deck configuration.
      *
-     * @return empty deck configuration
+     * @return the empty deck configuration
      */
     public static StartupDecks empty() {
         return new StartupDecks(null, null);
@@ -30,17 +30,17 @@ public final class StartupDecks {
      *
      * @param deckCountsTeam1 the deck counts of team 1
      * @param deckCountsTeam2 the deck counts of team 2
-     * @return deck configuration for both teams
+     * @return the deck configuration
      */
     public static StartupDecks of(int[] deckCountsTeam1, int[] deckCountsTeam2) {
         return new StartupDecks(deckCountsTeam1, deckCountsTeam2);
     }
 
     /**
-     * Returns a deck configuration that uses the same deck for both teams.
+     * Returns a mirrored deck configuration.
      *
-     * @param deckCounts the deck counts used for both teams
-     * @return mirrored deck configuration
+     * @param deckCounts the deck counts for both teams
+     * @return the mirrored deck configuration
      */
     public static StartupDecks mirrored(int[] deckCounts) {
         return new StartupDecks(deckCounts, deckCounts);
@@ -49,7 +49,7 @@ public final class StartupDecks {
     /**
      * Returns the deck counts of team 1.
      *
-     * @return copy of the deck counts of team 1
+     * @return the deck counts of team 1
      */
     public int[] getDeckCountsTeam1() {
         return copyArray(deckCountsTeam1);
@@ -58,7 +58,7 @@ public final class StartupDecks {
     /**
      * Returns the deck counts of team 2.
      *
-     * @return copy of the deck counts of team 2
+     * @return the deck counts of team 2
      */
     public int[] getDeckCountsTeam2() {
         return copyArray(deckCountsTeam2);

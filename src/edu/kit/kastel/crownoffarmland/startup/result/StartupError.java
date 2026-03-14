@@ -5,7 +5,7 @@ import edu.kit.kastel.crownoffarmland.startup.config.StartupKey;
 import java.util.Iterator;
 
 /**
- * Utility class for handling startup errors and formatting error messages.
+ * Provides utility methods for startup errors.
  *
  * @author ucgdi
  */
@@ -20,50 +20,56 @@ public final class StartupError {
         throw new UnsupportedOperationException(UTILITY_CLASSES_CANNOT_BE_INSTANTIATED);
     }
 
-
     /**
-     * Formats an error message with the given format and arguments, and returns a StartupResult containing the error message.
-     * @param format the format string for the error message
-     * @param args the arguments to be formatted into the error message
-     * @return a StartupResult containing the formatted error message
-     * @param <T> the type of the StartupResult
+     * Returns an error result with a formatted message.
+     *
+     * @param format the error message format
+     * @param args the format arguments
+     * @param <T> the result type
+     * @return the error result
      */
     public static <T> StartupResult<T> error(String format, Object... args) {
         return StartupResult.error(String.format(format, args));
     }
 
     /**
-     * Formats an error message with the given format and arguments, and returns the formatted error message as a String with a prefix.
-     * @param format the format string for the error message
-     * @param args the arguments to be formatted into the error message
-     * @return the formatted error message as a String with a prefix
+     * Returns a formatted error message with a prefix.
+     *
+     * @param format the error message format
+     * @param args the format arguments
+     * @return the formatted error message
      */
     public static String formatErrorMessage(String format, Object... args) {
         return PREFIX + String.format(format, args);
     }
+
     /**
-     * Joins the keys of the given iterable of StartupKey objects into a single string, separated by a comma and a space.
-     * @param keys the iterable of StartupKey objects whose keys are to be joined
-     * @return a string containing the joined keys of the StartupKey objects, separated by a comma and a space
+     * Joins startup keys into a comma-separated string.
+     *
+     * @param keys the startup keys
+     * @return the joined key string
      */
     public static String joinKeys(Iterable<StartupKey> keys) {
         StringBuilder sb = new StringBuilder();
         Iterator<StartupKey> iterator = keys.iterator();
+
         while (iterator.hasNext()) {
             sb.append(iterator.next().getKey());
             if (iterator.hasNext()) {
                 sb.append(LIST_SEPARATOR);
             }
         }
-        return  sb.toString();
+
+        return sb.toString();
     }
 
     /**
-     * Removes a single trailing line break from the input string, if it exists. If the input is null, it returns null.
-     * @param input the input string from which to remove a single trailing line break
-     * @return the input string with a single trailing line break removed, or null if the input is null
+     * Removes trailing line breaks from the given string.
+     *
+     * @param input the input string
+     * @return the trimmed string, or {@code null} if the input is {@code null}
      */
-    public static String dropSingleTrailingLineBreak(String input) {
+    public static String removeTrailingLineBreaks(String input) {
         if (input == null) {
             return null;
         }

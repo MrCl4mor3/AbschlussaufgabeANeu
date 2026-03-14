@@ -1,9 +1,8 @@
 package edu.kit.kastel.crownoffarmland.startup.parser;
 
-
 import edu.kit.kastel.crownoffarmland.startup.config.DeckConfigMode;
-import edu.kit.kastel.crownoffarmland.startup.result.StartupError;
 import edu.kit.kastel.crownoffarmland.startup.config.StartupKey;
+import edu.kit.kastel.crownoffarmland.startup.result.StartupError;
 import edu.kit.kastel.crownoffarmland.startup.result.StartupResult;
 
 import java.util.ArrayList;
@@ -13,15 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class is responsible for parsing raw command line arguments into a structured format. It validates the format of each argument,
- * checks for duplicate keys, ensures that all required keys are present, and validates the deck configuration. The main method,
- * parseRawArgs, takes an array of strings (the raw arguments) and returns a StartupResult containing either a map of parsed arguments or
- * an error message if any validation fails.
+ * Parses raw startup arguments.
  *
  * @author ucgdi
  */
 public final class RawArgsParser {
-
     private static final String ARGUMENT_DELIMITER = "=";
     private static final int KEY_VALUE_SPLIT_LIMIT = 2;
 
@@ -37,19 +32,18 @@ public final class RawArgsParser {
             "Invalid deck configuration. Use either deck=... OR deck1=... and deck2=... (not both). Given: %s.";
 
     /**
-     * Parses the raw command line arguments and returns a StartupResult containing either a map of parsed arguments or an error message
-     * if any validation fails.
-     * @param args the raw command line arguments to parse
-     * @return a StartupResult containing either a map of parsed arguments or an error message if any validation fails
+     * Parses the given startup arguments.
+     *
+     * @param args the raw startup arguments
+     * @return the parsed arguments
      */
     public StartupResult<Map<StartupKey, String>> parseRawArgs(String[] args) {
-        Map<StartupKey, String> arguments = new EnumMap<StartupKey, String>(StartupKey.class);
+        Map<StartupKey, String> arguments = new EnumMap<>(StartupKey.class);
         EnumSet<StartupKey> duplicates = EnumSet.noneOf(StartupKey.class);
 
         for (String arg : args) {
             String[] keyValue = arg.split(ARGUMENT_DELIMITER, KEY_VALUE_SPLIT_LIMIT);
 
-            // Split at first '=' only
             if (keyValue.length != KEY_VALUE_SPLIT_LIMIT) {
                 return StartupError.error(INVALID_ARGUMENT_FORMAT_ERROR, arg);
             }
@@ -57,12 +51,10 @@ public final class RawArgsParser {
             String rawKey = keyValue[0].trim();
             String rawValue = keyValue[1].trim();
 
-            // key/value must not be empty
             if (rawKey.isEmpty() || rawValue.isEmpty()) {
                 return StartupError.error(INVALID_ARGUMENT_FORMAT_ERROR, arg);
             }
 
-            // try to parse key
             StartupKey key = StartupKey.fromString(rawKey);
             if (key == null) {
                 return StartupError.error(UNKNOWN_ARGUMENT_ERROR, arg);
@@ -80,12 +72,10 @@ public final class RawArgsParser {
             return StartupError.error(DUPLICATE_ARGUMENT_ERROR, StartupError.joinKeys(duplicates));
         }
 
-
         List<StartupKey> missingRequiredKeys = getMissingRequiredKeys(arguments);
         if (!missingRequiredKeys.isEmpty()) {
             return StartupError.error(MISSING_MANDATORY_ARGUMENT_ERROR, StartupError.joinKeys(missingRequiredKeys));
         }
-
 
         StartupResult<DeckConfigMode> deckConfig = validateDeckConfig(arguments);
         if (!deckConfig.isSuccess()) {
@@ -94,8 +84,6 @@ public final class RawArgsParser {
 
         return StartupResult.success(arguments);
     }
-
-
 
     private List<StartupKey> getMissingRequiredKeys(Map<StartupKey, String> arguments) {
         List<StartupKey> missingKeys = new ArrayList<>();
@@ -118,7 +106,7 @@ public final class RawArgsParser {
             return StartupResult.success(DeckConfigMode.SHARED_DECK);
         } else if (hasDeck1 && hasDeck2) {
             return StartupResult.success(DeckConfigMode.SPLIT_DECKS);
-        } else  {
+        } else {
             return StartupError.error(INVALID_DECK_CONFIG_ERROR, StartupError.joinKeys(arguments.keySet()));
         }
     }

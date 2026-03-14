@@ -1,6 +1,7 @@
 package edu.kit.kastel.crownoffarmland.startup.context;
+
 /**
- * Immutable team name configuration during startup.
+ * Stores startup team names.
  *
  * @author ucgdi
  */
@@ -16,7 +17,7 @@ public final class StartupTeams {
     /**
      * Returns an empty team configuration.
      *
-     * @return empty team configuration
+     * @return the empty team configuration
      */
     public static StartupTeams empty() {
         return new StartupTeams(null, null);
@@ -27,7 +28,7 @@ public final class StartupTeams {
      *
      * @param team1Name the name of team 1
      * @param team2Name the name of team 2
-     * @return team configuration for both teams
+     * @return the team configuration
      */
     public static StartupTeams of(String team1Name, String team2Name) {
         return new StartupTeams(team1Name, team2Name);
@@ -36,7 +37,7 @@ public final class StartupTeams {
     /**
      * Returns the name of team 1.
      *
-     * @return team 1 name
+     * @return the name of team 1
      */
     public String getTeam1Name() {
         return team1Name;
@@ -45,7 +46,7 @@ public final class StartupTeams {
     /**
      * Returns the name of team 2.
      *
-     * @return team 2 name
+     * @return the name of team 2
      */
     public String getTeam2Name() {
         return team2Name;

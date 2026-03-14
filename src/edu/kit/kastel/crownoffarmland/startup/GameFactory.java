@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Factory for creating the initialized game handler from the validated startup context.
+ * Creates a game handler from startup data.
  *
  * @author ucgdi
  */
@@ -22,18 +22,18 @@ public final class GameFactory {
     private final StartupContext context;
 
     /**
-     * Constructs a new GameFactory with the given startup context.
+     * Creates a new game factory.
      *
-     * @param context the validated startup context
+     * @param context the startup context
      */
     public GameFactory(StartupContext context) {
         this.context = context;
     }
 
     /**
-     * Creates and initializes the game handler.
+     * Creates the game handler.
      *
-     * @return the initialized game handler
+     * @return the game handler
      */
     public GameHandler createGameHandler() {
         StartupDecks decks = context.getDecks();

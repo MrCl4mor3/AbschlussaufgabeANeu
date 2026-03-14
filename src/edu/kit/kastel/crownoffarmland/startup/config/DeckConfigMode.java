@@ -1,21 +1,18 @@
 package edu.kit.kastel.crownoffarmland.startup.config;
 
 /**
- * This enum represents the different modes for deck configuration during the startup process.
- * It defines two modes: SHARED_DECK and SPLIT_DECKS.
- * In SHARED_DECK mode, both teams share the same deck configuration.
- * In SPLIT_DECKS mode, each team has its own separate deck configuration.
+ * Defines the available deck configuration modes.
  *
  * @author ucgdi
  */
 public enum DeckConfigMode {
     /**
-     * In this mode, both teams share the same deck configuration.
+     * Both teams use the same deck.
      */
     SHARED_DECK,
+
     /**
-     * In this mode, each team has its own separate deck configuration.
+     * Each team uses its own deck.
      */
     SPLIT_DECKS;
 }
-
