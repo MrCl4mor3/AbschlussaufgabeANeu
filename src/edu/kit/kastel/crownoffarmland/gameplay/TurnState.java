@@ -8,8 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * This class encapsulates the state of a player's turn, including the selected position, yield restriction status,
- * moved entities, and whether an entity has been placed this turn.
+ * Stores the state of the current turn.
  *
  * @author ucgdi
  */
@@ -20,7 +19,7 @@ public class TurnState {
     private boolean placedThisTurn;
 
     /**
-     * Initializes a new TurnState with default values.
+     * Creates a new turn state.
      */
     public TurnState() {
         this.movedEntities = new HashSet<>();
@@ -28,8 +27,7 @@ public class TurnState {
     }
 
     /**
-     * Resets the turn state for a new turn, clearing the selected position, yield restriction status, moved entities, and placement
-     * status.
+     * Resets the state for a new turn.
      */
     public void resetForNewTurn() {
         selectedPos = null;
@@ -39,82 +37,78 @@ public class TurnState {
     }
 
     /**
-     * Returns the currently selected position for this turn, or null if no position is selected.
-     * @return the selected position, or null if none is selected
+     * Returns the selected position.
+     *
+     * @return the selected position, or {@code null} if none is selected
      */
     public Position getSelectedPos() {
         return selectedPos;
     }
 
     /**
-     * Sets the selected position for this turn. This position may be used for various actions during the turn, such as moving or placing
-     * entities.
-     * @param selectedPos the position to set as the currently selected position for this turn
+     * Sets the selected position.
+     *
+     * @param selectedPos the selected position
      */
     public void setSelectedPos(Position selectedPos) {
         this.selectedPos = selectedPos;
     }
 
     /**
-     * Checks if the yield restriction is currently active for this turn. If the yield restriction is active, the player must discard
-     * instead of performing other actions.
-     * @return true if the yield restriction is active, false otherwise
+     * Returns whether the yield restriction is active.
+     *
+     * @return {@code true} if the yield restriction is active
      */
     public boolean isYieldRestrictionActive() {
         return yieldRestrictionActive;
     }
 
     /**
-     * Activates the yield restriction for this turn, indicating that the player must discard instead of performing other actions. Once
-     * activated, the yield restriction will remain active until the end of the turn, preventing the player from performing any actions
-     * other than discarding.
+     * Activates the yield restriction.
      */
     public void activateYieldRestriction() {
         this.yieldRestrictionActive = true;
     }
 
     /**
-     * Checks if the player has already placed an entity during this turn. If an entity has been placed, the player cannot place another
-     * one during the same turn.
-     * @return true if an entity has been placed this turn, false otherwise
+     * Returns whether a unit was placed this turn.
+     *
+     * @return {@code true} if a unit was placed this turn
      */
     public boolean hasPlacedThisTurn() {
         return placedThisTurn;
     }
 
     /**
-     * Marks that the player has placed an entity during this turn, preventing them from placing another one until the next turn. This
-     * method should be called whenever the player successfully places an entity on the board, ensuring that the turn state accurately
-     * reflects the player's actions and enforces the rule that only one entity can be placed per turn.
+     * Marks that a unit was placed this turn.
      */
     public void markPlacedThisTurn() {
         this.placedThisTurn = true;
     }
 
-
     /**
-     * Checks if the specified entity has already been moved during this turn. If the entity is in the set of moved entities, it means that
-     * it has already been moved and cannot be moved again until the next turn.
-     * @param entity the entity to check for movement status during this turn
-     * @return true if the entity has already been moved this turn, false otherwise
+     * Returns whether the given entity has already moved.
+     *
+     * @param entity the entity to check
+     * @return {@code true} if the entity has already moved
      */
     public boolean hasMoved(BoardEntity entity) {
         return movedEntities.contains(entity);
     }
 
     /**
-     * Marks the specified entity as having been moved during this turn by adding it to the set of moved entities.
-     * @param entity the entity to mark as having been moved during this turn, preventing it from being moved again until the next turn
+     * Marks the given entity as moved.
+     *
+     * @param entity the moved entity
      */
     public void markMoved(BoardEntity entity) {
         movedEntities.add(entity);
     }
 
     /**
-     * Returns an unmodifiable view of the set of entities that have been moved during this turn. This allows other parts of the code to
-     * check which entities have been moved without allowing modification of the underlying set, ensuring that the turn state remains
-     * consistent and accurate throughout the turn.
-     * @return an unmodifiable set of entities that have been moved during this turn
+     * Returns the moved entities of this turn.
+     *
+     * @return an unmodifiable set of moved entities
      */
     public Set<BoardEntity> getMovedEntities() {
         return Collections.unmodifiableSet(movedEntities);

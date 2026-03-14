@@ -52,7 +52,7 @@ public class YieldCommand extends  Command {
                 System.err.println(ERROR_PREFIX + HAND_FULL_MESSAGE);
                 return;
             }
-            case DISCARDED_NOT_ALLOWED -> {
+            case DISCARD_NOT_ALLOWED -> {
                 System.err.println(ERROR_PREFIX + DISCARD_NOT_ALLOWED_MESSAGE);
                 return;
             }

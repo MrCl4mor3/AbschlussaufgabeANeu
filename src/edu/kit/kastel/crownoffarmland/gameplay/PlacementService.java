@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Handles all placement-related game logic.
+ * Handles unit placement.
  *
  * @author ucgdi
  */
@@ -35,8 +35,8 @@ public final class PlacementService {
      * Creates a new placement service.
      *
      * @param game the current game
-     * @param unitMerger merger used for placement unions
-     * @param turnState current turn state
+     * @param unitMerger the unit merger
+     * @param turnState the current turn state
      */
     public PlacementService(Game game, UnitMerger unitMerger, TurnState turnState) {
         this.game = game;
@@ -45,11 +45,11 @@ public final class PlacementService {
     }
 
     /**
-     * Places the given hand cards on the currently selected field.
+     * Places the selected hand cards on the selected field.
      *
-     * @param userIndices one-based indices of the cards in hand
-     * @return snapshots for each placement step
-     * @throws InvalidGameStateException if the current placement is not allowed
+     * @param userIndices the one-based hand indices
+     * @return the placement step snapshots
+     * @throws InvalidGameStateException if the placement is not allowed
      */
     public List<PlaceStepSnapshot> placeUnits(int[] userIndices) throws InvalidGameStateException {
         validateTarget();
@@ -60,6 +60,7 @@ public final class PlacementService {
         for (Unit unit : unitsToPlace) {
             snapshots.add(placeSingleUnit(unit));
         }
+
         turnState.markPlacedThisTurn();
         return snapshots;
     }
@@ -101,12 +102,11 @@ public final class PlacementService {
                 throw new InvalidHandException(String.valueOf(userIndex));
             }
             if (!seenIndices.add(internalIndex)) {
-                throw new InvalidGameStateException(
-                        "Each hand index may only be used once per place command."
-                );
+                throw new InvalidGameStateException("Each hand index may only be used once per place command.");
             }
             internalIndices.add(internalIndex);
         }
+
         return internalIndices;
     }
 
@@ -123,6 +123,7 @@ public final class PlacementService {
         for (int internalIndex : descendingIndices) {
             game.removeHandCardAt(currentTeam, internalIndex);
         }
+
         return units;
     }
 
@@ -142,6 +143,7 @@ public final class PlacementService {
                         targetPosition.toString()
                 );
             }
+
             game.setOccupant(targetPosition, incomingUnit);
             return new PlaceStepSnapshot(
                     teamName,

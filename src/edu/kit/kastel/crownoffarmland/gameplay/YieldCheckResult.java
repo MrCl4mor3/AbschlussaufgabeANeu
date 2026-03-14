@@ -1,21 +1,23 @@
 package edu.kit.kastel.crownoffarmland.gameplay;
 
 /**
- * Enum for Checking the YieldResult.
+ * Defines the possible results of a yield check.
  *
  * @author ucgdi
  */
 public enum YieldCheckResult {
     /**
-     * If the yield is successful.
+     * The yield is valid.
      */
     SUCCESS,
+
     /**
-     * If the yield is not successful, because player must discard a card from his hand.
+     * A discard is required before yielding.
      */
     DISCARD_REQUIRED,
+
     /**
-     * If the yield is not successful, because player want to discard a card from his hand, but it is not allowed.
+     * Discarding is not allowed.
      */
-    DISCARDED_NOT_ALLOWED;
+    DISCARD_NOT_ALLOWED
 }
