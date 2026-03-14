@@ -16,6 +16,8 @@ import java.util.List;
  */
 public class Team implements GameTeamView {
     private static final int START_LP = 8000;
+    private static final int MAX_UNITS_ON_BOARD = 5;
+
 
     private final String name;
     private final TeamID teamID;
@@ -124,6 +126,16 @@ public class Team implements GameTeamView {
      */
     public int getDrawPileSize() {
         return this.drawPile.size();
+    }
+
+    @Override
+    public int getStartDeckSize() {
+        return this.drawPile.getStartSize();
+    }
+
+    @Override
+    public int getMaxUnitsOnBoard() {
+        return MAX_UNITS_ON_BOARD;
     }
 
     /**

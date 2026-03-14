@@ -12,8 +12,8 @@ import java.util.List;
 public class StateOutputFormatter implements OutputFormatter<List<TeamStateSnapshot>> {
 
     private static final String LIFE_POINTS_FORMAT = "%d/8000 LP";
-    private static final String DECK_COUNT_FORMAT = "DC: %d/40";
-    private static final String BOARD_COUNT_FORMAT = "BC: %d/5";
+    private static final String DECK_COUNT_FORMAT = "DC: %d/%d";
+    private static final String BOARD_COUNT_FORMAT = "BC: %d/%d";
     private static final int TOTAL_LINE_LENGTH = 31;
     private static final String INDENT = "  ";
     private static final String PADDING = " ";
@@ -32,11 +32,11 @@ public class StateOutputFormatter implements OutputFormatter<List<TeamStateSnaps
         appendStateLine(output, String.format(LIFE_POINTS_FORMAT, team1.getLifePoints()), String.format(LIFE_POINTS_FORMAT,
                 team2.getLifePoints()));
         output.append(System.lineSeparator());
-        appendStateLine(output, String.format(DECK_COUNT_FORMAT, team1.getRemainingDeckCards()), String.format(DECK_COUNT_FORMAT,
-                team2.getRemainingDeckCards()));
+        appendStateLine(output, String.format(DECK_COUNT_FORMAT, team1.getRemainingDeckCards(), team1.getStartDeckSize()),
+                String.format(DECK_COUNT_FORMAT, team2.getRemainingDeckCards(), team1.getStartDeckSize()));
         output.append(System.lineSeparator());
-        appendStateLine(output, String.format(BOARD_COUNT_FORMAT, team1.getPlacedUnits()), String.format(BOARD_COUNT_FORMAT,
-                team2.getPlacedUnits()));
+        appendStateLine(output, String.format(BOARD_COUNT_FORMAT, team1.getPlacedUnits(), team1.getMaxUnitsOnBoard()),
+                String.format(BOARD_COUNT_FORMAT, team2.getPlacedUnits(), team2.getMaxUnitsOnBoard()));
 
         return output.toString();
     }

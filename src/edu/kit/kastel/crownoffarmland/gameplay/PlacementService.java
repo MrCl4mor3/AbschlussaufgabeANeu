@@ -26,7 +26,6 @@ import java.util.Set;
 public final class PlacementService {
     private static final int HAND_INDEX_OFFSET = 1;
     private static final int MAX_KING_DISTANCE = 1;
-    private static final int MAX_UNITS_ON_BOARD = 5;
 
     private final Game game;
     private final UnitMerger unitMerger;
@@ -134,7 +133,7 @@ public final class PlacementService {
         String incomingUnitName = incomingUnit.getName().toString();
 
         if (occupant == null) {
-            if (countUnitsOnBoard(game.getCurrentTeamID()) >= MAX_UNITS_ON_BOARD) {
+            if (countUnitsOnBoard(game.getCurrentTeamID()) >= game.teamView(game.getCurrentTeamID()).getMaxUnitsOnBoard()) {
                 return new PlaceStepSnapshot(
                         teamName,
                         incomingUnitName,

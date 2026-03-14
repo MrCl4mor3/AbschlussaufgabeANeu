@@ -38,9 +38,21 @@ public interface GameTeamView {
     int getDrawPileSize();
 
     /**
+     * Getter for the Start Size of the DrawPile.
+     * @return the size of the DrawPile
+     */
+    int getStartDeckSize();
+
+    /**
      * Check if the Draw Pile is empty.
      * @return true, if the DrawPile is empty, false otherwise
      */
     boolean isDrawPileEmpty();
+
+    /**
+     * Getter for the maximal Number of Units that can place at the same time on the board.
+     * @return The MAximal Number of Units that can be placed at the same time on the board.
+     */
+    int getMaxUnitsOnBoard();
 }
 

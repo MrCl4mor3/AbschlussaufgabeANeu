@@ -12,7 +12,6 @@ import edu.kit.kastel.crownoffarmland.model.units.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Creates immutable snapshot objects from the current game state.
@@ -50,8 +49,7 @@ public class SnapshotFactory implements SnapshotProvider {
         for (int rowIndex = 0; rowIndex < boardSize; rowIndex++) {
             for (int columnIndex = 0; columnIndex < boardSize; columnIndex++) {
                 Position position = game.boardView().getPositionAt(rowIndex, columnIndex);
-                cells[rowIndex][columnIndex] = createBoardCellSnapshot(game, position, turnState.getMovedEntities(),
-                        game.getCurrentTeamID());
+                cells[rowIndex][columnIndex] = createBoardCellSnapshot(position);
             }
         }
 
@@ -111,7 +109,6 @@ public class SnapshotFactory implements SnapshotProvider {
         return List.copyOf(handEntries);
     }
 
-
     /**
      * Creates a snapshot of the current team's state, including life points, remaining deck cards, and placed units.
      * @param teamID the team for which to create the snapshot
@@ -123,10 +120,11 @@ public class SnapshotFactory implements SnapshotProvider {
         int remainingDeckCards = game.teamView(teamID).getDrawPileSize();
         int lifePoints = game.teamView(teamID).getLifePoints();
 
-        return new TeamStateSnapshot(teamName, lifePoints, remainingDeckCards, game.getUnitsPlaced(teamID));
+        return new TeamStateSnapshot(teamName, lifePoints, remainingDeckCards, game.getUnitsPlaced(teamID),
+                game.teamView(teamID).getStartDeckSize(), game.teamView(teamID).getMaxUnitsOnBoard());
     }
 
-    private BoardCellSnapshot createBoardCellSnapshot(Game game, Position position, Set<BoardEntity> movedEntities, TeamID currentTeamID) {
+    private BoardCellSnapshot createBoardCellSnapshot(Position position) {
         BoardEntity occupant = game.boardView().getOccupant(position);
 
         if (occupant == null) {
@@ -134,7 +132,7 @@ public class SnapshotFactory implements SnapshotProvider {
         }
 
         boolean isPlayerTeam = occupant.getOwner() == TeamID.TEAM_1;
-        boolean isMoveable = occupant.getOwner().equals(currentTeamID) && !movedEntities.contains(occupant);
+        boolean isMoveable = occupant.getOwner().equals(game.getCurrentTeamID()) && !turnState.getMovedEntities().contains(occupant);
 
         return new BoardCellSnapshot(true, occupant.isFarmerKing(), occupant.isBlocked(), isPlayerTeam, isMoveable);
     }

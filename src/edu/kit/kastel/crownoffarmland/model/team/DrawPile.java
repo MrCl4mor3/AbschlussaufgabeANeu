@@ -17,6 +17,7 @@ import java.util.List;
  * @author ucgdi
  */
 public final class DrawPile {
+    private static final int START_SIZE = 40;
     private final Deque<Unit> deck;
 
     /**
@@ -34,6 +35,14 @@ public final class DrawPile {
      */
     public int size() {
         return deck.size();
+    }
+
+    /**
+     * Getter for the Start Size of the Draw Pile.
+     * @return The Size of the Draw Pile
+     */
+    public int getStartSize() {
+        return START_SIZE;
     }
 
     /**

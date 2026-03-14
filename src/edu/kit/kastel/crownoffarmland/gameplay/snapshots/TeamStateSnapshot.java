@@ -12,6 +12,8 @@ public final class TeamStateSnapshot {
     private final int lifePoints;
     private final int remainingDeckCards;
     private final int placedUnits;
+    private final int startDeckSize;
+    private final int maxUnitsOnBoard;
 
 
     /**
@@ -20,12 +22,17 @@ public final class TeamStateSnapshot {
      * @param lifePoints the current life points of the team
      * @param remainingDeckCards the number of cards remaining in the team's deck
      * @param placedUnits the number of units currently placed on the board by the team
+     * @param startDeckSize the startDeck Size
+     * @param maxUnitsOnBoard the Number of Units of one team, that can max. at the same time on the board
      */
-    public TeamStateSnapshot(String teamName, int lifePoints, int remainingDeckCards, int placedUnits) {
+    public TeamStateSnapshot(String teamName, int lifePoints, int remainingDeckCards, int placedUnits, int startDeckSize,
+        int maxUnitsOnBoard) {
         this.teamName = teamName;
         this.lifePoints = lifePoints;
         this.remainingDeckCards = remainingDeckCards;
         this.placedUnits = placedUnits;
+        this.startDeckSize = startDeckSize;
+        this.maxUnitsOnBoard = maxUnitsOnBoard;
     }
 
     /**
@@ -58,5 +65,21 @@ public final class TeamStateSnapshot {
      */
     public int getPlacedUnits() {
         return placedUnits;
+    }
+
+    /**
+     * Getter for the maximal number of cards that can be in the team's deck at the start of the game.
+     * @return The number of maximal deck cards for the team.
+     */
+    public int getStartDeckSize() {
+        return startDeckSize;
+    }
+
+    /**
+     * Getter for the maximal number of cards that can be on the board at the same time.
+     * @return the number of max. units on board for the team.
+     */
+    public int getMaxUnitsOnBoard() {
+        return maxUnitsOnBoard;
     }
 }
