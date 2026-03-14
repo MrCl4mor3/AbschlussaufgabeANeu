@@ -14,5 +14,5 @@ public enum DeckConfigMode {
     /**
      * Each team uses its own deck.
      */
-    SPLIT_DECKS;
+    SPLIT_DECKS
 }
