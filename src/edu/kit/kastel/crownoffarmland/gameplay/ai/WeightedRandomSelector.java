@@ -78,9 +78,7 @@ public final class WeightedRandomSelector {
     }
 
     private void setAllWeightsToDefault(List<Integer> weights) {
-        for (int i = 0; i < weights.size(); i++) {
-            weights.set(i, DEFAULT_WEIGHT);
-        }
+        weights.replaceAll(ignored -> DEFAULT_WEIGHT);
     }
 
     private int getTotalWeight(List<Integer> weights) {

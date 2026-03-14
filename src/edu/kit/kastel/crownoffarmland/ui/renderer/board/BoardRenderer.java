@@ -162,7 +162,8 @@ public class BoardRenderer {
         }
     }
 
-    private SelectedRelative determineSelectedRelative(int junctionRow, int junctionColumn, int boardSize, int selectedRow, int selectedColumn) {
+    private SelectedRelative determineSelectedRelative(int junctionRow, int junctionColumn, int boardSize, int selectedRow,
+            int selectedColumn) {
         if (selectedRow == NO_FIELD_SELECTED || selectedColumn == NO_FIELD_SELECTED) {
             return SelectedRelative.NONE;
         }
@@ -191,7 +192,8 @@ public class BoardRenderer {
                 && (junctionColumn == FIRST_INDEX || junctionColumn == boardSize);
     }
 
-    private SelectedRelative determineCornerRelative(int junctionRow, int junctionColumn, int boardSize, int selectedRow, int selectedColumn) {
+    private SelectedRelative determineCornerRelative(int junctionRow, int junctionColumn, int boardSize, int selectedRow,
+            int selectedColumn) {
         if (junctionRow == FIRST_INDEX && junctionColumn == FIRST_INDEX) {
             return selectedRow == FIRST_INDEX && selectedColumn == FIRST_INDEX
                     ? SelectedRelative.TOP_LEFT : SelectedRelative.NONE;
@@ -208,7 +210,8 @@ public class BoardRenderer {
                 ? SelectedRelative.BOTTOM_RIGHT : SelectedRelative.NONE;
     }
 
-    private SelectedRelative determineHorizontalBorderRelative(int junctionRow, int junctionColumn, int boardSize, int selectedRow, int selectedColumn) {
+    private SelectedRelative determineHorizontalBorderRelative(int junctionRow, int junctionColumn, int boardSize, int selectedRow,
+            int selectedColumn) {
         if (junctionRow == FIRST_INDEX) {
             if (selectedRow == FIRST_INDEX && selectedColumn == junctionColumn - INDEX_OFFSET) {
                 return SelectedRelative.LEFT;
@@ -228,7 +231,8 @@ public class BoardRenderer {
         return SelectedRelative.NONE;
     }
 
-    private SelectedRelative determineVerticalBorderRelative(int junctionRow, int junctionColumn, int boardSize, int selectedRow, int selectedColumn) {
+    private SelectedRelative determineVerticalBorderRelative(int junctionRow, int junctionColumn, int boardSize, int selectedRow,
+            int selectedColumn) {
         if (junctionColumn == FIRST_INDEX) {
             if (selectedColumn == FIRST_INDEX && selectedRow == junctionRow - INDEX_OFFSET) {
                 return SelectedRelative.TOP;
