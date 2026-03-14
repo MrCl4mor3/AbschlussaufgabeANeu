@@ -10,6 +10,7 @@ import edu.kit.kastel.crownoffarmland.model.units.UnitName;
  * @author ucgdi
  */
 public class UnitMerger {
+    private static final int SMALLEST_PRIME_DIVISOR = 2;
     private static final String QUALIFICATOR_DELIMITER = " ";
     private static final int G3T_PRIME_THRESHOLD = 100;
     private static final int PRIME_DIVISOR = 100;
@@ -108,7 +109,7 @@ public class UnitMerger {
             return false;
         }
 
-        for (int i = 2; i * i <= n; i++) {
+        for (int i = SMALLEST_PRIME_DIVISOR; i * i <= n; i++) {
             if (n % i == 0) {
                 return false;
             }
