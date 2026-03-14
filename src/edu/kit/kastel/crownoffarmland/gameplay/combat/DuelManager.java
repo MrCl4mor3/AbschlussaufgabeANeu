@@ -12,7 +12,7 @@ public class DuelManager {
     private static final boolean WAS_ELIMINATED = true;
     private static final boolean WAS_NOT_ELIMINATED = false;
     private static final int NO_DAMAGE_TO_ATTACKER_TEAM = 0;
-    private static final int NO_DAMAGE_TO_DEFENDER_TEAM = 1;
+    private static final int NO_DAMAGE_TO_DEFENDER_TEAM = 0;
 
     /**
      * Creates a new duel manager.

@@ -26,6 +26,13 @@ public final class UnitFileParser implements ContentParser<List<UnitTemplate>> {
     private static final String INVALID_INTEGER_ERROR = "The Unit file contains a line with an invalid integer value: %s";
     private static final String NEGATIVE_INTEGER_ERROR = "The Unit file contains a line with a negative integer value: %s";
 
+
+    private static final int QUALIFICATOR_INDEX = 0;
+    private static final int ROLE_INDEX = 1;
+    private static final int ATK_INDEX = 2;
+    private static final int DEF_INDEX = 3;
+
+
     @Override
     public StartupResult<List<UnitTemplate>> parse(String content) {
         String normalizedContent = StartupError.removeTrailingLineBreaks(content);
@@ -47,21 +54,21 @@ public final class UnitFileParser implements ContentParser<List<UnitTemplate>> {
                 return StartupError.error(INVALID_LINE_ERROR, line);
             }
 
-            String qualificator = parts[0].trim();
-            String role = parts[1].trim();
+            String qualificator = parts[QUALIFICATOR_INDEX].trim();
+            String role = parts[ROLE_INDEX].trim();
 
-            StartupResult<Integer> arkRes = parseNonNegativeInt(parts[2].trim());
-            if (arkRes.isError()) {
+            StartupResult<Integer> atkRes = parseNonNegativeInt(parts[ATK_INDEX].trim());
+            if (atkRes.isError()) {
                 return StartupError.error(INVALID_LINE_ERROR, line);
             }
 
-            StartupResult<Integer> defRes = parseNonNegativeInt(parts[3].trim());
+            StartupResult<Integer> defRes = parseNonNegativeInt(parts[DEF_INDEX].trim());
             if (defRes.isError()) {
                 return StartupError.error(INVALID_LINE_ERROR, line);
             }
 
             UnitName name = new UnitName(qualificator, role);
-            StatusValue stats = new StatusValue(arkRes.getValue(), defRes.getValue());
+            StatusValue stats = new StatusValue(atkRes.getValue(), defRes.getValue());
             units.add(new UnitTemplate(name, stats));
         }
 
