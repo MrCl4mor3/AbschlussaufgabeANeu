@@ -48,7 +48,7 @@ public class YieldCommand extends  Command {
         YieldCheckResult checkResult = gameHandler.checkYieldAttempt(discardRequested);
 
         switch (checkResult) {
-            case DISCARDED_REQUIRED -> {
+            case DISCARD_REQUIRED -> {
                 System.err.println(ERROR_PREFIX + HAND_FULL_MESSAGE);
                 return;
             }

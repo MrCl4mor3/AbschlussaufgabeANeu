@@ -216,7 +216,7 @@ public class GameHandler {
 
         if (!discardRequested && handFull) {
             turnState.activateYieldRestriction();
-            return YieldCheckResult.DISCARDED_REQUIRED;
+            return YieldCheckResult.DISCARD_REQUIRED;
         }
 
         if (discardRequested && !handFull) {
