@@ -3,8 +3,7 @@ package edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
 
 /**
- * This class represents a snapshot of a move action in the game, containing information about the entity that was moved and the target
- * position name.
+ * Represents a snapshot of a move.
  *
  * @author ucgdi
  */
@@ -15,12 +14,12 @@ public abstract class MoveSnapshot {
     private final EntitySnapshot movedEntity;
 
     /**
-     * Creates a new MoveSnapshot with the given parameters, including the entity that was moved, the target position name, whether the
-     * move was blocked, and the type of move.
-     * @param movedEntity the EntitySnapshot representing the entity that was moved
-     * @param toPositionName the name of the position to which the entity was moved
-     * @param wasBlocked a boolean indicating whether the move was blocked by an obstacle or another entity
-     * @param moveType the type of move that was performed, represented by the MoveType enum
+     * Creates a new move snapshot.
+     *
+     * @param movedEntity the moved entity
+     * @param toPositionName the target position name
+     * @param wasBlocked whether the entity was blocked before the move
+     * @param moveType the move type
      */
     protected MoveSnapshot(EntitySnapshot movedEntity, String toPositionName, boolean wasBlocked, MoveType moveType) {
         this.moveType = moveType;
@@ -30,43 +29,38 @@ public abstract class MoveSnapshot {
     }
 
     /**
-     * Getter for the moved entity.
-     * @return the EntitySnapshot representing the entity that was moved in this move action
+     * Returns the moved entity.
+     *
+     * @return the moved entity
      */
     public EntitySnapshot getMovedEntity() {
         return movedEntity;
     }
 
     /**
-     * Getter for the target position name.
-     * @return the name of the position to which the entity was moved in this move action
+     * Returns the target position name.
+     *
+     * @return the target position name
      */
     public String getToPositionName() {
         return toPositionName;
     }
 
     /**
-     * Indicates whether the entity was in block Mode before or not.
-     * @return true if the entity was blocked, false otherwise
+     * Returns whether the entity was blocked before the move.
+     *
+     * @return {@code true} if the entity was blocked before the move
      */
     public boolean wasBlocked() {
         return wasBlocked;
     }
 
     /**
-     * Getter for the type of move that was performed.
-     * @return the MoveType enum value representing the type of move that was performed in this move action
+     * Returns the move type.
+     *
+     * @return the move type
      */
     public MoveType getMoveType() {
         return moveType;
-    }
-
-    /**
-     * Protected getter for the moved entity, which can be used by subclasses to access the moved entity's information without exposing
-     * it publicly.
-     * @return the EntitySnapshot representing the entity that was moved in this move action, accessible to subclasses of MoveSnapshot
-     */
-    protected EntitySnapshot getMovingEntitySnapshot() {
-        return movedEntity;
     }
 }

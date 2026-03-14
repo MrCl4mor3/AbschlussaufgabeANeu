@@ -4,12 +4,11 @@ import edu.kit.kastel.crownoffarmland.gameplay.combat.DuelResult;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
 
 /**
- * This class represents a snapshot of a duel move in the game. It contains information about the moved entity, the target entity,
- * the positions involved in the move, whether the move was blocked, and the result of the duel.
+ * Represents a snapshot of a duel move.
  *
  * @author ucgdi
  */
-public final class DuelMoveSnapshot extends  MoveSnapshot {
+public final class DuelMoveSnapshot extends MoveSnapshot {
     private static final MoveType MOVE_TYPE = MoveType.DUEL;
     private static final int GOT_DAMAGE_THRESHOLD = 1;
 
@@ -18,103 +17,112 @@ public final class DuelMoveSnapshot extends  MoveSnapshot {
     private final EntitySnapshot targetEntity;
     private final String loserName;
 
-
     /**
-     * Creates a new DuelMoveSnapshot with the given parameters.
-     * @param movedEntity the entity that was moved in the duel
-     * @param targetEntity the entity that was targeted in the duel
-     * @param fromPositionName the name of the position from which the entity was moved
-     * @param toPositionName the name of the position to which the entity was moved
-     * @param wasBlocked indicates whether the move was blocked by another entity
-     * @param result the result of the duel, including information about damage dealt and whether any entities were eliminated
-     * @param loserName indicates whether the game has ended as a result of this duel (i.e., whether there is a winner)
+     * Creates a new duel move snapshot.
+     *
+     * @param movedEntity the moved entity
+     * @param targetEntity the target entity
+     * @param fromPositionName the source position name
+     * @param toPositionName the target position name
+     * @param wasBlocked whether the entity was blocked before the move
+     * @param result the duel result
+     * @param loserName the losing team name, or {@code null} if the game is not over
      */
-    public DuelMoveSnapshot(EntitySnapshot movedEntity, EntitySnapshot targetEntity, String fromPositionName, String toPositionName,
-                            boolean wasBlocked, DuelResult result, String loserName) {
+    public DuelMoveSnapshot(EntitySnapshot movedEntity, EntitySnapshot targetEntity, String fromPositionName,
+            String toPositionName, boolean wasBlocked, DuelResult result, String loserName) {
         super(movedEntity, toPositionName, wasBlocked, MOVE_TYPE);
         this.result = result;
         this.targetEntity = targetEntity;
         this.fromPositionName = fromPositionName;
-        this.loserName =  loserName;
+        this.loserName = loserName;
     }
 
-
     /**
-     * Getter for the isGameOver field, indicating whether the game has ended as a result of this duel.
-     * @return true, if there is a winner, false otherwise
+     * Returns whether the game ended with this duel.
+     *
+     * @return {@code true} if the game is over
      */
     public boolean isGameOver() {
         return loserName != null;
     }
 
     /**
-     * Gets the name of the winner if the game has ended as a result of this duel.
-     * @return the Team Name, who wons.
+     * Returns the losing team name.
+     *
+     * @return the losing team name
      */
     public String getLoserName() {
         return loserName;
     }
+
     /**
-     * Returns the name of the position from which the entity was moved.
-     * @return the name of the position from which the entity was moved
+     * Returns the source position name.
+     *
+     * @return the source position name
      */
     public String getFromPositionName() {
         return fromPositionName;
     }
 
-
     /**
-     * Returns the target entity involved in the duel.
-     * @return the target entity involved in the duel
+     * Returns the target entity.
+     *
+     * @return the target entity
      */
     public EntitySnapshot getTargetEntity() {
         return targetEntity;
     }
 
     /**
-     * Returns whether the attacker was flipped (i.e., hidden) as a result of the duel.
-     * @return true if the attacker was flipped, false otherwise
+     * Returns whether the attacker was flipped.
+     *
+     * @return {@code true} if the attacker was flipped
      */
     public boolean attackerWasFlipped() {
-        return getMovingEntitySnapshot().isHidden();
+        return getMovedEntity().isHidden();
     }
 
     /**
-     * Returns whether the defender was flipped (i.e., hidden) as a result of the duel.
-     * @return true if the defender was flipped, false otherwise
+     * Returns whether the defender was flipped.
+     *
+     * @return {@code true} if the defender was flipped
      */
     public boolean defenderWasFlipped() {
         return targetEntity.isHidden();
     }
 
     /**
-     * Returns whether the attacker was eliminated as a result of the duel.
-     * @return true if the attacker was eliminated, false otherwise
+     * Returns whether the attacker was eliminated.
+     *
+     * @return {@code true} if the attacker was eliminated
      */
     public boolean attackerWasEliminated() {
         return result.isAttackerEliminated();
     }
 
     /**
-     * Returns whether the defender was eliminated as a result of the duel.
-     * @return true if the defender was eliminated, false otherwise
+     * Returns whether the defender was eliminated.
+     *
+     * @return {@code true} if the defender was eliminated
      */
     public boolean defenderWasEliminated() {
         return result.isDefenderEliminated();
     }
 
     /**
-     * Returns whether any damage was dealt to either the attacker or the defender as a result of the duel.
-     * @return true if damage was dealt to either the attacker or the defender, false otherwise
+     * Returns whether the duel caused damage.
+     *
+     * @return {@code true} if damage was dealt
      */
     public boolean hasDamage() {
-        return result.getDamageToAttackerTeam() >= GOT_DAMAGE_THRESHOLD || result.getDamageToDefenderTeam() >= GOT_DAMAGE_THRESHOLD;
+        return result.getDamageToAttackerTeam() >= GOT_DAMAGE_THRESHOLD
+                || result.getDamageToDefenderTeam() >= GOT_DAMAGE_THRESHOLD;
     }
 
     /**
-     * Returns the amount of damage dealt to either the attacker or the defender as a result of the duel. If damage was dealt to both
-     * teams, the damage to the attacker team is returned.
-     * @return the amount of damage dealt to either the attacker or the defender, or 0 if no damage was dealt
+     * Returns the damage amount.
+     *
+     * @return the damage amount
      */
     public int getDamageAmount() {
         if (result.getDamageToAttackerTeam() >= GOT_DAMAGE_THRESHOLD) {
@@ -124,9 +132,9 @@ public final class DuelMoveSnapshot extends  MoveSnapshot {
     }
 
     /**
-     * Returns the name of the team that was damaged as a result of the duel. If damage was dealt to both teams, the name of the
-     * attacker's team is returned.
-     * @return the name of the team that was damaged as a result of the duel, or null if no damage was dealt
+     * Returns the name of the damaged team.
+     *
+     * @return the damaged team name, or {@code null} if no damage was dealt
      */
     public String getDamagedTeamName() {
         if (result.getDamageToAttackerTeam() >= GOT_DAMAGE_THRESHOLD) {
@@ -139,9 +147,9 @@ public final class DuelMoveSnapshot extends  MoveSnapshot {
     }
 
     /**
-     * Returns whether the attacker moves to the target's position as a result of the duel. This is the case if the attacker is not
-     * eliminated, the defender is eliminated, and the target entity is not a Farmer King.
-     * @return true if the attacker moves to the target's position as a result of the duel, false otherwise
+     * Returns whether the attacker moves to the target position.
+     *
+     * @return {@code true} if the attacker moves to the target position
      */
     public boolean attackerMovesToTarget() {
         return !result.isAttackerEliminated()

@@ -1,7 +1,7 @@
 package edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot;
 
 /**
- * Immutable snapshot of a single board cell for rendering purposes.
+ * Represents the snapshot of a single board cell.
  *
  * @author ucgdi
  */
@@ -22,13 +22,13 @@ public final class BoardCellSnapshot {
     private final boolean moveable;
 
     /**
-     * Creates a new immutable cell snapshot.
+     * Creates a new board cell snapshot.
      *
-     * @param hasEntity true if the cell contains an entity
-     * @param farmerKing true if the entity on the cell is a farmer king
-     * @param blocked true if the entity on the cell is blocked
-     * @param ownTeam true if the entity on the cell belongs to the current team
-     * @param moveable true if the entity on the cell may still move in this turn
+     * @param hasEntity whether the cell contains an entity
+     * @param farmerKing whether the entity is a farmer king
+     * @param blocked whether the entity is blocked
+     * @param ownTeam whether the entity belongs to the current team
+     * @param moveable whether the entity can still move this turn
      */
     public BoardCellSnapshot(boolean hasEntity, boolean farmerKing, boolean blocked, boolean ownTeam, boolean moveable) {
         this.hasEntity = hasEntity;
@@ -39,7 +39,7 @@ public final class BoardCellSnapshot {
     }
 
     /**
-     * Returns a shared snapshot representing an empty field.
+     * Returns the shared empty cell snapshot.
      *
      * @return the empty cell snapshot
      */
@@ -50,43 +50,43 @@ public final class BoardCellSnapshot {
     /**
      * Returns whether the cell contains an entity.
      *
-     * @return true if the cell contains an entity
+     * @return {@code true} if the cell contains an entity
      */
     public boolean hasEntity() {
         return hasEntity;
     }
 
     /**
-     * Returns whether the entity on this cell is a farmer king.
+     * Returns whether the entity is a farmer king.
      *
-     * @return true if the entity is a farmer king
+     * @return {@code true} if the entity is a farmer king
      */
     public boolean isFarmerKing() {
         return farmerKing;
     }
 
     /**
-     * Returns whether the entity on this cell is blocked.
+     * Returns whether the entity is blocked.
      *
-     * @return true if the entity is blocked
+     * @return {@code true} if the entity is blocked
      */
     public boolean isBlocked() {
         return blocked;
     }
 
     /**
-     * Returns whether the entity on this cell belongs to the current team.
+     * Returns whether the entity belongs to the current team.
      *
-     * @return true if the entity belongs to the current team
+     * @return {@code true} if the entity belongs to the current team
      */
     public boolean isPlayerTeam() {
         return ownTeam;
     }
 
     /**
-     * Returns whether the entity on this cell may still move in this turn.
+     * Returns whether the entity can still move this turn.
      *
-     * @return true if the entity may still move
+     * @return {@code true} if the entity can still move
      */
     public boolean isMoveable() {
         return moveable;

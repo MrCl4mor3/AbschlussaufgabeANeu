@@ -1,10 +1,9 @@
 package edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot;
 
-
 import edu.kit.kastel.crownoffarmland.model.board.Position;
 
 /**
- * Immutable snapshot of the complete board for rendering purposes.
+ * Represents a snapshot of the board.
  *
  * @author ucgdi
  */
@@ -15,10 +14,10 @@ public final class BoardSnapshot {
     private final Position selected;
 
     /**
-     * Creates a new immutable board snapshot.
+     * Creates a new board snapshot.
      *
-     * @param cells    the cell snapshots of the board
-     * @param selected the currently selected position, or null if no field is selected
+     * @param cells the cell snapshots
+     * @param selected the selected position, or {@code null} if none is selected
      */
     public BoardSnapshot(BoardCellSnapshot[][] cells, Position selected) {
         this.cells = copyCells(cells);
@@ -26,7 +25,7 @@ public final class BoardSnapshot {
     }
 
     /**
-     * Returns the size of the board.
+     * Returns the board size.
      *
      * @return the board size
      */
@@ -35,20 +34,20 @@ public final class BoardSnapshot {
     }
 
     /**
-     * Returns the snapshot of the cell at the given indices.
+     * Returns the cell snapshot at the given position.
      *
-     * @param rowIndex    the row index
+     * @param rowIndex the row index
      * @param columnIndex the column index
-     * @return the cell snapshot at the given position
+     * @return the cell snapshot
      */
     public BoardCellSnapshot getCell(int rowIndex, int columnIndex) {
         return cells[rowIndex][columnIndex];
     }
 
     /**
-     * Returns the currently selected position, or null if no field is selected.
+     * Returns the selected position.
      *
-     * @return the selected position or null
+     * @return the selected position, or {@code null} if none is selected
      */
     public Position getSelected() {
         return selected;
@@ -65,4 +64,3 @@ public final class BoardSnapshot {
         return copy;
     }
 }
-
