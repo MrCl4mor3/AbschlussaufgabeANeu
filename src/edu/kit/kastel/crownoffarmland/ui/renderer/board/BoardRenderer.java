@@ -1,15 +1,15 @@
 package edu.kit.kastel.crownoffarmland.ui.renderer.board;
 
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardCellSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardSnapshot;
 import edu.kit.kastel.crownoffarmland.model.board.Position;
 import edu.kit.kastel.crownoffarmland.startup.config.Verbosity;
 import edu.kit.kastel.crownoffarmland.ui.renderer.board.boardsymbols.BoardSymbolSet;
 import edu.kit.kastel.crownoffarmland.ui.renderer.board.boardsymbols.JunctionType;
 import edu.kit.kastel.crownoffarmland.ui.renderer.board.boardsymbols.SelectedRelative;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardCellSnapshot;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardSnapshot;
 
 /**
- * Renders a visual representation of a board snapshot as a string, using a specified set of symbols and formatting rules.
+ * Renders a board snapshot as a string.
  *
  * @author ucgdi
  */
@@ -27,11 +27,11 @@ public class BoardRenderer {
     private final Verbosity verbosity;
 
     /**
-     * Constructs a new BoardRenderer with the specified symbol set, token formatter, and verbosity level.
+     * Creates a new board renderer.
      *
-     * @param symbolSet the BoardSymbolSet to use for rendering the board's borders and junctions
-     * @param tokenFormatter the BoardEntityTokenFormatter to use for formatting individual board cells for display
-     * @param verbosity the Verbosity level that determines the amount of detail included in the rendered output
+     * @param symbolSet the board symbol set
+     * @param tokenFormatter the board token formatter
+     * @param verbosity the rendering verbosity
      */
     public BoardRenderer(BoardSymbolSet symbolSet, BoardEntityTokenFormatter tokenFormatter, Verbosity verbosity) {
         this.tokenFormatter = tokenFormatter;
@@ -40,16 +40,16 @@ public class BoardRenderer {
     }
 
     /**
-     * Renders the given board snapshot as a string representation.
+     * Renders the given board snapshot.
      *
-     * @param snapshot the board snapshot to render
-     * @return a string representation of the rendered board
+     * @param snapshot the board snapshot
+     * @return the rendered board
      */
     public String renderBoard(BoardSnapshot snapshot) {
-        final int boardSize = snapshot.getBoardSize();
-        final Position selected = snapshot.getSelected();
-        final int selectedRow = (selected != null) ? boardSize - selected.getRow() : NO_FIELD_SELECTED;
-        final int selectedColumn = (selected != null) ? selected.getColumn() - START_COLUMN_NAME : NO_FIELD_SELECTED;
+        int boardSize = snapshot.getBoardSize();
+        Position selected = snapshot.getSelected();
+        int selectedRow = selected != null ? boardSize - selected.getRow() : NO_FIELD_SELECTED;
+        int selectedColumn = selected != null ? selected.getColumn() - START_COLUMN_NAME : NO_FIELD_SELECTED;
 
         StringBuilder output = new StringBuilder();
 
@@ -67,7 +67,6 @@ public class BoardRenderer {
         }
 
         appendColumnLabels(output, boardSize);
-
         return output.toString();
     }
 
@@ -76,12 +75,16 @@ public class BoardRenderer {
 
         for (int junctionColumn = FIRST_INDEX; junctionColumn <= boardSize; junctionColumn++) {
             JunctionType junctionType = determineJunctionType(junctionRow, junctionColumn, boardSize);
-            SelectedRelative relative = determineSelectedRelative(junctionRow, junctionColumn, boardSize, selectedRow, selectedColumn);
+            SelectedRelative relative = determineSelectedRelative(
+                    junctionRow, junctionColumn, boardSize, selectedRow, selectedColumn
+            );
 
             output.append(symbolSet.getJunctionIcon(junctionType, relative));
 
             if (junctionColumn < boardSize) {
-                boolean selectedHorizontal = isHorizontalSelected(junctionRow, junctionColumn, selectedRow, selectedColumn);
+                boolean selectedHorizontal = isHorizontalSelected(
+                        junctionRow, junctionColumn, selectedRow, selectedColumn
+                );
                 appendRepeated(output, symbolSet.getHorizontalIcon(selectedHorizontal), CELL_WIDTH);
             }
         }
@@ -90,7 +93,7 @@ public class BoardRenderer {
     }
 
     private void appendFieldRow(StringBuilder output, BoardSnapshot snapshot, int rowIndex, int selectedRow, int selectedColumn) {
-        final int boardSize = snapshot.getBoardSize();
+        int boardSize = snapshot.getBoardSize();
         output.append(boardSize - rowIndex).append(SPACE);
 
         for (int boundaryColumn = FIRST_INDEX; boundaryColumn <= boardSize; boundaryColumn++) {
@@ -125,14 +128,16 @@ public class BoardRenderer {
         if (selectedRow == NO_FIELD_SELECTED || selectedColumn == NO_FIELD_SELECTED) {
             return false;
         }
-        return junctionColumn == selectedColumn && (junctionRow == selectedRow || junctionRow == selectedRow + INDEX_OFFSET);
+        return junctionColumn == selectedColumn
+                && (junctionRow == selectedRow || junctionRow == selectedRow + INDEX_OFFSET);
     }
 
     private boolean isVerticalSelected(int junctionRow, int junctionColumn, int selectedRow, int selectedColumn) {
         if (selectedRow == NO_FIELD_SELECTED || selectedColumn == NO_FIELD_SELECTED) {
             return false;
         }
-        return junctionRow == selectedRow && (junctionColumn == selectedColumn || junctionColumn == selectedColumn + INDEX_OFFSET);
+        return junctionRow == selectedRow
+                && (junctionColumn == selectedColumn || junctionColumn == selectedColumn + INDEX_OFFSET);
     }
 
     private JunctionType determineJunctionType(int junctionRow, int junctionColumn, int boardSize) {
@@ -157,8 +162,7 @@ public class BoardRenderer {
         }
     }
 
-    private SelectedRelative determineSelectedRelative(int junctionRow, int junctionColumn, int boardSize,
-        int selectedRow, int selectedColumn) {
+    private SelectedRelative determineSelectedRelative(int junctionRow, int junctionColumn, int boardSize, int selectedRow, int selectedColumn) {
         if (selectedRow == NO_FIELD_SELECTED || selectedColumn == NO_FIELD_SELECTED) {
             return SelectedRelative.NONE;
         }
@@ -168,11 +172,15 @@ public class BoardRenderer {
         }
 
         if (junctionRow == FIRST_INDEX || junctionRow == boardSize) {
-            return determineHorizontalBorderRelative(junctionRow, junctionColumn, boardSize, selectedRow, selectedColumn);
+            return determineHorizontalBorderRelative(
+                    junctionRow, junctionColumn, boardSize, selectedRow, selectedColumn
+            );
         }
 
         if (junctionColumn == FIRST_INDEX || junctionColumn == boardSize) {
-            return determineVerticalBorderRelative(junctionRow, junctionColumn, boardSize, selectedRow, selectedColumn);
+            return determineVerticalBorderRelative(
+                    junctionRow, junctionColumn, boardSize, selectedRow, selectedColumn
+            );
         }
 
         return determineCenterRelative(junctionRow, junctionColumn, selectedRow, selectedColumn);
@@ -183,8 +191,7 @@ public class BoardRenderer {
                 && (junctionColumn == FIRST_INDEX || junctionColumn == boardSize);
     }
 
-    private SelectedRelative determineCornerRelative(int junctionRow, int junctionColumn, int boardSize,
-        int selectedRow, int selectedColumn) {
+    private SelectedRelative determineCornerRelative(int junctionRow, int junctionColumn, int boardSize, int selectedRow, int selectedColumn) {
         if (junctionRow == FIRST_INDEX && junctionColumn == FIRST_INDEX) {
             return selectedRow == FIRST_INDEX && selectedColumn == FIRST_INDEX
                     ? SelectedRelative.TOP_LEFT : SelectedRelative.NONE;
@@ -201,8 +208,7 @@ public class BoardRenderer {
                 ? SelectedRelative.BOTTOM_RIGHT : SelectedRelative.NONE;
     }
 
-    private SelectedRelative determineHorizontalBorderRelative(int junctionRow, int junctionColumn, int boardSize,
-        int selectedRow, int selectedColumn) {
+    private SelectedRelative determineHorizontalBorderRelative(int junctionRow, int junctionColumn, int boardSize, int selectedRow, int selectedColumn) {
         if (junctionRow == FIRST_INDEX) {
             if (selectedRow == FIRST_INDEX && selectedColumn == junctionColumn - INDEX_OFFSET) {
                 return SelectedRelative.LEFT;
@@ -222,8 +228,7 @@ public class BoardRenderer {
         return SelectedRelative.NONE;
     }
 
-    private SelectedRelative determineVerticalBorderRelative(int junctionRow, int junctionColumn, int boardSize,
-        int selectedRow, int selectedColumn) {
+    private SelectedRelative determineVerticalBorderRelative(int junctionRow, int junctionColumn, int boardSize, int selectedRow, int selectedColumn) {
         if (junctionColumn == FIRST_INDEX) {
             if (selectedColumn == FIRST_INDEX && selectedRow == junctionRow - INDEX_OFFSET) {
                 return SelectedRelative.TOP;
@@ -243,8 +248,7 @@ public class BoardRenderer {
         return SelectedRelative.NONE;
     }
 
-    private SelectedRelative determineCenterRelative(int junctionRow, int junctionColumn,
-        int selectedRow, int selectedColumn) {
+    private SelectedRelative determineCenterRelative(int junctionRow, int junctionColumn, int selectedRow, int selectedColumn) {
         if (selectedRow == junctionRow - INDEX_OFFSET && selectedColumn == junctionColumn - INDEX_OFFSET) {
             return SelectedRelative.TOP_LEFT;
         }

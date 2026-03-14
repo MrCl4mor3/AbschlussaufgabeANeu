@@ -5,19 +5,19 @@ import edu.kit.kastel.crownoffarmland.gameplay.snapshots.TeamStateSnapshot;
 import java.util.List;
 
 /**
- * Formats.
+ * Formats team states for UI output.
  *
  * @author ucgdi
  */
 public class StateOutputFormatter implements OutputFormatter<List<TeamStateSnapshot>> {
-
     private static final String LIFE_POINTS_FORMAT = "%d/8000 LP";
     private static final String DECK_COUNT_FORMAT = "DC: %d/%d";
     private static final String BOARD_COUNT_FORMAT = "BC: %d/%d";
+
     private static final int TOTAL_LINE_LENGTH = 31;
+
     private static final String INDENT = "  ";
     private static final String PADDING = " ";
-
 
     @Override
     public String format(List<TeamStateSnapshot> teams) {
@@ -26,16 +26,18 @@ public class StateOutputFormatter implements OutputFormatter<List<TeamStateSnaps
         TeamStateSnapshot team1 = teams.get(0);
         TeamStateSnapshot team2 = teams.get(1);
 
-
-        appendStateLine(output, team1.getTeamName(),  team2.getTeamName());
+        appendStateLine(output, team1.getTeamName(), team2.getTeamName());
         output.append(System.lineSeparator());
-        appendStateLine(output, String.format(LIFE_POINTS_FORMAT, team1.getLifePoints()), String.format(LIFE_POINTS_FORMAT,
-                team2.getLifePoints()));
+        appendStateLine(output,
+                String.format(LIFE_POINTS_FORMAT, team1.getLifePoints()),
+                String.format(LIFE_POINTS_FORMAT, team2.getLifePoints()));
         output.append(System.lineSeparator());
-        appendStateLine(output, String.format(DECK_COUNT_FORMAT, team1.getRemainingDeckCards(), team1.getStartDeckSize()),
-                String.format(DECK_COUNT_FORMAT, team2.getRemainingDeckCards(), team1.getStartDeckSize()));
+        appendStateLine(output,
+                String.format(DECK_COUNT_FORMAT, team1.getRemainingDeckCards(), team1.getStartDeckSize()),
+                String.format(DECK_COUNT_FORMAT, team2.getRemainingDeckCards(), team2.getStartDeckSize()));
         output.append(System.lineSeparator());
-        appendStateLine(output, String.format(BOARD_COUNT_FORMAT, team1.getPlacedUnits(), team1.getMaxUnitsOnBoard()),
+        appendStateLine(output,
+                String.format(BOARD_COUNT_FORMAT, team1.getPlacedUnits(), team1.getMaxUnitsOnBoard()),
                 String.format(BOARD_COUNT_FORMAT, team2.getPlacedUnits(), team2.getMaxUnitsOnBoard()));
 
         return output.toString();

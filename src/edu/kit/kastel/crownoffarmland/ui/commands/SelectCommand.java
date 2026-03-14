@@ -5,24 +5,20 @@ import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 import edu.kit.kastel.crownoffarmland.model.board.Position;
 import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
 
-
 /**
- * Implements the select command.
- * This command allows the player to select a field by its name. After selecting a field, the board and the show are printed. The player
- * can then use the selected field for other commands.
+ * Command for selecting a field.
  *
  * @author ucgdi
  */
 public class SelectCommand extends Command {
-
     private static final String COMMAND_NAME = "select";
 
     /**
-     * Constructs a new SelectCommand with the specified CommandHandler and GameHandler.
+     * Creates a new select command.
      *
-     * @param commandHandler the CommandHandler to use for executing the command
-     * @param gameHandler    the GameHandler to use for accessing and modifying the game state
-     * @param gameOutputPrinter the GameOutputPrinter to use for formatting the output of the command
+     * @param commandHandler the command handler
+     * @param gameHandler the game handler
+     * @param gameOutputPrinter the game output printer
      */
     public SelectCommand(CommandHandler commandHandler, GameHandler gameHandler, GameOutputPrinter gameOutputPrinter) {
         super(COMMAND_NAME, commandHandler, gameHandler, gameOutputPrinter);
@@ -33,10 +29,7 @@ public class SelectCommand extends Command {
         ensureOneArguments(commandArguments);
 
         Position selectedPosition = Position.fromString(commandArguments[0]);
-
         gameHandler.setSelected(selectedPosition);
-
-
 
         System.out.println(gameOutputPrinter.formatBoard(gameHandler.snapshots().createBoardSnapshot()));
         System.out.println(gameOutputPrinter.formatShow(gameHandler.snapshots().createEntitySnapshot()));

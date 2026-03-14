@@ -1,46 +1,53 @@
 package edu.kit.kastel.crownoffarmland.ui.renderer.board.boardsymbols;
 
 /**
- * Enumeration representing the different types of junctions that can occur in a board symbol.
- * Each junction type corresponds to a specific configuration of connections between paths or edges in the board symbol.
+ * Defines the possible junction types of the board.
  *
  * @author ucgdi
  */
 public enum JunctionType {
     /**
-     * Represents a junction located at the top left corner of the board symbol, where two paths or edges meet at a right angle.
+     * The top-left corner junction.
      */
     TOP_LEFT_CORNER,
+
     /**
-     * Represents a junction located at the top right corner of the board symbol, where two paths or edges meet at a right angle.
+     * The top-right corner junction.
      */
     TOP_RIGHT_CORNER,
+
     /**
-     * Represents a junction located at the bottom left corner of the board symbol, where two paths or edges meet at a right angle.
+     * The bottom-left corner junction.
      */
     BOTTOM_LEFT_CORNER,
+
     /**
-     * Represents a junction located at the bottom right corner of the board symbol, where two paths or edges meet at a right angle.
+     * The bottom-right corner junction.
      */
     BOTTOM_RIGHT_CORNER,
+
     /**
-     * Represents a junction located at the top border of the board symbol, where a path or edge meets the top edge of the symbol.
+     * The top border junction.
      */
     TOP_BORDER,
+
     /**
-     * Represents a junction located at the right border of the board symbol, where a path or edge meets the right edge of the symbol.
+     * The right border junction.
      */
     RIGHT_BORDER,
+
     /**
-     * Represents a junction located at the bottom border of the board symbol, where a path or edge meets the bottom edge of the symbol.
+     * The bottom border junction.
      */
     BOTTOM_BORDER,
+
     /**
-     * Represents a junction located at the left border of the board symbol, where a path or edge meets the left edge of the symbol.
+     * The left border junction.
      */
     LEFT_BORDER,
+
     /**
-     * Represents a junction located at the center of the board symbol, where multiple paths or edges meet.
+     * The center junction.
      */
-    CENTER;
+    CENTER
 }

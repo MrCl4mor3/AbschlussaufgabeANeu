@@ -10,8 +10,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
 /**
- * Implement the command handler in a similar fashion as on earlier tasks.
+ * Handles user commands.
  *
  * @author Programmieren-Team
  * @author ucgdi
@@ -24,29 +25,27 @@ public class CommandHandler {
     private static final String HELP_COMMAND = "Use one of the following commands: %s.";
     private static final String COMMAND_NOT_ALLOWED_AFTER_YIELD = "Cannot execute the command '%s', you must discard!%n";
 
-
     private final Map<String, Command> commands;
     private final GameHandler gameHandler;
     private final GameOutputPrinter gameOutputPrinter;
+
     private boolean running = false;
 
-
     /**
-     * Creates a new command handler object and initializes its program.commands.
-     * @param gameHandler the game handler to execute the commands on
-     * @param gameOutputPrinter the game output printer to print the output of the commands
+     * Creates a new command handler.
+     *
+     * @param gameHandler the game handler
+     * @param gameOutputPrinter the game output printer
      */
     public CommandHandler(GameHandler gameHandler, GameOutputPrinter gameOutputPrinter) {
         this.gameHandler = gameHandler;
         this.gameOutputPrinter = gameOutputPrinter;
-        commands = new LinkedHashMap<>();
+        this.commands = new LinkedHashMap<>();
         initCommands();
     }
 
-
     /**
-     * This method handles the input of the user.
-     * The input is taken so long, as this (command handler) was not stopped by the quit command.
+     * Starts handling user input.
      */
     public void handleUserInput() {
         this.running = true;
@@ -54,7 +53,6 @@ public class CommandHandler {
 
         try (Scanner scanner = new Scanner(System.in)) {
             while (this.running) {
-
                 while (this.running && gameHandler.isCurrentPlayerAI() && !gameHandler.isGameOver()) {
                     executeAITurn();
                 }
@@ -62,6 +60,7 @@ public class CommandHandler {
                 if (!this.running || gameHandler.isGameOver()) {
                     break;
                 }
+
                 executeCommand(scanner.nextLine());
             }
         }
@@ -75,7 +74,6 @@ public class CommandHandler {
     }
 
     private void executeCommand(String inputString) {
-
         String strippedInput = inputString.strip().replaceAll(COMMAND_DELIMITER_REGEX, COMMAND_DELIMITER_REPLACEMENT);
         String[] splitCommand = strippedInput.split(COMMAND_DELIMITER_REGEX);
         String commandName = splitCommand[0].toLowerCase();
@@ -87,12 +85,10 @@ public class CommandHandler {
             return;
         }
 
-        // After tried yield command, only allow yield, hand and quit command until the next turn starts
         if (gameHandler.isYieldRestrictionActive() && !command.isAllowedDuringYieldRestriction()) {
             System.err.printf(COMMAND_ERROR_PREFIX + COMMAND_NOT_ALLOWED_AFTER_YIELD, commandName);
             return;
         }
-
 
         try {
             command.execute(commandArguments);
@@ -114,11 +110,9 @@ public class CommandHandler {
         }
     }
 
-
     private String startHelpMessage() {
         return String.format(HELP_COMMAND, String.join(", ", getCommandNames()));
     }
-
 
     private List<String> getCommandNames() {
         List<String> commandNames = new ArrayList<>();
@@ -127,8 +121,6 @@ public class CommandHandler {
         }
         return commandNames;
     }
-
-
 
     private void initCommands() {
         addCommand(new SelectCommand(this, gameHandler, gameOutputPrinter));
@@ -143,8 +135,6 @@ public class CommandHandler {
         addCommand(new StateCommand(this, gameHandler, gameOutputPrinter));
         addCommand(new QuitCommand(this, gameHandler, gameOutputPrinter));
     }
-
-
 
     private void addCommand(Command command) {
         this.commands.put(command.getCommandName(), command);

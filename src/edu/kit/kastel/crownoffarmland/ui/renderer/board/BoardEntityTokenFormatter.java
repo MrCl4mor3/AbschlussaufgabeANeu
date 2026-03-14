@@ -3,32 +3,32 @@ package edu.kit.kastel.crownoffarmland.ui.renderer.board;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardCellSnapshot;
 
 /**
- * Formats a {@link BoardCellSnapshot} into a string representation for display on the board.
+ * Formats board cells as display tokens.
  *
  * @author ucgdi
  */
 public class BoardEntityTokenFormatter {
-    private static final char TEAM_PLAYER_UNIT = 'x';
-    private static final char TEAM_PLAYER_KING = 'X';
-    private static final char TEAM_ENEMY_UNIT = 'y';
-    private static final char TEAM_ENEMY_KING = 'Y';
+    private static final char TEAM_ONE_UNIT_TOKEN = 'x';
+    private static final char TEAM_ONE_KING_TOKEN = 'X';
+    private static final char TEAM_TWO_UNIT_TOKEN = 'y';
+    private static final char TEAM_TWO_KING_TOKEN = 'Y';
     private static final char EMPTY_TOKEN = ' ';
     private static final String EMPTY_FIELD = "   ";
     private static final char BLOCK_SUFFIX = 'b';
     private static final char MOVEABLE_PREFIX = '*';
 
     /**
-     * Formats the given board cell snapshot into a string representation based on its contents and state.
+     * Formats the given board cell.
      *
-     * @param cell the board cell snapshot to format
-     * @return a string representation of the board cell snapshot
+     * @param cell the board cell snapshot
+     * @return the formatted token
      */
     public String format(BoardCellSnapshot cell) {
         if (!cell.hasEntity()) {
             return EMPTY_FIELD;
         }
 
-        char[] token = new char[] {EMPTY_TOKEN, resolveBaseSymbol(cell), EMPTY_TOKEN};
+        char[] token = new char[]{EMPTY_TOKEN, resolveBaseSymbol(cell), EMPTY_TOKEN};
 
         if (cell.isMoveable()) {
             token[0] = MOVEABLE_PREFIX;
@@ -43,9 +43,9 @@ public class BoardEntityTokenFormatter {
 
     private char resolveBaseSymbol(BoardCellSnapshot cell) {
         if (cell.isFarmerKing()) {
-            return cell.isTeamOne() ? TEAM_PLAYER_KING : TEAM_ENEMY_KING;
+            return cell.isTeamOne() ? TEAM_ONE_KING_TOKEN : TEAM_TWO_KING_TOKEN;
         } else {
-            return cell.isTeamOne() ? TEAM_PLAYER_UNIT : TEAM_ENEMY_UNIT;
+            return cell.isTeamOne() ? TEAM_ONE_UNIT_TOKEN : TEAM_TWO_UNIT_TOKEN;
         }
     }
 }

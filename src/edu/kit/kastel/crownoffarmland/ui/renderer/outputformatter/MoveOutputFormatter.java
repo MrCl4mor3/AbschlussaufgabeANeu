@@ -7,18 +7,14 @@ import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.MoveType;
 import edu.kit.kastel.crownoffarmland.ui.renderer.entity.EntityFormatter;
 
 /**
- * This class is responsible for formatting the output of move actions in the game. It takes a MoveSnapshot as input and generates a
- * string representation of the move, including details about the entities involved, the type of move, and the outcome of the move (e.g.,
- * whether it was blocked, whether a merge was successful, or the results of a duel). The output is designed to be informative and
- * engaging for the player, providing a clear narrative of the events that occurred during the move.
+ * Formats move actions for UI output.
  *
  * @author ucgdi
  */
 public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
-
-
     private static final String MOVE_MESSAGE = "%s moves to %s.%n";
     private static final String REMOVE_BLOCK_MESSAGE = "%s no longer blocks.%n";
+
     private static final String ATTACK_MESSAGE = "%s attacks %s on %s!%n";
     private static final String FLIP_MESSAGE = "%s was flipped on %s!%n";
     private static final String ELIMINATION_MESSAGE = "%s was eliminated!%n";
@@ -26,18 +22,18 @@ public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
     private static final String LIFE_ZERO_MESSAGE = "%s's life points dropped to 0!%n";
     private static final String NOT_REVEALED_UNIT = "???";
 
-
     private final MergeOutputFormatter mergeOutputFormatter;
+
     /**
-     *  Creates a new MoveOutputFormatter with the given EntityFormatter.
-     * @param entityFormatter the EntityFormatter used to format entity summaries in the output
-     * @param mergeOutputFormatter the MergeOutputFormatter used to format merge results in the output
+     * Creates a new move output formatter.
+     *
+     * @param entityFormatter formatter for entity output
+     * @param mergeOutputFormatter formatter for merge output
      */
     public MoveOutputFormatter(EntityFormatter entityFormatter, MergeOutputFormatter mergeOutputFormatter) {
         super(entityFormatter);
         this.mergeOutputFormatter = mergeOutputFormatter;
     }
-
 
     @Override
     public String format(MoveSnapshot snapshot) {
@@ -46,7 +42,7 @@ public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
         if (snapshot.wasBlocked()) {
             output.append(String.format(REMOVE_BLOCK_MESSAGE, snapshot.getMovedEntity().getEntityName()));
         }
-        if (!(snapshot.getMoveType() == MoveType.DUEL)) {
+        if (snapshot.getMoveType() != MoveType.DUEL) {
             output.append(String.format(MOVE_MESSAGE, snapshot.getMovedEntity().getEntityName(), snapshot.getToPositionName()));
         }
 
@@ -58,22 +54,24 @@ public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
                 formatDuelMove((DuelMoveSnapshot) snapshot, output);
                 break;
             default:
-                // No additional output for normal moves
                 break;
         }
+
         return output.toString();
     }
 
-
     private void formatMergeResult(MergeMoveSnapshot snapshot, StringBuilder output) {
-        output.append(mergeOutputFormatter.formatMergeOutput(snapshot.isMergeSuccess(), snapshot.getTargetEntityName(),
-                snapshot.getMovedEntity().getEntityName(), snapshot.getToPositionName()));
+        output.append(mergeOutputFormatter.formatMergeOutput(
+                snapshot.isMergeSuccess(),
+                snapshot.getTargetEntityName(),
+                snapshot.getMovedEntity().getEntityName(),
+                snapshot.getToPositionName()
+        ));
     }
 
     private void formatDuelMove(DuelMoveSnapshot snapshot, StringBuilder output) {
         String attackerSummary = entityFormatter.formatEntitySummary(snapshot.getMovedEntity());
         String defenderSummary = entityFormatter.formatEntitySummary(snapshot.getTargetEntity());
-
         String defenderDisplay = snapshot.getTargetEntity().isHidden() ? NOT_REVEALED_UNIT : defenderSummary;
 
         output.append(String.format(ATTACK_MESSAGE, attackerSummary, defenderDisplay, snapshot.getToPositionName()));
@@ -81,27 +79,21 @@ public class MoveOutputFormatter extends AbstractOutputFormatter<MoveSnapshot> {
         if (snapshot.attackerWasFlipped()) {
             output.append(String.format(FLIP_MESSAGE, attackerSummary, snapshot.getFromPositionName()));
         }
-
         if (snapshot.defenderWasFlipped()) {
             output.append(String.format(FLIP_MESSAGE, defenderSummary, snapshot.getToPositionName()));
         }
-
         if (snapshot.defenderWasEliminated()) {
             output.append(String.format(ELIMINATION_MESSAGE, snapshot.getTargetEntity().getEntityName()));
         }
-
         if (snapshot.attackerWasEliminated()) {
             output.append(String.format(ELIMINATION_MESSAGE, snapshot.getMovedEntity().getEntityName()));
         }
-
         if (snapshot.hasDamage()) {
             output.append(String.format(DAMAGE_MESSAGE, snapshot.getDamagedTeamName(), snapshot.getDamageAmount()));
         }
-
         if (snapshot.attackerMovesToTarget()) {
             output.append(String.format(MOVE_MESSAGE, snapshot.getMovedEntity().getEntityName(), snapshot.getToPositionName()));
         }
-
         if (snapshot.isGameOver()) {
             output.append(String.format(LIFE_ZERO_MESSAGE, snapshot.getLoserName()));
         }

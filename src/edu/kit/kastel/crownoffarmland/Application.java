@@ -14,24 +14,23 @@ import edu.kit.kastel.crownoffarmland.ui.renderer.board.BoardRenderer;
 import edu.kit.kastel.crownoffarmland.ui.renderer.entity.EntityFormatter;
 
 /**
- * This is the main entry class for the program.
+ * Entry point of the application.
  *
  * @author Programmieren-Team
  * @author ucgdi
  */
 public final class Application {
-    private static final String UTILITY_CLASS_CONSTRUCTOR_MESSAGES = "Utility classes cannot be instantiated";
+    private static final String UTILITY_CLASS_CONSTRUCTOR_MESSAGE = "Utility classes cannot be instantiated";
     private static final String EMPTY_ARGUMENTS_ERROR = "No arguments found.";
 
     private Application() {
-        throw new UnsupportedOperationException(UTILITY_CLASS_CONSTRUCTOR_MESSAGES);
+        throw new UnsupportedOperationException(UTILITY_CLASS_CONSTRUCTOR_MESSAGE);
     }
 
     /**
-     * This is the main entry point for the program. There are no arguments expected.
-     * If there are arguments, an error will be thrown.
+     * Starts the application.
      *
-     * @param args The command line arguments given at the start of the program
+     * @param args command line arguments
      */
     public static void main(String[] args) {
         if (args.length == 0) {
@@ -49,7 +48,6 @@ public final class Application {
 
         StartupContext context = result.getValue();
 
-
         StartupOutput output = context.getOutput();
         BoardRenderer boardRenderer = new BoardRenderer(
                 output.getBoardSymbolSet(),
@@ -59,7 +57,6 @@ public final class Application {
 
         EntityFormatter entityFormatter = new EntityFormatter();
         GameOutputPrinter gameOutputPrinter = new GameOutputPrinter(boardRenderer, entityFormatter);
-
 
         GameFactory factory = new GameFactory(context);
         GameHandler gameHandler = factory.createGameHandler();

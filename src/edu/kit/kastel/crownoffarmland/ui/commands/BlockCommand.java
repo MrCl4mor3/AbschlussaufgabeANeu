@@ -5,27 +5,22 @@ import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
 
 /**
- * Implements the block command.
- * Command to block the entity on the currently selected field. The entity will be blocked and won't be able to perform
- * any actions for the current turn. The command will print the name of the blocked entity and the position of the field where it is
- * located.
+ * Command for blocking the selected entity.
  *
  * @author ucgdi
  */
 public class BlockCommand extends Command {
     private static final String COMMAND_NAME = "block";
 
-
     /**
-     * Creates a new instance of the BlockCommand.
+     * Creates a new block command.
      *
-     * @param commandHandler the CommandHandler to which this command belongs
-     * @param gameHandler the GameHandler that provides access to the game state and logic
-     * @param gameOutputPrinter the Printer for the game
-     *
+     * @param commandHandler the command handler
+     * @param gameHandler the game handler
+     * @param gameOutputPrinter the game output printer
      */
     public BlockCommand(CommandHandler commandHandler, GameHandler gameHandler, GameOutputPrinter gameOutputPrinter) {
-        super(COMMAND_NAME, commandHandler, gameHandler,  gameOutputPrinter);
+        super(COMMAND_NAME, commandHandler, gameHandler, gameOutputPrinter);
     }
 
     @Override

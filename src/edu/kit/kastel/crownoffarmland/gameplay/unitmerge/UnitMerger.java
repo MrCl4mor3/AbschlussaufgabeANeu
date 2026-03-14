@@ -63,16 +63,12 @@ public class UnitMerger {
 
     private Unit buildMergedUnit(Unit incoming, Unit resident, int atk, int def) {
         String mergedQualificator = mergeQualificator(incoming.getQualificator(), resident.getQualificator());
-        String mergedRole = mergeRole(incoming.getRole(), resident.getRole());
+        String mergedRole = resident.getRole();
         return new Unit(incoming.getOwner(), new UnitName(mergedQualificator, mergedRole), new StatusValue(atk, def));
     }
 
     private String mergeQualificator(String qualificatorA, String qualificatorB) {
         return qualificatorB + QUALIFICATOR_DELIMITER + qualificatorA;
-    }
-
-    private String mergeRole(String roleA, String roleB) {
-        return roleB;
     }
 
     private int computeG3t(Unit unitA, Unit unitB) {

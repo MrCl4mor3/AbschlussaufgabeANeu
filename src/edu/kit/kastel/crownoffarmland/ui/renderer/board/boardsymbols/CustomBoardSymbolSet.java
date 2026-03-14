@@ -1,16 +1,11 @@
 package edu.kit.kastel.crownoffarmland.ui.renderer.board.boardsymbols;
 
 /**
- * A custom implementation of {@link BoardSymbolSet} that allows for a flexible set of symbols to be used for rendering the board.
- * The symbols are provided as a single string, where each character corresponds to a specific junction type and selection state.
- * The mapping of symbols to junction types and selection states is defined by the indices in the string.
- * This class overrides the {@link #getJunctionIcon(JunctionType, SelectedRelative)} method to return the appropriate symbol based on the
- * junction type and selection state.
+ * Uses a custom set of symbols to render the board.
  *
  * @author ucgdi
  */
 public class CustomBoardSymbolSet extends BoardSymbolSet {
-
     private static final int IDX_TL_CORNER = 0;
     private static final int IDX_TR_CORNER = 1;
     private static final int IDX_BL_CORNER = 2;
@@ -30,7 +25,6 @@ public class CustomBoardSymbolSet extends BoardSymbolSet {
     private static final int IDX_TR_CORNER_SELECTED = 12;
     private static final int IDX_BL_CORNER_SELECTED = 13;
     private static final int IDX_BR_CORNER_SELECTED = 14;
-
 
     private static final int IDX_TOP_BORDER_SELECTED_LEFT = 15;
     private static final int IDX_TOP_BORDER_SELECTED_RIGHT = 16;
@@ -52,50 +46,37 @@ public class CustomBoardSymbolSet extends BoardSymbolSet {
     private static final int IDX_CENTER_SELECTED_BL = 27;
     private static final int IDX_CENTER_SELECTED_BR = 28;
 
-
     private final char[] symbols;
 
-
     /**
-     * Constructs a new {@code CustomBoardSymbolSet} with the specified symbols.
+     * Creates a new custom board symbol set.
      *
-     * @param symbolsLine a string containing the symbols for the board, where each character corresponds to a specific junction type and
-     *                   selection state
+     * @param symbolsLine the symbol definition string
      */
     public CustomBoardSymbolSet(String symbolsLine) {
-        super(extractSymbol(symbolsLine, IDX_HORIZONTAL), extractSymbol(symbolsLine, IDX_HORIZONTAL_SELECTED), extractSymbol(symbolsLine,
-                IDX_VERTICAL), extractSymbol(symbolsLine, IDX_VERTICAL_SELECTED));
+        super(
+                extractSymbol(symbolsLine, IDX_HORIZONTAL),
+                extractSymbol(symbolsLine, IDX_HORIZONTAL_SELECTED),
+                extractSymbol(symbolsLine, IDX_VERTICAL),
+                extractSymbol(symbolsLine, IDX_VERTICAL_SELECTED)
+        );
         this.symbols = symbolsLine.toCharArray();
-    }
-
-    private static char extractSymbol(String symbols, int index) {
-        return symbols.charAt(index);
     }
 
     @Override
     public char getJunctionIcon(JunctionType type, SelectedRelative relative) {
         return switch (type) {
-            case TOP_LEFT_CORNER ->
-                getCornerIcon(relative, IDX_TL_CORNER, IDX_TL_CORNER_SELECTED);
-            case TOP_RIGHT_CORNER ->
-                getCornerIcon(relative, IDX_TR_CORNER, IDX_TR_CORNER_SELECTED);
-            case BOTTOM_LEFT_CORNER ->
-                getCornerIcon(relative, IDX_BL_CORNER, IDX_BL_CORNER_SELECTED);
-            case BOTTOM_RIGHT_CORNER ->
-                getCornerIcon(relative, IDX_BR_CORNER, IDX_BR_CORNER_SELECTED);
-            case TOP_BORDER ->
-                getTopBorderIcon(relative);
-            case RIGHT_BORDER ->
-                getRightBorderIcon(relative);
-            case BOTTOM_BORDER ->
-                getBottomBorderIcon(relative);
-            case LEFT_BORDER ->
-                getLeftBorderIcon(relative);
-            case CENTER ->
-                getCenterIcon(relative);
+            case TOP_LEFT_CORNER -> getCornerIcon(relative, IDX_TL_CORNER, IDX_TL_CORNER_SELECTED);
+            case TOP_RIGHT_CORNER -> getCornerIcon(relative, IDX_TR_CORNER, IDX_TR_CORNER_SELECTED);
+            case BOTTOM_LEFT_CORNER -> getCornerIcon(relative, IDX_BL_CORNER, IDX_BL_CORNER_SELECTED);
+            case BOTTOM_RIGHT_CORNER -> getCornerIcon(relative, IDX_BR_CORNER, IDX_BR_CORNER_SELECTED);
+            case TOP_BORDER -> getTopBorderIcon(relative);
+            case RIGHT_BORDER -> getRightBorderIcon(relative);
+            case BOTTOM_BORDER -> getBottomBorderIcon(relative);
+            case LEFT_BORDER -> getLeftBorderIcon(relative);
+            case CENTER -> getCenterIcon(relative);
         };
     }
-
 
     private char getCornerIcon(SelectedRelative relative, int normalIndex, int selectedIndex) {
         return relative == SelectedRelative.NONE ? symbols[normalIndex] : symbols[selectedIndex];
@@ -157,4 +138,7 @@ public class CustomBoardSymbolSet extends BoardSymbolSet {
         return symbols[IDX_CENTER];
     }
 
+    private static char extractSymbol(String symbols, int index) {
+        return symbols.charAt(index);
+    }
 }
