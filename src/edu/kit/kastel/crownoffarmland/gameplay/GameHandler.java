@@ -154,7 +154,7 @@ public class GameHandler {
     /**
      * Set the selected Pointer to the selected field.
      * @param position the selected position
-     * @throws InvalidPositionException if a invalid position was selected
+     * @throws InvalidPositionException if an invalid position was selected
      */
     public void setSelected(Position position) throws InvalidPositionException {
         if (!game.boardView().isValidPosition(position)) {
@@ -209,7 +209,7 @@ public class GameHandler {
      * returns a result indicating that discarding is required. If the player has requested to discard but does not have a full hand, the
      * yield restriction is activated, and the method returns a result indicating that discarding is not allowed.
      * @param discardRequested A boolean indicating whether the player has requested to discard a card before ending their turn
-     * @return the Yield restult-
+     * @return the Yield result.
      */
     public YieldCheckResult checkYieldAttempt(boolean discardRequested) {
         boolean handFull = game.teamView(game.getCurrentTeamID()).isHandFull();
