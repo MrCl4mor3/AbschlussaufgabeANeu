@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author ucgdi
  */
-public class Team implements GameTeamView {
+public class Team  {
     private static final int START_LP = 8000;
 
     private final String name;
@@ -46,7 +46,6 @@ public class Team implements GameTeamView {
      * Returns the name of the team.
      * @return the name of the team
      */
-    @Override
     public String getName() {
         return name;
     }

@@ -2,8 +2,10 @@ package edu.kit.kastel.crownoffarmland.ui.commands;
 
 import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidCommandArgumentException;
+import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
 import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.InvalidHandException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
+import edu.kit.kastel.crownoffarmland.gameplay.YieldCheckResult;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EndTurnSnapshot;
 import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
 
@@ -21,6 +23,9 @@ public class YieldCommand extends  Command {
     private static final String COMMAND_NAME = "yield";
     private static final boolean ALLOW_EXECUTE_DURING_YIELD_RESTRICTION = true;
     private static final int EXPECTED_NUMBER_OF_ARGUMENTS = 1;
+    private static final String ERROR_PREFIX = "ERROR: ";
+    private static final String HAND_FULL_MESSAGE = "Hand ist full, you must discard a card!";
+    private static final String DISCARD_NOT_ALLOWED_MESSAGE = "Cannot discard, hand is not full!";
 
 
     /**
@@ -39,9 +44,27 @@ public class YieldCommand extends  Command {
             throw new InvalidCommandArgumentException(EXPECTED_NUMBER_OF_ARGUMENTS, commandArgs.length);
         }
 
+        boolean discardRequested = commandArgs.length == 1;
+        YieldCheckResult checkResult = gameHandler.checkYieldAttempt(discardRequested);
+
+        switch (checkResult) {
+            case DISCARDED_REQUIRED -> {
+                System.err.println(ERROR_PREFIX + HAND_FULL_MESSAGE);
+                return;
+            }
+            case DISCARDED_NOT_ALLOWED -> {
+                System.err.println(ERROR_PREFIX + DISCARD_NOT_ALLOWED_MESSAGE);
+                return;
+            }
+            case SUCCESS -> {
+                // continue below
+            }
+            default -> throw new InvalidGameStateException("Unexpected yield check result.");
+        }
+
         EndTurnSnapshot endTurnSnapshot;
 
-        if (commandArgs.length == 0) {
+        if (!discardRequested) {
             endTurnSnapshot = gameHandler.tryEndTurn();
         } else {
             int handIndex;
@@ -54,7 +77,6 @@ public class YieldCommand extends  Command {
         }
         System.out.println(gameOutputPrinter.formatYield(endTurnSnapshot));
     }
-
 
 
     @Override

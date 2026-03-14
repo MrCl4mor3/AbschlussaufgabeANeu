@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents the game board, which consists of a grid of fields. Each field can be occupied by a BoardEntity (e.g., a unit).
+ * Represents the game board, which consists of a grid of fields. Each field can be occupied by a BoardEntity.
  * The board provides methods to access and manipulate the fields and their occupants.
+ * To view the board state, there is the GameBoardView.
  *
  *
  * @author ucgdi

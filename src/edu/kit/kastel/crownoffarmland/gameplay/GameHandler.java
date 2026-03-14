@@ -241,6 +241,24 @@ public class GameHandler {
     public boolean isYieldRestrictionActive() {
         return turnState.isYieldRestrictionActive();
     }
+
+
+
+    public YieldCheckResult checkYieldAttempt(boolean discardRequested) {
+        boolean handFull = game.isHandFull(game.getCurrentTeamID());
+
+        if (!discardRequested && handFull) {
+            turnState.activateYieldRestriction();
+            return YieldCheckResult.DISCARDED_REQUIRED;
+        }
+
+        if (discardRequested && !handFull) {
+            turnState.activateYieldRestriction();
+            return YieldCheckResult.DISCARDED_NOT_ALLOWED;
+        }
+        return YieldCheckResult.SUCCESS;
+    }
+
     /**
      * Attempts to end the current player's turn. If the player's hand is full, the yield restriction is activated, and a YieldException
      * is thrown, indicating that the player must discard a card before they can end their turn. If the player's hand is not full, the
@@ -251,13 +269,10 @@ public class GameHandler {
      * @throws YieldException if the player's hand is full, indicating that they must discard a card before they can end their turn
      */
     public EndTurnSnapshot tryEndTurn() throws InvalidGameStateException {
-        if (game.isHandFull(game.getCurrentTeamID())) {
-            turnState.activateYieldRestriction();
-            throw new YieldException(game.getTeamName(game.getCurrentTeamID()));
-        } else {
-            return finishTurn(null);
-        }
+        return finishTurn(null);
     }
+
+
     /**
      * Attempts to end the current player's turn by discarding a card from their hand. The player must provide the index of the card they
      * wish to discard.
@@ -269,26 +284,20 @@ public class GameHandler {
      * @throws YieldException if the player's hand is not full, indicating that they cannot end their turn by discarding a card
      */
     public EndTurnSnapshot tryEndTurnWithDiscard(int index) throws InvalidGameStateException {
-        if (!game.isHandFull(getCurrentTeamID())) {
-            turnState.activateYieldRestriction();
-            throw new YieldException(game.getTeamName(game.getCurrentTeamID()));
-        } else {
-            int handSize = game.getHandSize(game.getCurrentTeamID());
+        int handSize = game.getHandSize(game.getCurrentTeamID());
+        int internalIndex = index - HAND_INDEX_OFFSET;
 
-            int internalIndex = index - HAND_INDEX_OFFSET;
-
-            if (internalIndex < 0 || internalIndex >= handSize) {
-                throw new InvalidHandException(String.valueOf(index));
-            }
-
-            Unit discardedCard = game.removeHandCardAt(getCurrentTeamID(), internalIndex);
-            if (discardedCard == null) {
-                throw new InvalidGameStateException("Cannot discard from an empty hand.");
-            }
-            EntitySnapshot snapshot = new EntitySnapshot(discardedCard, game.getTeamName(game.getCurrentTeamID()));
-
-            return finishTurn(snapshot);
+        if (internalIndex < 0 || internalIndex >= handSize) {
+            throw new InvalidHandException(String.valueOf(index));
         }
+
+        Unit discardedCard = game.removeHandCardAt(getCurrentTeamID(), internalIndex);
+        if (discardedCard == null) {
+            throw new InvalidGameStateException("Cannot discard from an empty hand.");
+        }
+        EntitySnapshot snapshot = new EntitySnapshot(discardedCard, game.getTeamName(game.getCurrentTeamID()));
+
+        return finishTurn(snapshot);
     }
 
     private EndTurnSnapshot finishTurn(EntitySnapshot discardedCard) {
