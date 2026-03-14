@@ -130,9 +130,9 @@ public final class AITurnController {
         EndTurnSnapshot endTurnSnapshot;
         if (game.isHandFull(game.getCurrentTeamID())) {
             int discardIndex = aiDecisionService.chooseDiscardIndex();
-            endTurnSnapshot = gameHandler.tryEndTurnWithDiscard(discardIndex);
+            endTurnSnapshot = gameHandler.endTurnWithDiscard(discardIndex);
         } else {
-            endTurnSnapshot = gameHandler.tryEndTurn();
+            endTurnSnapshot = gameHandler.endTurn();
         }
 
         System.out.println(printer.formatYield(endTurnSnapshot));

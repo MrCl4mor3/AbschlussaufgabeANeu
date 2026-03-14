@@ -65,7 +65,7 @@ public class YieldCommand extends  Command {
         EndTurnSnapshot endTurnSnapshot;
 
         if (!discardRequested) {
-            endTurnSnapshot = gameHandler.tryEndTurn();
+            endTurnSnapshot = gameHandler.endTurn();
         } else {
             int handIndex;
             try {
@@ -73,7 +73,7 @@ public class YieldCommand extends  Command {
             } catch (NumberFormatException e) {
                 throw new InvalidHandException(commandArgs[0]);
             }
-            endTurnSnapshot = gameHandler.tryEndTurnWithDiscard(handIndex);
+            endTurnSnapshot = gameHandler.endTurnWithDiscard(handIndex);
         }
         System.out.println(gameOutputPrinter.formatYield(endTurnSnapshot));
     }

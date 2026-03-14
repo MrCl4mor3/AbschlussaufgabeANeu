@@ -243,7 +243,14 @@ public class GameHandler {
     }
 
 
-
+    /**
+     * Checks whether a player can attempt to end their turn based on the current state of their hand and whether they have requested to
+     * discard a card. If the player has a full hand and has not requested to discard, the yield restriction is activated, and the method
+     * returns a result indicating that discarding is required. If the player has requested to discard but does not have a full hand, the
+     * yield restriction is activated, and the method returns a result indicating that discarding is not allowed.
+     * @param discardRequested A boolean indicating whether the player has requested to discard a card before ending their turn
+     * @return the Yield restult-
+     */
     public YieldCheckResult checkYieldAttempt(boolean discardRequested) {
         boolean handFull = game.isHandFull(game.getCurrentTeamID());
 
@@ -268,11 +275,9 @@ public class GameHandler {
      * @throws InvalidGameStateException if there is a problem with the game state that prevents ending the turn
      * @throws YieldException if the player's hand is full, indicating that they must discard a card before they can end their turn
      */
-    public EndTurnSnapshot tryEndTurn() throws InvalidGameStateException {
+    public EndTurnSnapshot endTurn() throws InvalidGameStateException {
         return finishTurn(null);
     }
-
-
     /**
      * Attempts to end the current player's turn by discarding a card from their hand. The player must provide the index of the card they
      * wish to discard.
@@ -283,7 +288,7 @@ public class GameHandler {
      *      discard a card at the specified index.
      * @throws YieldException if the player's hand is not full, indicating that they cannot end their turn by discarding a card
      */
-    public EndTurnSnapshot tryEndTurnWithDiscard(int index) throws InvalidGameStateException {
+    public EndTurnSnapshot endTurnWithDiscard(int index) throws InvalidGameStateException {
         int handSize = game.getHandSize(game.getCurrentTeamID());
         int internalIndex = index - HAND_INDEX_OFFSET;
 
