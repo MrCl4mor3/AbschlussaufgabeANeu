@@ -254,9 +254,6 @@ public class GameHandler {
         }
 
         Unit discardedCard = game.removeHandCardAt(getCurrentTeamID(), internalIndex);
-        if (discardedCard == null) {
-            throw new InvalidGameStateException("Cannot discard from an empty hand.");
-        }
         EntitySnapshot snapshot = new EntitySnapshot(discardedCard, game.teamView(game.getCurrentTeamID()).getName());
 
         return finishTurn(snapshot);
