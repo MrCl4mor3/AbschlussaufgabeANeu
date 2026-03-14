@@ -2,7 +2,6 @@ package edu.kit.kastel.crownoffarmland.ui.commands;
 
 import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidCommandArgumentException;
-import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
 import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.InvalidHandException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 import edu.kit.kastel.crownoffarmland.gameplay.YieldCheckResult;
@@ -26,6 +25,7 @@ public class YieldCommand extends  Command {
     private static final String ERROR_PREFIX = "ERROR: ";
     private static final String HAND_FULL_MESSAGE = "Hand ist full, you must discard a card!";
     private static final String DISCARD_NOT_ALLOWED_MESSAGE = "Cannot discard, hand is not full!";
+    private static final String UNEXPECTED_YIELD_CHECK_RESULT = "Unexpected yield check result.";
 
 
     /**
@@ -59,7 +59,7 @@ public class YieldCommand extends  Command {
             case SUCCESS -> {
                 // continue below
             }
-            default -> throw new InvalidGameStateException("Unexpected yield check result.");
+            default -> throw new IllegalStateException(UNEXPECTED_YIELD_CHECK_RESULT);
         }
 
         EndTurnSnapshot endTurnSnapshot;

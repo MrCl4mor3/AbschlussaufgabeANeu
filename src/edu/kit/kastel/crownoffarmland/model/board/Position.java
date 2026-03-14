@@ -83,13 +83,13 @@ public final class Position {
      */
     public static Position fromString(String input) throws CrownOfFarmlandException {
         if (input == null) {
-            throw new InvalidPositionException();
+            throw new InvalidPositionException(input);
         }
 
         String trimmed = input.trim().toUpperCase();
 
         if (trimmed.length() != EXPECTED_POSITION_LENGTH) {
-            throw new InvalidCommandArgumentException(2, trimmed.length());
+            throw new InvalidPositionException(input);
         }
         char column = trimmed.charAt(0);
         String rowPart = trimmed.substring(1);

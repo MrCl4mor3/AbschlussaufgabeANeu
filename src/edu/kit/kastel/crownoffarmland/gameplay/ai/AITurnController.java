@@ -117,7 +117,7 @@ public final class AITurnController {
                     printMoveOutput(gameHandler.moveUnit(decision.getTarget()));
                     break;
                 default:
-                    throw new CrownOfFarmlandException(UNEXPECTED_AI_ACTION_TYPE);
+                    throw new IllegalStateException(UNEXPECTED_AI_ACTION_TYPE);
             }
 
             decision = aiDecisionService.chooseNextUnitAction();
