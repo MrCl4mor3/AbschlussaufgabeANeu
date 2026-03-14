@@ -13,7 +13,7 @@ public enum YieldCheckResult {
     /**
      * If the yield is not successful, because player must discard a card from his hand.
      */
-    DISCARDED_REQUIRED,
+    DISCARD_REQUIRED,
     /**
      * If the yield is not successful, because player want to discard a card from his hand, but it is not allowed.
      */
