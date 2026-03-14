@@ -17,6 +17,8 @@ public class BoardEntityTokenFormatter {
     private static final char BLOCK_SUFFIX = 'b';
     private static final char MOVEABLE_PREFIX = '*';
 
+    private static final int MOVEABLE_MARK_INDEX = 0;
+    private static final int BLOCK_MARK_INDEX = 2;
     /**
      * Formats the given board cell.
      *
@@ -31,11 +33,11 @@ public class BoardEntityTokenFormatter {
         char[] token = new char[]{EMPTY_TOKEN, resolveBaseSymbol(cell), EMPTY_TOKEN};
 
         if (cell.isMoveable()) {
-            token[0] = MOVEABLE_PREFIX;
+            token[MOVEABLE_MARK_INDEX] = MOVEABLE_PREFIX;
         }
 
         if (cell.isBlocked()) {
-            token[2] = BLOCK_SUFFIX;
+            token[BLOCK_MARK_INDEX] = BLOCK_SUFFIX;
         }
 
         return new String(token);
