@@ -101,10 +101,10 @@ public class SnapshotFactory implements SnapshotProvider {
             return BoardCellSnapshot.empty();
         }
 
-        boolean isPlayerTeam = occupant.getOwner() == TeamID.TEAM_1;
+        boolean isTeamOne = occupant.getOwner() == TeamID.TEAM_1;
         boolean isMoveable = occupant.getOwner().equals(game.getCurrentTeamID())
                 && !turnState.getMovedEntities().contains(occupant);
 
-        return new BoardCellSnapshot(true, occupant.isFarmerKing(), occupant.isBlocked(), isPlayerTeam, isMoveable);
+        return new BoardCellSnapshot(true, occupant.isFarmerKing(), occupant.isBlocked(), isTeamOne, isMoveable);
     }
 }

@@ -18,7 +18,7 @@ public final class BoardCellSnapshot {
     private final boolean hasEntity;
     private final boolean farmerKing;
     private final boolean blocked;
-    private final boolean ownTeam;
+    private final boolean teamOne;
     private final boolean moveable;
 
     /**
@@ -27,14 +27,14 @@ public final class BoardCellSnapshot {
      * @param hasEntity whether the cell contains an entity
      * @param farmerKing whether the entity is a farmer king
      * @param blocked whether the entity is blocked
-     * @param ownTeam whether the entity belongs to the current team
+     * @param teamOne whether the entity belongs to team one
      * @param moveable whether the entity can still move this turn
      */
-    public BoardCellSnapshot(boolean hasEntity, boolean farmerKing, boolean blocked, boolean ownTeam, boolean moveable) {
+    public BoardCellSnapshot(boolean hasEntity, boolean farmerKing, boolean blocked, boolean teamOne, boolean moveable) {
         this.hasEntity = hasEntity;
         this.farmerKing = farmerKing;
         this.blocked = blocked;
-        this.ownTeam = ownTeam;
+        this.teamOne = teamOne;
         this.moveable = moveable;
     }
 
@@ -75,12 +75,12 @@ public final class BoardCellSnapshot {
     }
 
     /**
-     * Returns whether the entity belongs to the current team.
+     * Returns whether the entity belongs to team one.
      *
-     * @return {@code true} if the entity belongs to the current team
+     * @return {@code true} if the entity belongs to the team one
      */
-    public boolean isPlayerTeam() {
-        return ownTeam;
+    public boolean isTeamOne() {
+        return teamOne;
     }
 
     /**

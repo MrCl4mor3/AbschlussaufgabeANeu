@@ -43,9 +43,9 @@ public class BoardEntityTokenFormatter {
 
     private char resolveBaseSymbol(BoardCellSnapshot cell) {
         if (cell.isFarmerKing()) {
-            return cell.isPlayerTeam() ? TEAM_PLAYER_KING : TEAM_ENEMY_KING;
+            return cell.isTeamOne() ? TEAM_PLAYER_KING : TEAM_ENEMY_KING;
         } else {
-            return cell.isPlayerTeam() ? TEAM_PLAYER_UNIT : TEAM_ENEMY_UNIT;
+            return cell.isTeamOne() ? TEAM_PLAYER_UNIT : TEAM_ENEMY_UNIT;
         }
     }
 }
