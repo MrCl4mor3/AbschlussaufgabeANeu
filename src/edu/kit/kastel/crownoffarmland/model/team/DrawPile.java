@@ -17,7 +17,8 @@ import java.util.List;
  * @author ucgdi
  */
 public final class DrawPile {
-    private static final int START_SIZE = 40;
+    private static final int START_SIZE_DEFAULT = 40;
+    private final int startSize;
     private final Deque<Unit> deck;
 
     /**
@@ -27,6 +28,7 @@ public final class DrawPile {
      */
     public DrawPile(Collection<Unit> initialCards) {
         this.deck = new ArrayDeque<>(initialCards);
+        this.startSize = deck.size();
     }
 
     /**
@@ -42,7 +44,7 @@ public final class DrawPile {
      * @return The Size of the Draw Pile
      */
     public int getStartSize() {
-        return START_SIZE;
+        return startSize;
     }
 
     /**
@@ -71,5 +73,13 @@ public final class DrawPile {
         generator.shuffle(toShuffle);
         deck.clear();
         deck.addAll(toShuffle);
+    }
+
+    /**
+     * Getter for the default start size.
+     * @return the default start size of the draw pile
+     */
+    public static int getStartSizeDefault() {
+        return START_SIZE_DEFAULT;
     }
 }

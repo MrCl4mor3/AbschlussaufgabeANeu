@@ -1,6 +1,7 @@
 package edu.kit.kastel.crownoffarmland.startup.parser;
 
 
+import edu.kit.kastel.crownoffarmland.model.team.DrawPile;
 import edu.kit.kastel.crownoffarmland.startup.result.StartupError;
 import edu.kit.kastel.crownoffarmland.startup.result.StartupResult;
 
@@ -18,7 +19,6 @@ import java.util.List;
  */
 public class DeckFileParser implements ContentParser<int[]> {
 
-    private static final int REQUIRED_DECK_SIZE = 40;
 
     private static final String INVALID_DECK_SIZE_ERROR = "Invalid deck size: expected %d cards, but got %d.";
     private static final String DECK_FILE_EMPTY_ERROR = "The deck file is empty.";
@@ -63,8 +63,8 @@ public class DeckFileParser implements ContentParser<int[]> {
             cardCounts[i] = count;
             sum += count;
         }
-        if (sum != REQUIRED_DECK_SIZE) {
-            return StartupError.error(INVALID_DECK_SIZE_ERROR, REQUIRED_DECK_SIZE, sum);
+        if (sum != DrawPile.getStartSizeDefault()) {
+            return StartupError.error(INVALID_DECK_SIZE_ERROR, DrawPile.getStartSizeDefault(), sum);
         }
 
         return StartupResult.success(cardCounts);
