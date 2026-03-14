@@ -3,7 +3,7 @@ package edu.kit.kastel.crownoffarmland.gameplay.ai;
 import edu.kit.kastel.crownoffarmland.model.board.Position;
 
 /**
- * Represents an Action Score, wich helps for the AI decision.
+ * Stores a possible action and its score for the AI.
  *
  * @author ucgdi
  */
@@ -13,10 +13,11 @@ final class ActionScore {
     private final int score;
 
     /**
-     * Creates a new Score.
-     * @param actionType wich type of action
-     * @param target the target to move
-     * @param score the actual position of my unit
+     * Creates a scored action.
+     *
+     * @param actionType the type of action
+     * @param target the target position
+     * @param score the score of the action
      */
     ActionScore(UnitActionType actionType, Position target, int score) {
         this.actionType = actionType;
@@ -25,15 +26,17 @@ final class ActionScore {
     }
 
     /**
-     * Getter for ActionType.
-     * @return the unitActionType
+     * Returns the action type.
+     *
+     * @return the action type
      */
     UnitActionType getActionType() {
         return actionType;
     }
 
     /**
-     * Getter for Target.
+     * Returns the target position.
+     *
      * @return the target position
      */
     Position getTarget() {
@@ -41,7 +44,8 @@ final class ActionScore {
     }
 
     /**
-     * Getter for Score.
+     * Returns the score of the action.
+     *
      * @return the score
      */
     int getScore() {

@@ -6,39 +6,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A utility class for selecting a random index from a list of weights, where the probability of selecting each index is proportional to
- * its weight.
- * This class also provides a method for selecting an index based on inverse weights, where the probability of selecting each index is
- * inversely proportional to its weight.
- * Negative weights are treated as zero.
+ * Selects random indices based on weighted probabilities.
  *
  * @author ucgdi
  */
 public final class WeightedRandomSelector {
     private static final int MIN_WEIGHT = 0;
+    private static final int DEFAULT_WEIGHT = 1;
     private static final int INTERVAL_START = 1;
     private static final int OFFSET = 1;
     private static final int INDEX_NOT_FOUND = -1;
+
     private final RandomGenerator random;
 
     /**
-     * Constructor for creating a WeightedRandomSelector object with the specified random generator.
-     * @param random the random generator to be used for selecting random indices based on weights
+     * Creates a new weighted random selector.
+     *
+     * @param random the random generator
      */
     public WeightedRandomSelector(RandomGenerator random) {
         this.random = random;
     }
 
     /**
-     * Selects a random index from the list of weights, where the probability of selecting each index is proportional to its weight.
-     * @param weights the list of weights, where each weight corresponds to the probability of selecting the index at that position.
-     *                Negative weights are treated as zero.
-     * @return the selected index based on the weights, or -1 if the list of weights is empty or all weights are zero
+     * Selects an index based on the given weights.
+     *
+     * @param weights the weights to use
+     * @return the selected index
      */
     public int selectWeightedRandom(List<Integer> weights) {
-        List<Integer> normalizedWeights = setNegativeWeightsToZero(weights);
-
-
+        List<Integer> normalizedWeights = normalizeWeights(weights);
         int totalWeight = getTotalWeight(normalizedWeights);
         int roll = random.nextInt(INTERVAL_START, totalWeight + OFFSET);
 
@@ -46,23 +43,45 @@ public final class WeightedRandomSelector {
     }
 
     /**
-     * Selects a random index from the list of weights, where the probability of selecting each index is inversely proportional to its
-     * weight.
-     * @param weights the list of weights, where each weight corresponds to the probability of selecting the index at that position.
-     * @return the selected index based on the inverse weights, or -1 if the list of weights is empty or all weights are zero
+     * Selects an index based on the inverse of the given weights.
+     *
+     * @param weights the weights to invert
+     * @return the selected index
      */
     public int selectInverseWeightedRandom(List<Integer> weights) {
-        List<Integer> normalizedWeights = setNegativeWeightsToZero(weights);
+        List<Integer> normalizedWeights = normalizeWeights(weights);
         int maxWeight = getMaxWeight(normalizedWeights);
 
         List<Integer> inverseWeights = new ArrayList<>(normalizedWeights.size());
-        for (Integer weight : normalizedWeights) {
+        for (int weight : normalizedWeights) {
             inverseWeights.add(maxWeight - weight);
         }
+
+        if (getTotalWeight(inverseWeights) == 0) {
+            setAllWeightsToDefault(inverseWeights);
+        }
+
         return selectWeightedRandom(inverseWeights);
     }
 
+    private List<Integer> normalizeWeights(List<Integer> weights) {
+        List<Integer> normalizedWeights = new ArrayList<>(weights.size());
+        for (int weight : weights) {
+            normalizedWeights.add(Math.max(weight, MIN_WEIGHT));
+        }
 
+        if (getTotalWeight(normalizedWeights) == 0) {
+            setAllWeightsToDefault(normalizedWeights);
+        }
+
+        return normalizedWeights;
+    }
+
+    private void setAllWeightsToDefault(List<Integer> weights) {
+        for (int i = 0; i < weights.size(); i++) {
+            weights.set(i, DEFAULT_WEIGHT);
+        }
+    }
 
     private int getTotalWeight(List<Integer> weights) {
         int totalWeight = 0;
@@ -81,16 +100,6 @@ public final class WeightedRandomSelector {
             }
         }
         return INDEX_NOT_FOUND;
-    }
-
-
-    private List<Integer> setNegativeWeightsToZero(List<Integer> weights) {
-        for (int i = 0; i < weights.size(); i++) {
-            if (weights.get(i) < 0) {
-                weights.set(i, MIN_WEIGHT);
-            }
-        }
-        return weights;
     }
 
     private int getMaxWeight(List<Integer> weights) {

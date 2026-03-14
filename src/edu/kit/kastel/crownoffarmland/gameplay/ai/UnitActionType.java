@@ -1,22 +1,23 @@
 package edu.kit.kastel.crownoffarmland.gameplay.ai;
 
 /**
- * A Enum to represent the different type of action a ai can be decide.
- *
+ * Defines the possible actions of a unit.
  *
  * @author ucgdi
  */
 public enum UnitActionType {
     /**
-     * Move the unit to a new position. The position is determined by the ai and is not fixed.
+     * Moves the unit to a target position.
      */
     MOVE,
+
     /**
-     * Stay on field and go to blocking state.
+     * Sets the unit to blocking.
      */
     BLOCK,
+
     /**
-     * Do nothing with the unit and stay on the current position.
+     * Leaves the unit on its current position.
      */
-    STAY;
+    STAY
 }

@@ -5,7 +5,7 @@ import edu.kit.kastel.crownoffarmland.model.board.Position;
 import java.util.List;
 
 /**
- * Is a representation of a unit candidate, which consists of a source position, a list of action scores, and a total score.
+ * Represents a unit together with its possible actions and total score.
  *
  * @author ucgdi
  */
@@ -15,10 +15,11 @@ public final class UnitCandidate {
     private final int totalScore;
 
     /**
-     * Creates.
-     * @param source the actual position of the unit
-     * @param actionScores a List of ActionScores for all possible moves of the unit
-     * @param totalScore the total score of all possible moves of the unit
+     * Creates a new unit candidate.
+     *
+     * @param source the source position of the unit
+     * @param actionScores the scored possible actions
+     * @param totalScore the total score of the unit
      */
     UnitCandidate(Position source, List<ActionScore> actionScores, int totalScore) {
         this.source = source;
@@ -26,9 +27,9 @@ public final class UnitCandidate {
         this.totalScore = totalScore;
     }
 
-
     /**
-     * Getter for the source Position.
+     * Returns the source position.
+     *
      * @return the source position
      */
     Position getSource() {
@@ -36,16 +37,18 @@ public final class UnitCandidate {
     }
 
     /**
-     * Getter for the ActionScores.
-     * @return a List of ActionScores for all possible moves of the unit
+     * Returns the scored possible actions.
+     *
+     * @return the action scores
      */
     List<ActionScore> getActionScores() {
         return actionScores;
     }
 
     /**
-     * Getter for the total score of all possible moves of the unit.
-     * @return the sum of all ActionScores for all possible moves of the unit
+     * Returns the total score.
+     *
+     * @return the total score
      */
     int getTotalScore() {
         return totalScore;

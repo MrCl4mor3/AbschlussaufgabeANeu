@@ -3,10 +3,10 @@ package edu.kit.kastel.crownoffarmland.gameplay.ai;
 import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EndTurnSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntityOnPositionSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardSnapshot;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntityOnPositionSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.MoveSnapshot;
 import edu.kit.kastel.crownoffarmland.model.Game;
 import edu.kit.kastel.crownoffarmland.model.board.Position;
@@ -15,27 +15,29 @@ import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
 import java.util.List;
 
 /**
- * Controls the AI turn.
+ * Controls the AI turn flow.
  *
  * @author ucgdi
  */
 public final class AITurnController {
     private static final String UNEXPECTED_AI_ACTION_TYPE = "Unexpected AI action type";
     private static final String WINNER_MESSAGE = "%s wins!%n";
+
     private final Game game;
     private final GameHandler gameHandler;
     private final AIDecisionService aiDecisionService;
     private final GameOutputPrinter printer;
 
-
     /**
-     * Creates a new Controller.
-     * @param gameHandler the gameHandler
-     * @param game the model
-     * @param aiDecisionService to decide the AI's actions
-     * @param printer to generate an output
+     * Creates a new AI turn controller.
+     *
+     * @param gameHandler the game handler
+     * @param game the game model
+     * @param aiDecisionService the AI decision service
+     * @param printer the output printer
      */
-    public AITurnController(GameHandler gameHandler, Game game, AIDecisionService aiDecisionService, GameOutputPrinter printer) {
+    public AITurnController(GameHandler gameHandler, Game game, AIDecisionService aiDecisionService,
+                            GameOutputPrinter printer) {
         this.gameHandler = gameHandler;
         this.aiDecisionService = aiDecisionService;
         this.game = game;
@@ -43,8 +45,9 @@ public final class AITurnController {
     }
 
     /**
-     * Execute the AI turn.
-     * @throws CrownOfFarmlandException if an invalid Move triggert.
+     * Executes the complete AI turn.
+     *
+     * @throws CrownOfFarmlandException if an invalid action occurs
      */
     public void executeTurn() throws CrownOfFarmlandException {
         executeKingMove();
@@ -70,7 +73,6 @@ public final class AITurnController {
         executeYield();
     }
 
-
     private void executeKingMove() throws CrownOfFarmlandException {
         Position kingPosition = game.getKingPosition(game.getCurrentTeamID());
         Position target = aiDecisionService.chooseKingMove();
@@ -89,7 +91,9 @@ public final class AITurnController {
         }
 
         gameHandler.setSelected(target);
-        List<PlaceStepSnapshot> placeStepSnapshots = gameHandler.placeUnits(new int[]{aiDecisionService.choosePlacementHandIndex()});
+        List<PlaceStepSnapshot> placeStepSnapshots = gameHandler.placeUnits(
+                new int[]{aiDecisionService.choosePlacementHandIndex()}
+        );
 
         System.out.print(printer.formatPlace(placeStepSnapshots));
         printBoardAndShow();
@@ -124,9 +128,7 @@ public final class AITurnController {
         }
     }
 
-
     private void executeYield() throws CrownOfFarmlandException {
-
         EndTurnSnapshot endTurnSnapshot;
         if (game.teamView(game.getCurrentTeamID()).isHandFull()) {
             int discardIndex = aiDecisionService.chooseDiscardIndex();
@@ -137,7 +139,6 @@ public final class AITurnController {
 
         System.out.println(printer.formatYield(endTurnSnapshot));
     }
-
 
     private void printMoveOutput(MoveSnapshot moveSnapshot) throws CrownOfFarmlandException {
         System.out.print(printer.formatMove(moveSnapshot));
