@@ -6,7 +6,6 @@ package edu.kit.kastel.crownoffarmland.gameplay.combat;
  * @author ucgdi
  */
 public class DuelResult {
-    private final DuelType duelType;
     private final boolean attackerEliminated;
     private final boolean defenderEliminated;
     private final int damageToAttackerTeam;
@@ -15,30 +14,18 @@ public class DuelResult {
     /**
      * Creates a new duel result.
      *
-     * @param duelType the duel type
      * @param attackerEliminated whether the attacker was eliminated
      * @param defenderEliminated whether the defender was eliminated
      * @param damageToAttackerTeam the damage dealt to the attacker's team
      * @param damageToDefenderTeam the damage dealt to the defender's team
      */
-    public DuelResult(DuelType duelType, boolean attackerEliminated, boolean defenderEliminated,
+    public DuelResult(boolean attackerEliminated, boolean defenderEliminated,
             int damageToAttackerTeam, int damageToDefenderTeam) {
-        this.duelType = duelType;
         this.attackerEliminated = attackerEliminated;
         this.defenderEliminated = defenderEliminated;
         this.damageToAttackerTeam = damageToAttackerTeam;
         this.damageToDefenderTeam = damageToDefenderTeam;
     }
-
-    /**
-     * Returns the duel type.
-     *
-     * @return the duel type
-     */
-    public DuelType getDuelType() {
-        return duelType;
-    }
-
     /**
      * Returns whether the attacker was eliminated.
      *

@@ -29,7 +29,7 @@ public class DuelManager {
      */
     public DuelResult resolveDuel(Unit attacker, BoardEntity defender) {
         if (defender.isFarmerKing()) {
-            return new DuelResult(DuelType.KING, WAS_NOT_ELIMINATED, WAS_NOT_ELIMINATED,
+            return new DuelResult(WAS_NOT_ELIMINATED, WAS_NOT_ELIMINATED,
                     NO_DAMAGE_TO_ATTACKER_TEAM, attacker.getAtk());
         }
 
@@ -46,14 +46,14 @@ public class DuelManager {
         int defB = defender.getDef();
 
         if (atkA > defB) {
-            return new DuelResult(DuelType.BLOCKADE, WAS_NOT_ELIMINATED, WAS_ELIMINATED,
+            return new DuelResult(WAS_NOT_ELIMINATED, WAS_ELIMINATED,
                     NO_DAMAGE_TO_ATTACKER_TEAM, NO_DAMAGE_TO_DEFENDER_TEAM);
         } else if (defB > atkA) {
             int damage = defB - atkA;
-            return new DuelResult(DuelType.BLOCKADE, WAS_ELIMINATED, WAS_NOT_ELIMINATED,
+            return new DuelResult(WAS_ELIMINATED, WAS_NOT_ELIMINATED,
                     damage, NO_DAMAGE_TO_DEFENDER_TEAM);
         } else {
-            return new DuelResult(DuelType.BLOCKADE, WAS_NOT_ELIMINATED, WAS_ELIMINATED,
+            return new DuelResult(WAS_NOT_ELIMINATED, WAS_ELIMINATED,
                     NO_DAMAGE_TO_ATTACKER_TEAM, NO_DAMAGE_TO_DEFENDER_TEAM);
         }
     }
@@ -63,13 +63,13 @@ public class DuelManager {
         int atkB = defender.getAtk();
 
         if (atkA > atkB) {
-            return new DuelResult(DuelType.STANDARD, WAS_NOT_ELIMINATED, WAS_ELIMINATED,
+            return new DuelResult(WAS_NOT_ELIMINATED, WAS_ELIMINATED,
                     NO_DAMAGE_TO_ATTACKER_TEAM, atkA - atkB);
         } else if (atkB > atkA) {
-            return new DuelResult(DuelType.STANDARD, WAS_ELIMINATED, WAS_NOT_ELIMINATED,
+            return new DuelResult(WAS_ELIMINATED, WAS_NOT_ELIMINATED,
                     atkB - atkA, NO_DAMAGE_TO_DEFENDER_TEAM);
         } else {
-            return new DuelResult(DuelType.STANDARD, WAS_ELIMINATED, WAS_ELIMINATED,
+            return new DuelResult(WAS_ELIMINATED, WAS_ELIMINATED,
                     NO_DAMAGE_TO_ATTACKER_TEAM, NO_DAMAGE_TO_DEFENDER_TEAM);
         }
     }
