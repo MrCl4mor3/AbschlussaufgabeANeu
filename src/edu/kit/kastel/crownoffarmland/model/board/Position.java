@@ -18,6 +18,7 @@ public final class Position {
     private final int row;
     private final char column;
 
+
     /**
      * Constructor for creating a Position object with the specified row and column.
      * @param row the row of the position as an integer.
@@ -79,11 +80,10 @@ public final class Position {
      * @return a new Position
      * @throws CrownOfFarmlandException if an invalide String was found
      * @throws InvalidPositionException if the input is null or cannot be parsed to a valid position
-     * @throws InvalidCommandArgumentException if the input does not have the expected length for a position string
      */
     public static Position fromString(String input) throws CrownOfFarmlandException {
         if (input == null) {
-            throw new InvalidPositionException(input);
+            throw new InvalidPositionException();
         }
 
         String trimmed = input.trim().toUpperCase();
