@@ -80,7 +80,7 @@ public class SnapshotFactory implements SnapshotProvider {
             return EntitySnapshot.noUnit();
         }
 
-        String teamName = game.getTeamName(entity.getOwner());
+        String teamName = game.teamView(entity.getOwner()).getName();
         boolean hidden = !entity.isRevealed() && entity.getOwner() != game.getCurrentTeamID();
 
         return new EntitySnapshot(entity, teamName, entity.isFarmerKing(), hidden);
@@ -95,8 +95,8 @@ public class SnapshotFactory implements SnapshotProvider {
     @Override
     public List<EntitySnapshot> createHandSnapshot() {
         List<EntitySnapshot> handEntries = new ArrayList<>();
-        int handSize = game.getHandSize(game.getCurrentTeamID());
-        String teamName = game.getTeamName(game.getCurrentTeamID());
+        int handSize = game.teamView(game.getCurrentTeamID()).getHandSize();
+        String teamName = game.teamView(game.getCurrentTeamID()).getName();
 
         for (int index = 0; index < handSize; index++) {
             Unit unit = game.getHandCardAt(game.getCurrentTeamID(), index);
@@ -114,9 +114,9 @@ public class SnapshotFactory implements SnapshotProvider {
      */
     @Override
     public TeamStateSnapshot createTeamStateSnapshot(TeamID teamID) {
-        String teamName = game.getTeamName(teamID);
-        int remainingDeckCards = game.getDrawPileSize(teamID);
-        int lifePoints = game.getLifePoints(teamID);
+        String teamName = game.teamView(teamID).getName();
+        int remainingDeckCards = game.teamView(teamID).getDrawPileSize();
+        int lifePoints = game.teamView(teamID).getLifePoints();
 
         return new TeamStateSnapshot(teamName, lifePoints, remainingDeckCards, game.getUnitsPlaced(teamID));
     }

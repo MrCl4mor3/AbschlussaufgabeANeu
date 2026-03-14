@@ -154,7 +154,7 @@ public final class AIDecisionService {
         TeamID currentTeam = game.getCurrentTeamID();
         List<Integer> atkWeights = new ArrayList<>();
 
-        for (int handIndex = 0; handIndex < game.getHandSize(currentTeam); handIndex++) {
+        for (int handIndex = 0; handIndex < game.teamView(currentTeam).getHandSize(); handIndex++) {
             atkWeights.add(game.getHandCardAt(currentTeam, handIndex).getAtk());
         }
 
@@ -202,7 +202,7 @@ public final class AIDecisionService {
         List<Integer> discardWeights = new ArrayList<>();
         TeamID currentTeam = game.getCurrentTeamID();
 
-        for (int handIndex = 0; handIndex < game.getHandSize(currentTeam); handIndex++) {
+        for (int handIndex = 0; handIndex < game.teamView(currentTeam).getHandSize(); handIndex++) {
             Unit handCard = game.getHandCardAt(currentTeam, handIndex);
             discardWeights.add(handCard.getAtk() + handCard.getDef());
         }

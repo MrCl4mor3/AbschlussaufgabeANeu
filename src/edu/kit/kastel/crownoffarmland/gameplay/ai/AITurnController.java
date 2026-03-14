@@ -128,7 +128,7 @@ public final class AITurnController {
     private void executeYield() throws CrownOfFarmlandException {
 
         EndTurnSnapshot endTurnSnapshot;
-        if (game.isHandFull(game.getCurrentTeamID())) {
+        if (game.teamView(game.getCurrentTeamID()).isHandFull()) {
             int discardIndex = aiDecisionService.chooseDiscardIndex();
             endTurnSnapshot = gameHandler.endTurnWithDiscard(discardIndex);
         } else {

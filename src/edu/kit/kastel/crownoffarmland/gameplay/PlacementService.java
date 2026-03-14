@@ -94,7 +94,7 @@ public final class PlacementService {
     private List<Integer> parseUniqueHandIndices(int[] userIndices) throws InvalidGameStateException {
         List<Integer> internalIndices = new ArrayList<>();
         Set<Integer> seenIndices = new HashSet<>();
-        int handSize = game.getHandSize(game.getCurrentTeamID());
+        int handSize = game.teamView(game.getCurrentTeamID()).getHandSize();
 
         for (int userIndex : userIndices) {
             int internalIndex = userIndex - HAND_INDEX_OFFSET;
@@ -130,7 +130,7 @@ public final class PlacementService {
     private PlaceStepSnapshot placeSingleUnit(Unit incomingUnit) throws InvalidGameStateException {
         Position targetPosition = turnState.getSelectedPos();
         BoardEntity occupant = game.boardView().getOccupant(targetPosition);
-        String teamName = game.getTeamName(game.getCurrentTeamID());
+        String teamName = game.teamView(game.getCurrentTeamID()).getName();
         String incomingUnitName = incomingUnit.getName().toString();
 
         if (occupant == null) {

@@ -4,6 +4,7 @@ package edu.kit.kastel.crownoffarmland.model;
 import edu.kit.kastel.crownoffarmland.model.board.Board;
 import edu.kit.kastel.crownoffarmland.model.board.GameBoardView;
 import edu.kit.kastel.crownoffarmland.model.board.Position;
+import edu.kit.kastel.crownoffarmland.model.team.GameTeamView;
 import edu.kit.kastel.crownoffarmland.model.team.Team;
 import edu.kit.kastel.crownoffarmland.model.team.TeamID;
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
@@ -95,6 +96,14 @@ public class Game {
         return board;
     }
 
+    /**
+     * Wrapper for team.
+     * @param teamID the selected team
+     * @return the view of the selectet team
+     */
+    public GameTeamView teamView(TeamID teamID) {
+        return teams.get(teamID);
+    }
 
     /**
      * Removes and returns the BoardEntity that occupies the specified position on the game board.
@@ -105,8 +114,6 @@ public class Game {
         return board.removeOccupant(position);
     }
 
-
-
     /**
      * Sets the occupant of the specified position on the game board to the given BoardEntity. This method allows you to place a unit or
      * other entity on the board at a specific location.
@@ -116,26 +123,6 @@ public class Game {
     public void setOccupant(Position position, BoardEntity entity) {
         board.setOccupant(position, entity);
     }
-
-    /**
-     * Returns the name of the team corresponding to the given TeamID.
-     * @param teamID the ID of the team for which to retrieve the name
-     * @return the name of the team corresponding to the given TeamID
-     */
-    public String getTeamName(TeamID teamID) {
-        return teams.get(teamID).getName();
-    }
-
-    /**
-     * Returns the current life points of the team corresponding to the given TeamID. Life points represent the health or vitality of a
-     * team, and when a team's life points reach zero, it typically indicates that the team has been defeated.
-     * @param teamID the ID of the team for which to retrieve the life points
-     * @return the current life points of the team corresponding to the given TeamID
-     */
-    public int getLifePoints(TeamID teamID) {
-        return teams.get(teamID).getLifePoints();
-    }
-
     /**
      * Deals damage to the team corresponding to the given TeamID by reducing its life points by the specified amount. If the team's life
      * points reach zero as a result of the damage, the method also checks if there is a winner and sets the winner to the opposing team
@@ -181,28 +168,6 @@ public class Game {
         }
         return null;
     }
-
-    /**
-     * Returns the number of cards currently in the hand of the team corresponding to the given TeamID. The hand represents the cards
-     * that a team has available to play during their turn, and the hand size indicates how many cards the team can currently use.
-     * @param teamID the ID of the team for which to retrieve the hand size
-     * @return the number of cards currently in the hand of the team corresponding to the given TeamID
-     */
-    public int getHandSize(TeamID teamID) {
-        return teams.get(teamID).getHandSize();
-    }
-
-    /**
-     * Checks if the hand of the team corresponding to the given TeamID is full. A full hand typically means that the team has reached
-     * the maximum number of cards allowed in their hand, and they cannot draw more cards until they play or discard some of their
-     * existing cards.
-     * @param teamID the ID of the team for which to check if the hand is full
-     * @return true if the hand of the team corresponding to the given TeamID is full, false otherwise
-     */
-    public boolean isHandFull(TeamID teamID) {
-        return teams.get(teamID).isHandFull();
-    }
-
     /**
      * Returns the Unit card at the specified index in the hand of the team corresponding to the given TeamID.
      * @param teamID the ID of the team for which to retrieve the hand card
@@ -224,28 +189,6 @@ public class Game {
     public Unit removeHandCardAt(TeamID teamID, int index) {
         return teams.get(teamID).removeHandCardAt(index);
     }
-
-    /**
-     * Returns the number of cards currently in the draw pile of the team corresponding to the given TeamID. The draw pile contains the
-     * cards that a team can draw during their turn, and the size of the draw pile indicates how many cards are still available for the
-     * team to draw before the pile is empty.
-     * @param teamID the ID of the team for which to retrieve the draw pile size
-     * @return the number of cards currently in the draw pile of the team corresponding to the given TeamID
-     */
-    public int getDrawPileSize(TeamID teamID) {
-        return teams.get(teamID).getDrawPileSize();
-    }
-
-    /**
-     * Checks if the draw pile of the team corresponding to the given TeamID is empty. An empty draw pile means that the team has no more
-     * cards available to draw during their turn.
-     * @param teamID the ID of the team for which to check if the draw pile is empty
-     * @return true if the draw pile of the team corresponding to the given TeamID is empty, false otherwise
-     */
-    public boolean isDrawPileEmpty(TeamID teamID) {
-        return teams.get(teamID).isDrawPileEmpty();
-    }
-
     /**
      * Draws the top card from the draw pile of the team corresponding to the given TeamID and adds it to their hand. This method removes
      * the top card from the draw pile and returns it, allowing the team to use the drawn card during their turn. If the draw pile is

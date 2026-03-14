@@ -98,7 +98,7 @@ public class GameHandler {
     private void startCurrentTurn() {
         turnState.resetForNewTurn();
         TeamID currentTeam = game.getCurrentTeamID();
-        if (game.isDrawPileEmpty(currentTeam)) {
+        if (game.teamView(currentTeam).isDrawPileEmpty()) {
             game.setWinner(currentTeam.getNext());
             return;
         }
@@ -214,7 +214,7 @@ public class GameHandler {
      * @return the Yield restult-
      */
     public YieldCheckResult checkYieldAttempt(boolean discardRequested) {
-        boolean handFull = game.isHandFull(game.getCurrentTeamID());
+        boolean handFull = game.teamView(game.getCurrentTeamID()).isHandFull();
 
         if (!discardRequested && handFull) {
             turnState.activateYieldRestriction();
@@ -248,7 +248,7 @@ public class GameHandler {
      *      discard a card at the specified index.
      */
     public EndTurnSnapshot endTurnWithDiscard(int index) throws InvalidGameStateException {
-        int handSize = game.getHandSize(game.getCurrentTeamID());
+        int handSize = game.teamView(game.getCurrentTeamID()).getHandSize();
         int internalIndex = index - HAND_INDEX_OFFSET;
 
         if (internalIndex < 0 || internalIndex >= handSize) {
@@ -259,13 +259,13 @@ public class GameHandler {
         if (discardedCard == null) {
             throw new InvalidGameStateException("Cannot discard from an empty hand.");
         }
-        EntitySnapshot snapshot = new EntitySnapshot(discardedCard, game.getTeamName(game.getCurrentTeamID()));
+        EntitySnapshot snapshot = new EntitySnapshot(discardedCard, game.teamView(game.getCurrentTeamID()).getName());
 
         return finishTurn(snapshot);
     }
 
     private EndTurnSnapshot finishTurn(EntitySnapshot discardedCard) {
-        EndTurnSnapshot endTurnSnapshot = new EndTurnSnapshot(discardedCard, game.getTeamName(game.getEnemyTeamID()), isGameOver());
+        EndTurnSnapshot endTurnSnapshot = new EndTurnSnapshot(discardedCard, game.teamView(game.getEnemyTeamID()).getName(), isGameOver());
         game.nextTurn();
         startCurrentTurn();
         return endTurnSnapshot;
@@ -285,7 +285,7 @@ public class GameHandler {
      */
     public String getWinner() {
         if (isGameOver()) {
-            return game.getTeamName(game.getWinnerID());
+            return game.teamView(game.getWinnerID()).getName();
         }
         return null;
     }

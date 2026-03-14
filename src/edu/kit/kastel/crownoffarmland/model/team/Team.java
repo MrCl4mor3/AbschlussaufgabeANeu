@@ -14,7 +14,7 @@ import java.util.List;
  *
  * @author ucgdi
  */
-public class Team  {
+public class Team implements GameTeamView {
     private static final int START_LP = 8000;
 
     private final String name;

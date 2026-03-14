@@ -145,7 +145,7 @@ public final class MovementService {
         String loserName;
 
         if (!(game.getWinnerID() == null)) {
-            loserName = game.getTeamName(game.getWinnerID().getNext());
+            loserName = game.teamView(game.getWinnerID().getNext()).getName();
         } else {
             loserName = null;
         }
@@ -202,9 +202,9 @@ public final class MovementService {
         TeamID attackerTeam = attacker.getOwner();
         TeamID defenderTeam = defender.getOwner();
 
-        if (game.getLifePoints(attackerTeam) <= 0) {
+        if (game.teamView(attackerTeam).getLifePoints() <= 0) {
             game.setWinner(defenderTeam);
-        } else if (game.getLifePoints(defenderTeam) <= 0) {
+        } else if (game.teamView(defenderTeam).getLifePoints() <= 0) {
             game.setWinner(attackerTeam);
         }
     }
@@ -262,6 +262,6 @@ public final class MovementService {
     }
 
     private EntitySnapshot createEntitySnapshot(BoardEntity entity) {
-        return new EntitySnapshot(entity, game.getTeamName(entity.getOwner()), entity.isFarmerKing(), !entity.isRevealed());
+        return new EntitySnapshot(entity, game.teamView(entity.getOwner()).getName(), entity.isFarmerKing(), !entity.isRevealed());
     }
 }
