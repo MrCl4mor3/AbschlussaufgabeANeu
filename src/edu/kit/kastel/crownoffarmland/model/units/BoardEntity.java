@@ -3,9 +3,8 @@ package edu.kit.kastel.crownoffarmland.model.units;
 import edu.kit.kastel.crownoffarmland.model.team.TeamID;
 
 /**
- * Represents an entity on the board, which can be a unit or a tile.
- * Contains common properties and methods for both units and tiles, such as name, team affiliation, and visibility.
- * This class is abstract and serves as a base for specific types of board entities, such as Unit and Tile.
+ * Represents an entity on the board.
+ * A board entity has a name, an owner, and a reveal state.
  *
  * @author ucgdi
  */
@@ -15,14 +14,12 @@ public abstract class BoardEntity {
     private final TeamID teamID;
     private boolean revealed;
 
-
     /**
-     * Constructs a new BoardEntity with the specified name, team ID, and revealed status. This constructor is protected to allow only
-     * subclasses to create instances of BoardEntity, ensuring that it cannot be instantiated directly.
-     * @param name the UnitName of this board entity, which includes its role and qualificator
-     * @param teamID the TeamID of the team to which this board entity belongs
-     * @param revealed true if this board entity is revealed to the enemy player, false if it is hidden; this status can be changed later
-     *                using the setRevealed method
+     * Constructs a board entity with the given name, owner, and reveal state.
+     *
+     * @param name the entity name
+     * @param teamID the owning team
+     * @param revealed whether the entity is initially revealed
      */
     protected BoardEntity(UnitName name, TeamID teamID, boolean revealed) {
         this.name = name;
@@ -32,62 +29,71 @@ public abstract class BoardEntity {
     }
 
     /**
-     * Returns the team ID associated with this board entity.
-     * @return the team ID of this board entity
+     * Returns the owning team of this entity.
+     *
+     * @return the owning team
      */
     public TeamID getOwner() {
         return teamID;
     }
+
     /**
-     * Indicates whether this board entity has been revealed to the enemy player.
-     * @return true if the entity is revealed, false otherwise
+     * Returns whether this entity is revealed.
+     *
+     * @return {@code true} if this entity is revealed, otherwise {@code false}
      */
     public boolean isRevealed() {
         return revealed;
     }
+
     /**
-     * Returns the name of this board entity, which includes its role and qualificator.
-     * @return the UnitName of this board entity
+     * Returns the name of this entity.
+     *
+     * @return the entity name
      */
     public UnitName getName() {
         return name;
     }
+
     /**
-     * Returns the role of this board entity, which indicates its primary function or type in the game (e.g., "Knight", "Archer").
-     * @return the role of this board entity
+     * Returns the role of this entity.
+     *
+     * @return the entity role
      */
     public String getRole() {
-
         return name.getRole();
     }
+
     /**
-     * Returns the qualificator of this board entity, which provides additional information about its type or status.
-     * @return the qualificator of this board entity
+     * Returns the qualificator of this entity.
+     *
+     * @return the entity qualificator
      */
     public String getQualificator() {
         return name.getQualificator();
     }
 
     /**
-     * Sets the revealed status of this board entity. This method is protected to allow subclasses to control when an entity becomes
-     * revealed. Once an entity is revealed, it cannot be hidden again, so this method only allows changing the status from false to true.
+     * Reveals this entity.
      */
     public void reveal() {
         this.revealed = true;
     }
 
     /**
-     * Indicates whether this board entity is the Farmer King, which is a special unit in the game. This method must be implemented by
-     * subclasses to specify their behavior regarding the Farmer King status.
-     * @return true if this board entity is the Farmer King, false otherwise
-     */
-    public abstract boolean isFarmerKing();
-
-    /**
-     * Returns whether the unit is currently blocked. A blocked unit cannot perform actions until it is unblocked.
-     * @return true if the unit is blocked, false otherwise
+     * Returns whether this entity is blocked.
+     *
+     * @return {@code true} if this entity is blocked, otherwise {@code false}
      */
     public boolean isBlocked() {
         return blocking;
     }
+
+    /**
+     * Returns whether this entity is a farmer king.
+     *
+     * @return {@code true} if this entity is a farmer king, otherwise {@code false}
+     */
+    public abstract boolean isFarmerKing();
+
 }

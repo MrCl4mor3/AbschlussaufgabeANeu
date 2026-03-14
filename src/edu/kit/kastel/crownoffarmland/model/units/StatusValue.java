@@ -1,8 +1,8 @@
 package edu.kit.kastel.crownoffarmland.model.units;
 
 /**
- * This class represents the status values of a unit, such as attack and defense.
- * It ensures that the values are non-negative and provides getter methods to access them.
+ * Represents the attack and defense values of a unit.
+ * Negative values are stored as {@code 0}.
  *
  * @author ucgdi
  */
@@ -10,11 +10,11 @@ public class StatusValue {
     private final int def;
     private final int atk;
 
-
     /**
-     * Constructor for creating a StatusValue object with the specified attack and defense values.
-     * @param atk the attack value of the unit, which will be set to 0 if a negative value is provided
-     * @param def the defense value of the unit, which will be set to 0 if a negative value is provided
+     * Constructs status values with the given attack and defense.
+     *
+     * @param atk the attack value
+     * @param def the defense value
      */
     public StatusValue(int atk, int def) {
         this.def = Math.max(def, 0);
@@ -22,7 +22,8 @@ public class StatusValue {
     }
 
     /**
-     * Returns the defense value of the unit.
+     * Returns the defense value.
+     *
      * @return the defense value
      */
     public int getDef() {
@@ -30,7 +31,8 @@ public class StatusValue {
     }
 
     /**
-     * Returns the attack value of the unit.
+     * Returns the attack value.
+     *
      * @return the attack value
      */
     public int getAtk() {
