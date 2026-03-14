@@ -5,12 +5,13 @@ import edu.kit.kastel.crownoffarmland.model.units.FarmerKing;
 import edu.kit.kastel.crownoffarmland.model.units.Unit;
 
 /**
- * Immutable snapshot of a single entity for rendering purposes.
+ * Represents a snapshot of a single entity.
  *
  * @author ucgdi
  */
 public final class EntitySnapshot {
     private static final int NON_COMBAT_STAT = 0;
+    private static final EntitySnapshot NO_UNIT = new EntitySnapshot();
 
     private final boolean hasEntity;
     private final boolean farmerKing;
@@ -20,43 +21,34 @@ public final class EntitySnapshot {
     private final int attack;
     private final int defense;
 
-
-
-
-    private EntitySnapshot(boolean hasEntity, boolean farmerKing, boolean hidden, String teamName, String entityName, int attack,
-                        int defense) {
-        this.hasEntity = hasEntity;
-        this.farmerKing = farmerKing;
-        this.hidden = hidden;
-        this.teamName = teamName;
-        this.entityName = entityName;
-        this.attack = attack;
-        this.defense = defense;
-    }
-
     /**
-     * Creates a new immutable entity snapshot for the given unit.
-     * @param unit the unit to create the snapshot for
-     * @param teamName the name of the team the unit belongs to
+     * Creates a new entity snapshot for a unit.
+     *
+     * @param unit the unit
+     * @param teamName the team name
      */
     public EntitySnapshot(Unit unit, String teamName) {
         this(true, false, !unit.isRevealed(), teamName, unit.getName().toString(), unit.getAtk(), unit.getDef());
     }
 
     /**
-     * Creates a new immutable entity snapshot for the given farmer king.
-     * @param farmerKing the farmer king to create the snapshot for
-     * @param teamName the name of the team the farmer king belongs to
+     * Creates a new entity snapshot for a farmer king.
+     *
+     * @param farmerKing the farmer king
+     * @param teamName the team name
      */
     public EntitySnapshot(FarmerKing farmerKing, String teamName) {
-        this(true, true, !farmerKing.isRevealed(), teamName, farmerKing.getName().toString(), 0, 0);
+        this(true, true, !farmerKing.isRevealed(), teamName, farmerKing.getName().toString(),
+                NON_COMBAT_STAT, NON_COMBAT_STAT);
     }
+
     /**
-     * Creates a new immutable entity snapshot for the given entity.
-     * @param entity the entity to create the snapshot for
-     * @param teamName the name of the team the entity belongs to
-     * @param isKing true if the entity is a farmer king, false otherwise
-     * @param hidden true if the entity is revealed, false if it is hidden
+     * Creates a new entity snapshot for a board entity.
+     *
+     * @param entity the entity
+     * @param teamName the team name
+     * @param isKing whether the entity is a farmer king
+     * @param hidden whether the entity is hidden
      */
     public EntitySnapshot(BoardEntity entity, String teamName, boolean isKing, boolean hidden) {
         this(true,
@@ -66,6 +58,17 @@ public final class EntitySnapshot {
                 entity.getName().toString(),
                 !isKing ? ((Unit) entity).getAtk() : NON_COMBAT_STAT,
                 !isKing ? ((Unit) entity).getDef() : NON_COMBAT_STAT);
+    }
+
+    private EntitySnapshot(boolean hasEntity, boolean farmerKing, boolean hidden, String teamName, String entityName,
+            int attack, int defense) {
+        this.hasEntity = hasEntity;
+        this.farmerKing = farmerKing;
+        this.hidden = hidden;
+        this.teamName = teamName;
+        this.entityName = entityName;
+        this.attack = attack;
+        this.defense = defense;
     }
 
     private EntitySnapshot() {
@@ -79,64 +82,72 @@ public final class EntitySnapshot {
     }
 
     /**
-     * Returns a shared snapshot representing the absence of an entity.
-     * @return the no-unit snapshot
+     * Returns a shared snapshot without an entity.
+     *
+     * @return the empty entity snapshot
      */
     public static EntitySnapshot noUnit() {
-        return new EntitySnapshot();
+        return NO_UNIT;
     }
 
     /**
-     * Returns whether this snapshot represents an entity.
-     * @return true if this snapshot represents an entity, false if it represents the absence of an entity
+     * Returns whether an entity is present.
+     *
+     * @return {@code true} if an entity is present
      */
     public boolean hasEntity() {
         return hasEntity;
     }
 
     /**
-     * Returns whether the entity represented by this snapshot is a farmer king.
-     * @return true if the entity is a farmer king, false otherwise
+     * Returns whether the entity is a farmer king.
+     *
+     * @return {@code true} if the entity is a farmer king
      */
     public boolean isFarmerKing() {
         return farmerKing;
     }
 
     /**
-     * Returns whether the entity represented by this snapshot is hidden.
-     * @return true if the entity is hidden, false if it is revealed
+     * Returns whether the entity is hidden.
+     *
+     * @return {@code true} if the entity is hidden
      */
     public boolean isHidden() {
         return hidden;
     }
 
     /**
-     * Returns the name of the team the entity represented by this snapshot belongs to.
-     * @return the name of the team, or null if this snapshot represents the absence of an entity
+     * Returns the team name.
+     *
+     * @return the team name, or {@code null} if no entity is present
      */
     public String getTeamName() {
         return teamName;
     }
 
     /**
-     * Returns the name of the entity represented by this snapshot.
-     * @return the name of the entity, or null if this snapshot represents the absence of an entity
+     * Returns the entity name.
+     *
+     * @return the entity name, or {@code null} if no entity is present
      */
     public String getEntityName() {
         return entityName;
     }
 
     /**
-     * Returns the attack value of the entity represented by this snapshot.
-     * @return the attack value, or 0 if this snapshot represents the absence of an entity or a farmer king
+     * Returns the attack value.
+     *
+     * @return the attack value
      */
     public int getAttack() {
         return attack;
     }
 
     /**
-     * Returns the defense value of the entity represented by this snapshot.
-     * @return the defense value, or 0 if this snapshot represents the absence of an entity or a farmer king
+     * Returns the defense value.
+     *
+     * @return the defense value
      */
     public int getDefense() {
         return defense;

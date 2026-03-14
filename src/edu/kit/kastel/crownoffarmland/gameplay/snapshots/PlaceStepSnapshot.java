@@ -1,9 +1,7 @@
 package edu.kit.kastel.crownoffarmland.gameplay.snapshots;
 
 /**
- * Snapshot for a place step in the game. It captures the state of the game after a unit has been placed on the board.
- * This includes the team that placed the unit, the name of the placed unit, any existing unit that was replaced, any unit that was
- * eliminated as a result of the placement, and the target position on the board where the unit was placed.
+ * Represents a single placement step.
  *
  * @author ucgdi
  */
@@ -14,17 +12,17 @@ public class PlaceStepSnapshot {
     private final String eliminatedUnitName;
     private final String targetPosition;
 
-
     /**
-     * Constructor for PlaceStepSnapshot. It initializes all the fields with the provided values.
-     * @param teamName The name of the team that placed the unit.
-     * @param placedUnitName The name of the unit that was placed on the board.
-     * @param existingUnitName The name of any existing unit that was replaced by the placed unit (if applicable).
-     * @param eliminatedUnitName The name of any unit that was eliminated as a result of the placement (if applicable).
-     * @param targetPosition The position on the board where the unit was placed.
+     * Creates a new place step snapshot.
+     *
+     * @param teamName the name of the placing team
+     * @param placedUnitName the name of the placed unit
+     * @param existingUnitName the name of the replaced unit, or {@code null} if none was replaced
+     * @param eliminatedUnitName the name of the eliminated unit, or {@code null} if none was eliminated
+     * @param targetPosition the target position
      */
     public PlaceStepSnapshot(String teamName, String placedUnitName, String existingUnitName, String eliminatedUnitName,
-        String targetPosition) {
+            String targetPosition) {
         this.teamName = teamName;
         this.placedUnitName = placedUnitName;
         this.existingUnitName = existingUnitName;
@@ -33,40 +31,45 @@ public class PlaceStepSnapshot {
     }
 
     /**
-     * Getter for the name of the team that placed the unit.
-     * @return The name of the team that placed the unit.
+     * Returns the team name.
+     *
+     * @return the team name
      */
     public String getTeamName() {
         return teamName;
     }
 
     /**
-     * Getter for the name of the unit that was placed on the board.
-     * @return The name of the unit that was placed on the board.
+     * Returns the placed unit name.
+     *
+     * @return the placed unit name
      */
     public String getPlacedUnitName() {
         return placedUnitName;
     }
 
     /**
-     * Getter for the name of any existing unit that was replaced by the placed unit (if applicable).
-     * @return The name of any existing unit that was replaced by the placed unit, or null if no unit was replaced.
+     * Returns the replaced unit name.
+     *
+     * @return the replaced unit name, or {@code null} if none was replaced
      */
     public String getExistingUnitName() {
         return existingUnitName;
     }
 
     /**
-     * Getter for the name of any unit that was eliminated as a result of the placement (if applicable).
-     * @return The name of any unit that was eliminated as a result of the placement, or null if no unit was eliminated.
+     * Returns the eliminated unit name.
+     *
+     * @return the eliminated unit name, or {@code null} if none was eliminated
      */
     public String getEliminatedUnitName() {
         return eliminatedUnitName;
     }
 
     /**
-     * Getter for the position on the board where the unit was placed.
-     * @return The position on the board where the unit was placed.
+     * Returns the target position.
+     *
+     * @return the target position
      */
     public String getTargetPosition() {
         return targetPosition;

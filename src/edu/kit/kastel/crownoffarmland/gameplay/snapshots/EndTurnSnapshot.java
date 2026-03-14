@@ -1,7 +1,7 @@
 package edu.kit.kastel.crownoffarmland.gameplay.snapshots;
 
 /**
- * A Snapshot.
+ * Represents the result of ending a turn.
  *
  * @author ucgdi
  */
@@ -11,10 +11,11 @@ public final class EndTurnSnapshot {
     private final boolean isGameOver;
 
     /**
-     * A new Instance.
-     * @param discardedCard the discardedCard
-     * @param nextTeamName the NextTeamName
-     * @param isGameOver True, if a Winner ist set, false otherwise
+     * Creates a new end turn snapshot.
+     *
+     * @param discardedCard the discarded card, or {@code null} if no card was discarded
+     * @param nextTeamName the name of the next team
+     * @param isGameOver whether the game is over
      */
     public EndTurnSnapshot(EntitySnapshot discardedCard, String nextTeamName, boolean isGameOver) {
         this.discardedCard = discardedCard;
@@ -23,24 +24,27 @@ public final class EndTurnSnapshot {
     }
 
     /**
-     * Getter for the DiscardedCard.
-     * @return the EntitySnapshot of the discardedCard, or null if no card was discarded
+     * Returns the discarded card.
+     *
+     * @return the discarded card, or {@code null} if no card was discarded
      */
     public EntitySnapshot getDiscardedCard() {
         return discardedCard;
     }
 
     /**
-     * Getter for the NextTeamName.
-     * @return a String
+     * Returns the name of the next team.
+     *
+     * @return the next team name
      */
     public String getNextTeamName() {
         return nextTeamName;
     }
 
     /**
-     * Getter for the isGameOver.
-     * @return true, if a Winner is set, false otherwise
+     * Returns whether the game is over.
+     *
+     * @return {@code true} if the game is over
      */
     public boolean isGameOver() {
         return isGameOver;

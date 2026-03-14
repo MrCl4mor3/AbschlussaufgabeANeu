@@ -14,33 +14,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Creates immutable snapshot objects from the current game state.
- * This class contains no game logic. It only translates model state into
- * snapshot objects that can later be rendered by the UI.
+ * Creates snapshots from the current game state.
  *
  * @author ucgdi
  */
 public class SnapshotFactory implements SnapshotProvider {
-
     private final Game game;
     private final TurnState turnState;
 
-
     /**
-     * Constructs a new Snapshotfactory.
+     * Creates a new snapshot factory.
+     *
      * @param game the game model
-     * @param turnState the actual turnsate of the game
+     * @param turnState the current turn state
      */
     public SnapshotFactory(Game game, TurnState turnState) {
         this.game = game;
         this.turnState = turnState;
     }
 
-    /**
-    * Creates a snapshot of the whole board.
-    *
-    * @return the board snapshot
-    */
     @Override
     public BoardSnapshot createBoardSnapshot() {
         int boardSize = game.boardView().getBoardSize();
@@ -56,22 +48,11 @@ public class SnapshotFactory implements SnapshotProvider {
         return new BoardSnapshot(cells, turnState.getSelectedPos());
     }
 
-    /**
-    * Creates a snapshot of the entity on the selected field.
-    *
-    * @return the entity snapshot, or a no-unit snapshot if the field is empty
-    * @throws NoSelectionException if no field is selected
-    */
     @Override
     public EntityOnPositionSnapshot createEntitySnapshotAtSelected() throws NoSelectionException {
         return new EntityOnPositionSnapshot(createEntitySnapshot(), turnState.getSelectedPos().toString());
     }
 
-    /**
-     * Creates an entitySnapshot.
-     * @return a EntitySnapshot of the selected position, or a no-unit snapshot if the field is empty
-     * @throws NoSelectionException if no field is selected
-     */
     @Override
     public EntitySnapshot createEntitySnapshot() throws NoSelectionException {
         if (turnState.getSelectedPos() == null) {
@@ -89,12 +70,6 @@ public class SnapshotFactory implements SnapshotProvider {
         return new EntitySnapshot(entity, teamName, entity.isFarmerKing(), hidden);
     }
 
-
-    /**
-     * Creates a snapshot of the current team's hand.
-     *
-     * @return immutable list of hand entry snapshots
-     */
     @Override
     public List<EntitySnapshot> createHandSnapshot() {
         List<EntitySnapshot> handEntries = new ArrayList<>();
@@ -109,11 +84,6 @@ public class SnapshotFactory implements SnapshotProvider {
         return List.copyOf(handEntries);
     }
 
-    /**
-     * Creates a snapshot of the current team's state, including life points, remaining deck cards, and placed units.
-     * @param teamID the team for which to create the snapshot
-     * @return the team state snapshot
-     */
     @Override
     public TeamStateSnapshot createTeamStateSnapshot(TeamID teamID) {
         String teamName = game.teamView(teamID).getName();
@@ -132,7 +102,8 @@ public class SnapshotFactory implements SnapshotProvider {
         }
 
         boolean isPlayerTeam = occupant.getOwner() == TeamID.TEAM_1;
-        boolean isMoveable = occupant.getOwner().equals(game.getCurrentTeamID()) && !turnState.getMovedEntities().contains(occupant);
+        boolean isMoveable = occupant.getOwner().equals(game.getCurrentTeamID())
+                && !turnState.getMovedEntities().contains(occupant);
 
         return new BoardCellSnapshot(true, occupant.isFarmerKing(), occupant.isBlocked(), isPlayerTeam, isMoveable);
     }

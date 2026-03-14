@@ -1,9 +1,7 @@
 package edu.kit.kastel.crownoffarmland.gameplay.snapshots;
 
 /**
- * Snapshot of a team's state at a specific point in time during the game.
- * This class is immutable and provides information about the team's name,
- * life points, remaining deck cards, and placed units.
+ * Represents a snapshot of a team's state.
  *
  * @author ucgdi
  */
@@ -15,18 +13,18 @@ public final class TeamStateSnapshot {
     private final int startDeckSize;
     private final int maxUnitsOnBoard;
 
-
     /**
-     * Creates a new TeamStateSnapshot with the specified team name, life points, remaining deck cards, and placed units.
-     * @param teamName the name of the team
-     * @param lifePoints the current life points of the team
-     * @param remainingDeckCards the number of cards remaining in the team's deck
-     * @param placedUnits the number of units currently placed on the board by the team
-     * @param startDeckSize the startDeck Size
-     * @param maxUnitsOnBoard the Number of Units of one team, that can max. at the same time on the board
+     * Creates a new team state snapshot.
+     *
+     * @param teamName the team name
+     * @param lifePoints the current life points
+     * @param remainingDeckCards the remaining deck cards
+     * @param placedUnits the number of placed units
+     * @param startDeckSize the initial deck size
+     * @param maxUnitsOnBoard the maximum number of units on the board
      */
-    public TeamStateSnapshot(String teamName, int lifePoints, int remainingDeckCards, int placedUnits, int startDeckSize,
-        int maxUnitsOnBoard) {
+    public TeamStateSnapshot(String teamName, int lifePoints, int remainingDeckCards, int placedUnits,
+            int startDeckSize, int maxUnitsOnBoard) {
         this.teamName = teamName;
         this.lifePoints = lifePoints;
         this.remainingDeckCards = remainingDeckCards;
@@ -36,7 +34,8 @@ public final class TeamStateSnapshot {
     }
 
     /**
-     * Returns the name of the team.
+     * Returns the team name.
+     *
      * @return the team name
      */
     public String getTeamName() {
@@ -44,7 +43,8 @@ public final class TeamStateSnapshot {
     }
 
     /**
-     * Returns the current life points of the team.
+     * Returns the current life points.
+     *
      * @return the life points
      */
     public int getLifePoints() {
@@ -52,7 +52,8 @@ public final class TeamStateSnapshot {
     }
 
     /**
-     * Returns the number of cards remaining in the team's deck.
+     * Returns the number of remaining deck cards.
+     *
      * @return the remaining deck cards
      */
     public int getRemainingDeckCards() {
@@ -60,24 +61,27 @@ public final class TeamStateSnapshot {
     }
 
     /**
-     * Returns the number of units currently placed on the board by the team.
-     * @return the placed units
+     * Returns the number of placed units.
+     *
+     * @return the number of placed units
      */
     public int getPlacedUnits() {
         return placedUnits;
     }
 
     /**
-     * Getter for the maximal number of cards that can be in the team's deck at the start of the game.
-     * @return The number of maximal deck cards for the team.
+     * Returns the initial deck size.
+     *
+     * @return the initial deck size
      */
     public int getStartDeckSize() {
         return startDeckSize;
     }
 
     /**
-     * Getter for the maximal number of cards that can be on the board at the same time.
-     * @return the number of max. units on board for the team.
+     * Returns the maximum number of units on the board.
+     *
+     * @return the maximum number of units on the board
      */
     public int getMaxUnitsOnBoard() {
         return maxUnitsOnBoard;
