@@ -42,7 +42,7 @@ public class MoveCommand extends  Command {
         if (gameHandler.isGameOver()) {
             System.out.printf(WINNER_MESSAGE, gameHandler.getWinner());
         }
-        System.out.println(gameOutputPrinter.formatBoard(gameHandler.createBoardSnapshot()));
-        System.out.println(gameOutputPrinter.formatShow(gameHandler.createEntitySnapshot()));
+        System.out.println(gameOutputPrinter.formatBoard(gameHandler.snapshots().createBoardSnapshot()));
+        System.out.println(gameOutputPrinter.formatShow(gameHandler.snapshots().createEntitySnapshot()));
     }
 }

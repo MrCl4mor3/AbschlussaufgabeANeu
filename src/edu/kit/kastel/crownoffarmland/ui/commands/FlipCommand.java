@@ -30,7 +30,7 @@ public class FlipCommand extends  Command {
         ensureNoArguments(commandArguments);
 
         System.out.println(gameOutputPrinter.formatFlip(gameHandler.flipSelectedEntity()));
-        System.out.println(gameOutputPrinter.formatBoard(gameHandler.createBoardSnapshot()));
-        System.out.println(gameOutputPrinter.formatShow(gameHandler.createEntitySnapshot()));
+        System.out.println(gameOutputPrinter.formatBoard(gameHandler.snapshots().createBoardSnapshot()));
+        System.out.println(gameOutputPrinter.formatShow(gameHandler.snapshots().createEntitySnapshot()));
     }
 }

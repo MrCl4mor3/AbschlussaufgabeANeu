@@ -36,12 +36,12 @@ public class StateCommand extends  Command {
     public void execute(String[] commandArguments) throws CrownOfFarmlandException {
         ensureNoArguments(commandArguments);
 
-        TeamStateSnapshot team1 = gameHandler.createTeamStateSnapshots(TeamID.TEAM_1);
-        TeamStateSnapshot team2 = gameHandler.createTeamStateSnapshots(TeamID.TEAM_2);
+        TeamStateSnapshot team1 = gameHandler.snapshots().createTeamStateSnapshot(TeamID.TEAM_1);
+        TeamStateSnapshot team2 = gameHandler.snapshots().createTeamStateSnapshot(TeamID.TEAM_2);
         System.out.println(gameOutputPrinter.formatState(List.of(team1, team2)));
-        System.out.println(gameOutputPrinter.formatBoard(gameHandler.createBoardSnapshot()));
+        System.out.println(gameOutputPrinter.formatBoard(gameHandler.snapshots().createBoardSnapshot()));
         if (gameHandler.getSelectedPos() != null) {
-            System.out.println(gameOutputPrinter.formatShow(gameHandler.createEntitySnapshot()));
+            System.out.println(gameOutputPrinter.formatShow(gameHandler.snapshots().createEntitySnapshot()));
         }
     }
 

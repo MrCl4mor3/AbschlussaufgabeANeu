@@ -10,13 +10,13 @@ import edu.kit.kastel.crownoffarmland.exceptions.KingCannotBlockedException;
 import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.NoSelectionException;
 import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.UnitAlreadyActedException;
 import edu.kit.kastel.crownoffarmland.exceptions.UnitAlreadyRevealedException;
-import edu.kit.kastel.crownoffarmland.exceptions.YieldException;
 import edu.kit.kastel.crownoffarmland.gameplay.ai.AIDecisionService;
 import edu.kit.kastel.crownoffarmland.gameplay.ai.AITurnController;
 import edu.kit.kastel.crownoffarmland.gameplay.ai.WeightedRandomSelector;
 import edu.kit.kastel.crownoffarmland.gameplay.combat.DuelManager;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EndTurnSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntityOnPositionSnapshot;
+import edu.kit.kastel.crownoffarmland.gameplay.snapshots.SnapshotProvider;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.MoveSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.SnapshotFactory;
@@ -69,8 +69,8 @@ public class GameHandler {
     public GameHandler(Game game) {
         this.game = game;
         this.unitMerger = new UnitMerger();
-        this.snapshotFactory = new SnapshotFactory();
         this.turnState = new TurnState();
+        this.snapshotFactory = new SnapshotFactory(game, turnState);
         this.placementService = new PlacementService(game, unitMerger, turnState);
         this.movementService = new MovementService(game, unitMerger, turnState, new DuelManager());
     }
@@ -132,7 +132,7 @@ public class GameHandler {
             throw new UnitAlreadyRevealedException(entity.getName().toString());
         }
         entity.reveal();
-        return createEntitySnapshotAtSelected();
+        return snapshotFactory.createEntitySnapshotAtSelected();
     }
 
     private BoardEntity getSelectedEntity() throws InvalidGameStateException {
@@ -166,51 +166,13 @@ public class GameHandler {
     }
 
     /**
-     * Creates a snapshot of the current state of the board, including the positions and details of all entities on the board. This snapshot
-     * can be used for rendering the board state.
-     * @return A BoardSnapshot representing the current state of the board
+     * Returns the SnapshotProvider instance associated with this GameHandler. The SnapshotProvider is responsible for creating snapshots
+     * of the current game state, including the board, entities, and team states. It provides methods for generating snapshots that can
+     * be used to update the user interface or for other purposes where a representation of the current game state is needed.
+     * @return w
      */
-    public BoardSnapshot createBoardSnapshot() {
-        return snapshotFactory.createBoardSnapshot(game, turnState.getSelectedPos(), turnState.getMovedEntities());
-    }
-
-    /**
-     * Creates a snapshot of the currently selected entity on the board, including its details and state. This snapshot can be used for
-     * rendering the selected entity's information.
-     * @return An EntitySnapshot representing the currently selected entity on the board
-     * @throws InvalidGameStateException if there is no selected position, the selected field is empty
-     */
-    public EntitySnapshot createEntitySnapshot() throws InvalidGameStateException {
-        return snapshotFactory.createEntitySnapshot(game, getSelectedPos());
-    }
-
-
-    /**
-     * Creates a snapshot of the currently selected entity on the board, including its details and state, along with its position. This
-     * snapshot can be used for rendering the selected entity's information along with its location on the board.
-     * @return a En.
-     * @throws InvalidGameStateException w
-     */
-    private EntityOnPositionSnapshot createEntitySnapshotAtSelected() throws InvalidGameStateException {
-        return snapshotFactory.createEntitySnapshotAtSelected(game, getSelectedPos());
-    }
-
-
-    /**
-     * Creates a snapshot of the current state of the player's hand, including the cards in hand and their details.
-     * @return A list of EntitySnapshots representing the current state of the player's hand
-     */
-    public List<EntitySnapshot> createHandSnapshot() {
-        return snapshotFactory.createHandSnapshot(game);
-    }
-
-    /**
-     * Creates a snapshot of the current state of the specified team, including information about the team's units on the board and in hand.
-     * @param teamID The TeamID of the team for which to create the snapshot
-     * @return A TeamStateSnapshot representing the current state of the specified team
-     */
-    public TeamStateSnapshot createTeamStateSnapshots(TeamID teamID) {
-        return snapshotFactory.createTeamStateSnapshot(game, teamID);
+    public SnapshotProvider snapshots() {
+        return snapshotFactory;
     }
 
     /**
@@ -229,7 +191,7 @@ public class GameHandler {
         Unit unit = (Unit) entity;
         unit.block();
         turnState.markMoved(unit);
-        return createEntitySnapshotAtSelected();
+        return snapshots().createEntitySnapshotAtSelected();
     }
     /**
      * Checks if the yield restriction is currently active for the current turn. The yield restriction is activated when a player
@@ -272,10 +234,8 @@ public class GameHandler {
      * turn is successfully ended, and the next round begins.
      * @return An EndTurnSnapshot representing the result of ending the turn, including any relevant information about the turn
      *      transition and game state.
-     * @throws InvalidGameStateException if there is a problem with the game state that prevents ending the turn
-     * @throws YieldException if the player's hand is full, indicating that they must discard a card before they can end their turn
      */
-    public EndTurnSnapshot endTurn() throws InvalidGameStateException {
+    public EndTurnSnapshot endTurn() {
         return finishTurn(null);
     }
     /**
@@ -286,7 +246,6 @@ public class GameHandler {
      * @throws InvalidGameStateException if there is a problem with the game state that prevents discarding the card or ending the turn
      * @throws InvalidHandException if the provided index is not a valid index for the player's hand, indicating that the player cannot
      *      discard a card at the specified index.
-     * @throws YieldException if the player's hand is not full, indicating that they cannot end their turn by discarding a card
      */
     public EndTurnSnapshot endTurnWithDiscard(int index) throws InvalidGameStateException {
         int handSize = game.getHandSize(game.getCurrentTeamID());

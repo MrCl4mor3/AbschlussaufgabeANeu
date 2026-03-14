@@ -30,7 +30,7 @@ public class ShowCommand extends  Command {
     @Override
     public void execute(String[] commandArguments) throws CrownOfFarmlandException {
         ensureNoArguments(commandArguments);
-        System.out.println(gameOutputPrinter.formatShow(gameHandler.createEntitySnapshot()));
+        System.out.println(gameOutputPrinter.formatShow(gameHandler.snapshots().createEntitySnapshot()));
     }
 
 

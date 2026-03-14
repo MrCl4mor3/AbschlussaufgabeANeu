@@ -148,8 +148,8 @@ public final class AITurnController {
     }
 
     private void printBoardAndShow() throws CrownOfFarmlandException {
-        BoardSnapshot boardSnapshot = gameHandler.createBoardSnapshot();
-        EntitySnapshot showSnapshot = gameHandler.createEntitySnapshot();
+        BoardSnapshot boardSnapshot = gameHandler.snapshots().createBoardSnapshot();
+        EntitySnapshot showSnapshot = gameHandler.snapshots().createEntitySnapshot();
 
         System.out.println(printer.formatBoard(boardSnapshot));
         System.out.println(printer.formatShow(showSnapshot));

@@ -51,7 +51,7 @@ public class PlaceCommand extends Command {
         }
 
         System.out.print(gameOutputPrinter.formatPlace(gameHandler.placeUnits(userIndices)));
-        System.out.println(gameOutputPrinter.formatBoard(gameHandler.createBoardSnapshot()));
-        System.out.println(gameOutputPrinter.formatShow(gameHandler.createEntitySnapshot()));
+        System.out.println(gameOutputPrinter.formatBoard(gameHandler.snapshots().createBoardSnapshot()));
+        System.out.println(gameOutputPrinter.formatShow(gameHandler.snapshots().createEntitySnapshot()));
     }
 }

@@ -35,7 +35,7 @@ public class HandCommand extends Command {
     public void execute(String[] commandArguments) throws CrownOfFarmlandException {
         ensureNoArguments(commandArguments);
 
-        System.out.println(gameOutputPrinter.formatHand(gameHandler.createHandSnapshot()));
+        System.out.println(gameOutputPrinter.formatHand(gameHandler.snapshots().createHandSnapshot()));
     }
 
 

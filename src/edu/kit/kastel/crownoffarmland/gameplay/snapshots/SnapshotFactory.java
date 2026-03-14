@@ -1,6 +1,7 @@
 package edu.kit.kastel.crownoffarmland.gameplay.snapshots;
 
 import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.NoSelectionException;
+import edu.kit.kastel.crownoffarmland.gameplay.TurnState;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardCellSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardSnapshot;
 import edu.kit.kastel.crownoffarmland.model.Game;
@@ -20,55 +21,61 @@ import java.util.Set;
  *
  * @author ucgdi
  */
-public class SnapshotFactory {
+public class SnapshotFactory implements SnapshotProvider {
+
+    private final Game game;
+    private final TurnState turnState;
+
+
+    public SnapshotFactory(Game game, TurnState turnState) {
+        this.game = game;
+        this.turnState = turnState;
+    }
 
     /**
     * Creates a snapshot of the whole board.
     *
-    * @param game the current game
-    * @param selected the currently selected position, may be null
-    * @param movedEntities the entities that have already acted this turn
     * @return the board snapshot
     */
-    public BoardSnapshot createBoardSnapshot(Game game, Position selected, Set<BoardEntity> movedEntities) {
+    @Override
+    public BoardSnapshot createBoardSnapshot() {
         int boardSize = game.boardView().getBoardSize();
         BoardCellSnapshot[][] cells = new BoardCellSnapshot[boardSize][boardSize];
 
         for (int rowIndex = 0; rowIndex < boardSize; rowIndex++) {
             for (int columnIndex = 0; columnIndex < boardSize; columnIndex++) {
                 Position position = game.boardView().getPositionAt(rowIndex, columnIndex);
-                cells[rowIndex][columnIndex] = createBoardCellSnapshot(game, position, movedEntities, game.getCurrentTeamID());
+                cells[rowIndex][columnIndex] = createBoardCellSnapshot(game, position, turnState.getMovedEntities(),
+                        game.getCurrentTeamID());
             }
         }
 
-        return new BoardSnapshot(cells, selected);
+        return new BoardSnapshot(cells, turnState.getSelectedPos());
     }
 
     /**
     * Creates a snapshot of the entity on the selected field.
     *
-    * @param game the current game
-    * @param selected the selected field
     * @return the entity snapshot, or a no-unit snapshot if the field is empty
     * @throws NoSelectionException if no field is selected
     */
-    public EntityOnPositionSnapshot createEntitySnapshotAtSelected(Game game, Position selected) throws NoSelectionException {
-        return new EntityOnPositionSnapshot(createEntitySnapshot(game, selected), selected.toString());
+    @Override
+    public EntityOnPositionSnapshot createEntitySnapshotAtSelected() throws NoSelectionException {
+        return new EntityOnPositionSnapshot(createEntitySnapshot(), turnState.getSelectedPos().toString());
     }
 
     /**
      * Creates an entitySnapshot.
-     * @param game the current game.
-     * @param selected the position wich is selected
      * @return a EntitySnapshot of the selected position, or a no-unit snapshot if the field is empty
      * @throws NoSelectionException if no field is selected
      */
-    public EntitySnapshot createEntitySnapshot(Game game, Position selected) throws NoSelectionException {
-        if (selected == null) {
+    @Override
+    public EntitySnapshot createEntitySnapshot() throws NoSelectionException {
+        if (turnState.getSelectedPos() == null) {
             throw new NoSelectionException();
         }
 
-        BoardEntity entity = game.boardView().getOccupant(selected);
+        BoardEntity entity = game.boardView().getOccupant(turnState.getSelectedPos());
         if (entity == null) {
             return EntitySnapshot.noUnit();
         }
@@ -83,10 +90,10 @@ public class SnapshotFactory {
     /**
      * Creates a snapshot of the current team's hand.
      *
-     * @param game the current game
      * @return immutable list of hand entry snapshots
      */
-    public List<EntitySnapshot> createHandSnapshot(Game game) {
+    @Override
+    public List<EntitySnapshot> createHandSnapshot() {
         List<EntitySnapshot> handEntries = new ArrayList<>();
         int handSize = game.getHandSize(game.getCurrentTeamID());
         String teamName = game.getTeamName(game.getCurrentTeamID());
@@ -102,11 +109,11 @@ public class SnapshotFactory {
 
     /**
      * Creates a snapshot of the current team's state, including life points, remaining deck cards, and placed units.
-     * @param game the current game
      * @param teamID the team for which to create the snapshot
      * @return the team state snapshot
      */
-    public TeamStateSnapshot createTeamStateSnapshot(Game game, TeamID teamID) {
+    @Override
+    public TeamStateSnapshot createTeamStateSnapshot(TeamID teamID) {
         String teamName = game.getTeamName(teamID);
         int remainingDeckCards = game.getDrawPileSize(teamID);
         int lifePoints = game.getLifePoints(teamID);
