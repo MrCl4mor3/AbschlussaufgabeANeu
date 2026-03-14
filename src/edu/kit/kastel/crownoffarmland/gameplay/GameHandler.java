@@ -21,9 +21,7 @@ import edu.kit.kastel.crownoffarmland.gameplay.snapshots.movesnapshot.MoveSnapsh
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.SnapshotFactory;
 import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.UnitMerger;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.boardsnapshot.BoardSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
-import edu.kit.kastel.crownoffarmland.gameplay.snapshots.TeamStateSnapshot;
 import edu.kit.kastel.crownoffarmland.model.Game;
 import edu.kit.kastel.crownoffarmland.model.board.Position;
 import edu.kit.kastel.crownoffarmland.model.team.TeamID;
