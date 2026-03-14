@@ -27,6 +27,11 @@ public class SnapshotFactory implements SnapshotProvider {
     private final TurnState turnState;
 
 
+    /**
+     * Constructs a new Snapshotfactory.
+     * @param game the game model
+     * @param turnState the actual turnsate of the game
+     */
     public SnapshotFactory(Game game, TurnState turnState) {
         this.game = game;
         this.turnState = turnState;
