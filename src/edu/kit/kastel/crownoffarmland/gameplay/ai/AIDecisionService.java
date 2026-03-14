@@ -8,7 +8,6 @@ import edu.kit.kastel.crownoffarmland.model.board.Position;
 import edu.kit.kastel.crownoffarmland.model.team.TeamID;
 import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
 import edu.kit.kastel.crownoffarmland.model.units.Unit;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,25 +22,21 @@ public final class AIDecisionService {
     private static final int KING_FELLOW_ON_FIELD_VALUE = 1;
     private static final int KING_NO_FELLOW_ON_FIELD_VALUE = 0;
     private static final int TIE_WEIGHT_VALUE = 1;
-
     private static final int PLACEMENT_ENEMY_WEIGHT_FACTOR = 2;
     private static final int PLACEMENT_TIE_WEIGHT = 1;
     private static final int HAND_INDEX_OFFSET = 1;
-
     private static final int[][] ORTHOGONAL_DELTAS = {
             {1, 0},
             {0, 1},
             {-1, 0},
             {0, -1}
     };
-
     private static final int BLOCK_MIN_SCORE = 1;
     private static final int STAY_MIN_SCORE = 0;
     private static final int DIVISOR = 100;
     private static final int HIDDEN_ENEMY_PENALTY = 500;
     private static final int ADVANCE_STEPS_FACTOR = 10;
     private static final int DUEL_FACTOR = 2;
-
     private final UnitMerger unitMerger;
     private final TurnState turnState;
     private final Game game;
@@ -216,12 +211,10 @@ public final class AIDecisionService {
         int selectedIndex = weightedRandomSelector.selectInverseWeightedRandom(discardWeights);
         return selectedIndex + HAND_INDEX_OFFSET;
     }
-
     private boolean isValidKingTarget(Position candidate, TeamID currentTeam) {
         BoardEntity occupant = game.boardView().getOccupant(candidate);
         return occupant == null || occupant.getOwner().equals(currentTeam);
     }
-
     private int scoreKingTarget(Position candidate, Position kingPosition, TeamID currentTeam) {
         int distance = manhattanDistance(candidate, kingPosition);
         int enemies = countAdjacentEntitiesFromTeam(candidate, game.getEnemyTeamID(), true);
@@ -230,7 +223,6 @@ public final class AIDecisionService {
                 ? KING_FELLOW_ON_FIELD_VALUE : KING_NO_FELLOW_ON_FIELD_VALUE;
         return fellows - KING_ENEMY_WEIGHT_FACTOR * enemies - distance - KING_FELLOW_PRESENT_FACTOR * fellowPresent;
     }
-
     private int scorePlacementPosition(Position candidate, TeamID currentTeam) {
         Position enemyKingPosition = game.getKingPosition(game.getEnemyTeamID());
         int steps = manhattanDistance(candidate, enemyKingPosition);
@@ -238,7 +230,6 @@ public final class AIDecisionService {
         int fellows = countOrthogonalEntitiesFromTeam(candidate, currentTeam);
         return -steps + PLACEMENT_ENEMY_WEIGHT_FACTOR * enemies - fellows;
     }
-
     private List<UnitCandidate> getMoveableUnitCandidates(TeamID currentTeam) {
         List<UnitCandidate> candidates = new ArrayList<>();
 
@@ -256,7 +247,6 @@ public final class AIDecisionService {
         }
         return candidates;
     }
-
     private UnitCandidate evaluateUnit(Position source, Unit unit, TeamID currentTeam) {
         List<ActionScore> actionScores = evaluatePossibleActions(source, unit, currentTeam);
         int totalScore = 0;
@@ -266,7 +256,6 @@ public final class AIDecisionService {
 
         return new UnitCandidate(source, actionScores, totalScore);
     }
-
     private List<ActionScore> evaluatePossibleActions(Position source, Unit unit, TeamID team) {
         List<ActionScore> actionScores = new ArrayList<>();
 
@@ -282,7 +271,6 @@ public final class AIDecisionService {
 
         return actionScores;
     }
-
     private void addDirectionalAction(List<ActionScore> actionScores, Position target, Unit unit, TeamID currentTeam) {
         if (!game.boardView().isValidPosition(target)) {
             return;
@@ -296,7 +284,6 @@ public final class AIDecisionService {
         int score = scoreDirectionalAction(target, unit, currentTeam, targetEntity);
         actionScores.add(new ActionScore(UnitActionType.MOVE, target, score));
     }
-
     private int scoreDirectionalAction(Position target, Unit unit, TeamID currentTeam, BoardEntity targetEntity) {
         if (targetEntity == null) {
             Position enemyKingPosition = game.getKingPosition(game.getEnemyTeamID());
@@ -331,17 +318,14 @@ public final class AIDecisionService {
 
         return DUEL_FACTOR * (unit.getAtk() - targetUnit.getDef());
     }
-
     private int scoreBlockAction(Position source, Unit unit, TeamID currentTeam) {
         int strongestEnemyAtk = getStrongestEnemyAtkInStraightLine(source, currentTeam.getNext());
         return Math.max(BLOCK_MIN_SCORE, (unit.getDef() - strongestEnemyAtk) / DIVISOR);
     }
-
     private int scoreStayAction(Position source, Unit unit, TeamID currentTeam) {
         int strongestEnemyAtk = getStrongestEnemyAtkInStraightLine(source, currentTeam.getNext());
         return Math.max(STAY_MIN_SCORE, (unit.getAtk() - strongestEnemyAtk) / DIVISOR);
     }
-
     private int getStrongestEnemyAtkInStraightLine(Position source, TeamID enemyTeam) {
         int strongestAtk = 0;
 
@@ -351,7 +335,6 @@ public final class AIDecisionService {
         }
         return strongestAtk;
     }
-
     private int getStrongestEnemyAtkAlongRay(Position source, int rowDelta, int columnDelta, TeamID enemyTeam) {
         int strongestAtk = 0;
         Position current = new Position(source.getRow() + rowDelta, (char) (source.getColumn() + columnDelta));
@@ -368,7 +351,6 @@ public final class AIDecisionService {
 
         return strongestAtk;
     }
-
     private boolean hasPositiveMovementOption(List<ActionScore> actionScores) {
         for (ActionScore actionScore : actionScores) {
             if (actionScore.getActionType() != UnitActionType.BLOCK && actionScore.getScore() > 0) {
@@ -377,11 +359,9 @@ public final class AIDecisionService {
         }
         return false;
     }
-
     private int manhattanDistance(Position a, Position b) {
         return Math.abs(a.getRow() - b.getRow()) + Math.abs(a.getColumn() - b.getColumn());
     }
-
     private int countAdjacentEntitiesFromTeam(Position center, TeamID team, boolean includeKing) {
         int count = 0;
 
@@ -395,7 +375,6 @@ public final class AIDecisionService {
         }
         return count;
     }
-
     private int countOrthogonalEntitiesFromTeam(Position center, TeamID team) {
         int count = 0;
 
@@ -407,12 +386,10 @@ public final class AIDecisionService {
         }
         return count;
     }
-
     private boolean hasOwnUnitOnField(Position candidate, TeamID team) {
         BoardEntity occupant = game.boardView().getOccupant(candidate);
         return occupant != null && occupant.getOwner().equals(team) && !occupant.isFarmerKing();
     }
-
     private List<Integer> createTieWeights(int size, int score) {
         List<Integer> weights = new ArrayList<>();
         for (int i = 0; i < size; i++) {
