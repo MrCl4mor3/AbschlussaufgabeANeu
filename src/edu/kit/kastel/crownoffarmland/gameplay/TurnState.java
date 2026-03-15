@@ -12,7 +12,7 @@ import java.util.Set;
  *
  * @author ucgdi
  */
-public class TurnState {
+public final class TurnState {
     private Position selectedPos;
     private boolean yieldRestrictionActive;
     private final Set<BoardEntity> movedEntities;

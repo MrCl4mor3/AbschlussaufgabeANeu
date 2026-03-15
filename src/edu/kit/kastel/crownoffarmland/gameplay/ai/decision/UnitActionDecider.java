@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @author ucgdi
  */
-public final class UnitActionDecider {
+public final class UnitActionDecider extends AbstractAIDecider {
     private static final int BLOCK_MIN_SCORE = 1;
     private static final int STAY_MIN_SCORE = 0;
     private static final int DIVISOR = 100;
@@ -29,11 +29,9 @@ public final class UnitActionDecider {
     private static final int ADVANCE_STEPS_FACTOR = 10;
     private static final int DUEL_FACTOR = 2;
 
-    private final Game game;
+
     private final TurnState turnState;
     private final UnitMerger unitMerger;
-    private final BoardAnalysisService boardAnalysisService;
-    private final WeightedRandomSelector weightedRandomSelector;
 
     /**
      * Creates a new unit action decider.
@@ -44,13 +42,10 @@ public final class UnitActionDecider {
      * @param boardAnalysisService the board analysis service
      * @param weightedRandomSelector the weighted random selector
      */
-    public UnitActionDecider(Game game, TurnState turnState, UnitMerger unitMerger,
-                             BoardAnalysisService boardAnalysisService, WeightedRandomSelector weightedRandomSelector) {
-        this.game = game;
-        this.turnState = turnState;
+    public UnitActionDecider(Game game, TurnState turnState, UnitMerger unitMerger, BoardAnalysisService boardAnalysisService, WeightedRandomSelector weightedRandomSelector) {
+        super(game, boardAnalysisService, weightedRandomSelector);
         this.unitMerger = unitMerger;
-        this.boardAnalysisService = boardAnalysisService;
-        this.weightedRandomSelector = weightedRandomSelector;
+        this.turnState = turnState;
     }
 
     /**

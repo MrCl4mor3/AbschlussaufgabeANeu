@@ -13,16 +13,13 @@ import java.util.List;
  *
  * @author ucgdi
  */
-public final class KingMoveDecider {
+public final class KingMoveDecider extends AbstractAIDecider {
     private static final int KING_ENEMY_WEIGHT_FACTOR = 2;
     private static final int KING_FELLOW_PRESENT_FACTOR = 3;
     private static final int KING_FELLOW_ON_FIELD_VALUE = 1;
     private static final int KING_NO_FELLOW_ON_FIELD_VALUE = 0;
     private static final int TIE_WEIGHT_VALUE = 1;
 
-    private final Game game;
-    private final BoardAnalysisService boardAnalysisService;
-    private final WeightedRandomSelector weightedRandomSelector;
 
     /**
      * Creates a new king move decider.
@@ -32,9 +29,7 @@ public final class KingMoveDecider {
      * @param weightedRandomSelector the weighted random selector
      */
     public KingMoveDecider(Game game, BoardAnalysisService boardAnalysisService, WeightedRandomSelector weightedRandomSelector) {
-        this.game = game;
-        this.boardAnalysisService = boardAnalysisService;
-        this.weightedRandomSelector = weightedRandomSelector;
+        super(game, boardAnalysisService, weightedRandomSelector);
     }
 
     /**

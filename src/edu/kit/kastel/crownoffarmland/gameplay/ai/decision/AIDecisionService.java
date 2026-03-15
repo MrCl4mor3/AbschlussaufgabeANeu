@@ -40,8 +40,7 @@ public final class AIDecisionService {
         BoardAnalysisService boardAnalysisService = new BoardAnalysisService(game);
         this.kingMoveDecider = new KingMoveDecider(game, boardAnalysisService, weightedRandomSelector);
         this.placementDecider = new PlacementDecider(game, boardAnalysisService, weightedRandomSelector);
-        this.unitActionDecider = new UnitActionDecider(
-                game, turnState, unitMerger, boardAnalysisService, weightedRandomSelector
+        this.unitActionDecider = new UnitActionDecider(game, turnState, unitMerger, boardAnalysisService, weightedRandomSelector
         );
     }
 
