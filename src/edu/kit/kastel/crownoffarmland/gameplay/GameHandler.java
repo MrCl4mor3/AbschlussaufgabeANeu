@@ -10,9 +10,9 @@ import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.EnemyUnitSe
 import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.InvalidHandIndexException;
 import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.NoSelectionException;
 import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.EntityAlreadyActedException;
-import edu.kit.kastel.crownoffarmland.gameplay.ai.AIDecisionService;
+import edu.kit.kastel.crownoffarmland.gameplay.ai.decision.AIDecisionService;
 import edu.kit.kastel.crownoffarmland.gameplay.ai.AITurnController;
-import edu.kit.kastel.crownoffarmland.gameplay.ai.WeightedRandomSelector;
+import edu.kit.kastel.crownoffarmland.gameplay.ai.decision.WeightedRandomSelector;
 import edu.kit.kastel.crownoffarmland.gameplay.combat.DuelManager;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EndTurnSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntityOnPositionSnapshot;

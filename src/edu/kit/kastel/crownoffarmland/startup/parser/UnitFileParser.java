@@ -26,7 +26,7 @@ public final class UnitFileParser implements ContentParser<List<UnitTemplate>> {
     private static final String INVALID_INTEGER_ERROR = "The Unit file contains a line with an invalid integer value: %s";
     private static final String NEGATIVE_INTEGER_ERROR = "The Unit file contains a line with a negative integer value: %s";
 
-
+    private static final int PRESERVE_TRAILING_EMPTY_FIELDS = -1;
     private static final int QUALIFICATOR_INDEX = 0;
     private static final int ROLE_INDEX = 1;
     private static final int ATK_INDEX = 2;
@@ -49,7 +49,7 @@ public final class UnitFileParser implements ContentParser<List<UnitTemplate>> {
         List<UnitTemplate> units = new ArrayList<>();
 
         for (String line : lines) {
-            String[] parts = line.split(DELIMITER, -1);
+            String[] parts = line.split(DELIMITER, PRESERVE_TRAILING_EMPTY_FIELDS);
             if (parts.length != PARTS_PER_LINE) {
                 return StartupError.error(INVALID_LINE_ERROR, line);
             }

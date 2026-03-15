@@ -1,4 +1,4 @@
-package edu.kit.kastel.crownoffarmland.gameplay.ai;
+package edu.kit.kastel.crownoffarmland.gameplay.ai.decision;
 
 import edu.kit.kastel.crownoffarmland.model.RandomGenerator;
 

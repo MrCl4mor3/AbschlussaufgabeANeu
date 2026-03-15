@@ -1,4 +1,4 @@
-package edu.kit.kastel.crownoffarmland.gameplay.ai;
+package edu.kit.kastel.crownoffarmland.gameplay.ai.decision.model;
 
 import edu.kit.kastel.crownoffarmland.model.board.Position;
 
@@ -7,7 +7,7 @@ import edu.kit.kastel.crownoffarmland.model.board.Position;
  *
  * @author ucgdi
  */
-final class ActionScore {
+public final class ActionScore {
     private final UnitActionType actionType;
     private final Position target;
     private final int score;
@@ -19,7 +19,7 @@ final class ActionScore {
      * @param target the target position
      * @param score the score of the action
      */
-    ActionScore(UnitActionType actionType, Position target, int score) {
+    public ActionScore(UnitActionType actionType, Position target, int score) {
         this.actionType = actionType;
         this.target = target;
         this.score = score;
@@ -30,7 +30,7 @@ final class ActionScore {
      *
      * @return the action type
      */
-    UnitActionType getActionType() {
+    public UnitActionType getActionType() {
         return actionType;
     }
 
@@ -39,7 +39,7 @@ final class ActionScore {
      *
      * @return the target position
      */
-    Position getTarget() {
+    public Position getTarget() {
         return target;
     }
 
@@ -48,7 +48,7 @@ final class ActionScore {
      *
      * @return the score
      */
-    int getScore() {
+    public int getScore() {
         return score;
     }
 }

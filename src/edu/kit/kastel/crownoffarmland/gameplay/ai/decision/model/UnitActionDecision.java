@@ -1,4 +1,4 @@
-package edu.kit.kastel.crownoffarmland.gameplay.ai;
+package edu.kit.kastel.crownoffarmland.gameplay.ai.decision.model;
 
 import edu.kit.kastel.crownoffarmland.model.board.Position;
 

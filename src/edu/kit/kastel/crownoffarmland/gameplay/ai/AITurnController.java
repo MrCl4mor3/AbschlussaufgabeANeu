@@ -2,6 +2,8 @@ package edu.kit.kastel.crownoffarmland.gameplay.ai;
 
 import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
+import edu.kit.kastel.crownoffarmland.gameplay.ai.decision.AIDecisionService;
+import edu.kit.kastel.crownoffarmland.gameplay.ai.decision.model.UnitActionDecision;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EndTurnSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntityOnPositionSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;

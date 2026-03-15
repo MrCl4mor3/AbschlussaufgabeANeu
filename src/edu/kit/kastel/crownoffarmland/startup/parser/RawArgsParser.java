@@ -17,6 +17,8 @@ import java.util.Map;
  * @author ucgdi
  */
 public final class RawArgsParser {
+    private static final int KEY_INDEX = 0;
+    private static final int VALUE_INDEX = 1;
     private static final String ARGUMENT_DELIMITER = "=";
     private static final int KEY_VALUE_SPLIT_LIMIT = 2;
 
@@ -48,8 +50,8 @@ public final class RawArgsParser {
                 return StartupError.error(INVALID_ARGUMENT_FORMAT_ERROR, arg);
             }
 
-            String rawKey = keyValue[0].trim();
-            String rawValue = keyValue[1].trim();
+            String rawKey = keyValue[KEY_INDEX].trim();
+            String rawValue = keyValue[VALUE_INDEX].trim();
 
             if (rawKey.isEmpty() || rawValue.isEmpty()) {
                 return StartupError.error(INVALID_ARGUMENT_FORMAT_ERROR, arg);

@@ -1,4 +1,4 @@
-package edu.kit.kastel.crownoffarmland.gameplay.ai;
+package edu.kit.kastel.crownoffarmland.gameplay.ai.decision.model;
 
 import edu.kit.kastel.crownoffarmland.model.board.Position;
 
@@ -21,7 +21,7 @@ public final class UnitCandidate {
      * @param actionScores the scored possible actions
      * @param totalScore the total score of the unit
      */
-    UnitCandidate(Position source, List<ActionScore> actionScores, int totalScore) {
+    public UnitCandidate(Position source, List<ActionScore> actionScores, int totalScore) {
         this.source = source;
         this.actionScores = actionScores;
         this.totalScore = totalScore;
@@ -32,7 +32,7 @@ public final class UnitCandidate {
      *
      * @return the source position
      */
-    Position getSource() {
+    public Position getSource() {
         return source;
     }
 
@@ -41,7 +41,7 @@ public final class UnitCandidate {
      *
      * @return the action scores
      */
-    List<ActionScore> getActionScores() {
+    public List<ActionScore> getActionScores() {
         return actionScores;
     }
 
@@ -50,7 +50,7 @@ public final class UnitCandidate {
      *
      * @return the total score
      */
-    int getTotalScore() {
+    public int getTotalScore() {
         return totalScore;
     }
 }

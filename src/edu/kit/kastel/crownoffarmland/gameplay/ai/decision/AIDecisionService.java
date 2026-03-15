@@ -1,6 +1,9 @@
-package edu.kit.kastel.crownoffarmland.gameplay.ai;
-
+package edu.kit.kastel.crownoffarmland.gameplay.ai.decision;
 import edu.kit.kastel.crownoffarmland.gameplay.TurnState;
+import edu.kit.kastel.crownoffarmland.gameplay.ai.decision.model.ActionScore;
+import edu.kit.kastel.crownoffarmland.gameplay.ai.decision.model.UnitActionDecision;
+import edu.kit.kastel.crownoffarmland.gameplay.ai.decision.model.UnitActionType;
+import edu.kit.kastel.crownoffarmland.gameplay.ai.decision.model.UnitCandidate;
 import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.MergeResult;
 import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.UnitMerger;
 import edu.kit.kastel.crownoffarmland.model.Game;
@@ -10,13 +13,14 @@ import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
 import edu.kit.kastel.crownoffarmland.model.units.Unit;
 import java.util.ArrayList;
 import java.util.List;
-
 /**
  * Provides decision logic for AI actions.
  *
  * @author ucgdi
  */
 public final class AIDecisionService {
+    private static final int ROW_DELTA_INDEX = 0;
+    private static final int COLUMN_DELTA_INDEX = 1;
     private static final int KING_ENEMY_WEIGHT_FACTOR = 2;
     private static final int KING_FELLOW_PRESENT_FACTOR = 3;
     private static final int KING_FELLOW_ON_FIELD_VALUE = 1;
@@ -98,7 +102,6 @@ public final class AIDecisionService {
         int selectedIndex = weightedRandomSelector.selectWeightedRandom(tieWeights);
         return bestPositions.get(selectedIndex);
     }
-
     /**
      * Chooses a position for placing a unit.
      *
@@ -115,14 +118,11 @@ public final class AIDecisionService {
                 candidates.add(position);
             }
         }
-
         if (candidates.isEmpty()) {
             return null;
         }
-
         int bestScore = Integer.MIN_VALUE;
         List<Position> bestPositions = new ArrayList<>();
-
         for (Position candidate : candidates) {
             int score = scorePlacementPosition(candidate, currentTeam);
             if (score > bestScore) {
@@ -133,16 +133,13 @@ public final class AIDecisionService {
                 bestPositions.add(candidate);
             }
         }
-
         if (bestPositions.size() == 1) {
             return bestPositions.getFirst();
         }
-
         List<Integer> tieWeights = createTieWeights(bestPositions.size(), PLACEMENT_TIE_WEIGHT);
         int selectedIndex = weightedRandomSelector.selectWeightedRandom(tieWeights);
         return bestPositions.get(selectedIndex);
     }
-
     /**
      * Chooses the hand card to place.
      *
@@ -159,7 +156,6 @@ public final class AIDecisionService {
         int selectedIndex = weightedRandomSelector.selectWeightedRandom(atkWeights);
         return selectedIndex + HAND_INDEX_OFFSET;
     }
-
     /**
      * Chooses the next action for a unit.
      *
@@ -179,11 +175,9 @@ public final class AIDecisionService {
                 bestCandidate = candidate;
             }
         }
-
         if (!hasPositiveMovementOption(bestCandidate.getActionScores())) {
             return new UnitActionDecision(bestCandidate.getSource(), UnitActionType.BLOCK, bestCandidate.getSource());
         }
-
         List<Integer> weights = new ArrayList<>();
         for (ActionScore actionScore : bestCandidate.getActionScores()) {
             weights.add(actionScore.getScore());
@@ -193,7 +187,6 @@ public final class AIDecisionService {
         ActionScore selectedAction = bestCandidate.getActionScores().get(selectedIndex);
         return new UnitActionDecision(bestCandidate.getSource(), selectedAction.getActionType(), selectedAction.getTarget());
     }
-
     /**
      * Chooses the card to discard.
      *
@@ -330,7 +323,7 @@ public final class AIDecisionService {
         int strongestAtk = 0;
 
         for (int[] delta : ORTHOGONAL_DELTAS) {
-            int atkOnRay = getStrongestEnemyAtkAlongRay(source, delta[0], delta[1], enemyTeam);
+            int atkOnRay = getStrongestEnemyAtkAlongRay(source, delta[ROW_DELTA_INDEX], delta[COLUMN_DELTA_INDEX], enemyTeam);
             strongestAtk = Math.max(strongestAtk, atkOnRay);
         }
         return strongestAtk;
