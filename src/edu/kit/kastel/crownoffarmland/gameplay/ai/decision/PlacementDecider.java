@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author ucgdi
  */
-public final class PlacementDecider extends AbstractAIDecider {
+public final class PlacementDecider extends AIDecider {
     private static final int PLACEMENT_ENEMY_WEIGHT_FACTOR = 2;
     private static final int PLACEMENT_TIE_WEIGHT = 1;
 

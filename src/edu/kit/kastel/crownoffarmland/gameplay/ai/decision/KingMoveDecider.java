@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author ucgdi
  */
-public final class KingMoveDecider extends AbstractAIDecider {
+public final class KingMoveDecider extends AIDecider {
     private static final int KING_ENEMY_WEIGHT_FACTOR = 2;
     private static final int KING_FELLOW_PRESENT_FACTOR = 3;
     private static final int KING_FELLOW_ON_FIELD_VALUE = 1;

@@ -7,7 +7,7 @@ import edu.kit.kastel.crownoffarmland.model.Game;
  *
  * @author ucgdi
  */
-public abstract class AbstractAIDecider {
+public abstract class AIDecider {
     protected final Game game;
     protected final BoardAnalysisService boardAnalysisService;
     protected final WeightedRandomSelector weightedRandomSelector;
@@ -19,7 +19,7 @@ public abstract class AbstractAIDecider {
      * @param boardAnalysisService the board analysis service
      * @param weightedRandomSelector the weighted random selector
      */
-    protected AbstractAIDecider(Game game, BoardAnalysisService boardAnalysisService, WeightedRandomSelector weightedRandomSelector) {
+    protected AIDecider(Game game, BoardAnalysisService boardAnalysisService, WeightedRandomSelector weightedRandomSelector) {
         this.game = game;
         this.boardAnalysisService = boardAnalysisService;
         this.weightedRandomSelector = weightedRandomSelector;

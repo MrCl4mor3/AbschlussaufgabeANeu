@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @author ucgdi
  */
-public final class UnitActionDecider extends AbstractAIDecider {
+public final class UnitActionDecider extends AIDecider {
     private static final int BLOCK_MIN_SCORE = 1;
     private static final int STAY_MIN_SCORE = 0;
     private static final int DIVISOR = 100;
