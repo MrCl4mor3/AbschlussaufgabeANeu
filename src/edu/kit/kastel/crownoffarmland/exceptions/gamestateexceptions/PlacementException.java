@@ -10,16 +10,12 @@ import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
  * @see InvalidGameStateException
  */
 public final class PlacementException extends InvalidGameStateException {
-    private static final String MESSAGE_ALREADY_PLACED_THIS_TURN =
-            "You have already placed a unit this turn.";
-    private static final String MESSAGE_NOT_ADJACENT_TO_KING =
-            "You can only place a unit adjacent to your King. Target: %s, King: %s.";
-    private static final String MESSAGE_ENEMY_OCCUPIED_FIELD =
-            "You cannot place on the enemy occupied field %s.";
+    private static final String MESSAGE_ALREADY_PLACED_THIS_TURN = "You have already placed a unit this turn.";
+    private static final String MESSAGE_NOT_ADJACENT_TO_KING = "You can only place a unit adjacent to your King. Target: %s, King: %s.";
+    private static final String MESSAGE_ENEMY_OCCUPIED_FIELD = "You cannot place on the enemy occupied field %s.";
     private static final String MESSAGE_DUPLICATE_HAND_INDEX =
             "Each hand index may only be used once per place command. Duplicate index: %d.";
-    private static final String MESSAGE_ONTO_FARMER_KING =
-            "You cannot place a unit on top of a Farmer King at %s.";
+    private static final String MESSAGE_ONTO_FARMER_KING = "You cannot place a unit on top of a Farmer King at %s.";
 
     private PlacementException(String message) {
         super(message);

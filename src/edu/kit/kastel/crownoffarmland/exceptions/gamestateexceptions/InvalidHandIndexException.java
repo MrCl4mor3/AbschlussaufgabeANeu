@@ -10,8 +10,7 @@ import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
  * @see InvalidGameStateException
  */
 public class InvalidHandIndexException extends InvalidGameStateException {
-    private static final String ERROR_MESSAGE =
-            "There is no card with index %s in the hand. Please provide a valid hand index.";
+    private static final String ERROR_MESSAGE = "There is no card with index %s in the hand. Please provide a valid hand index.";
 
     /**
      * Creates a new exception for an invalid hand index.

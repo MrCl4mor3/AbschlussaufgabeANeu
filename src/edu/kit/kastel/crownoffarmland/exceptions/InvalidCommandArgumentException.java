@@ -7,8 +7,7 @@ package edu.kit.kastel.crownoffarmland.exceptions;
  * @author ucgdi
  */
 public class InvalidCommandArgumentException extends CrownOfFarmlandException {
-    private static final String ERROR_WRONG_NUMBER_OF_ARGUMENTS =
-            "Wrong number of arguments. Expected %d but got %d.";
+    private static final String ERROR_WRONG_NUMBER_OF_ARGUMENTS = "Wrong number of arguments. Expected %d but got %d.";
 
     /**
      * Creates a new exception for an invalid number of command arguments.

@@ -10,8 +10,7 @@ import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
  * @see InvalidGameStateException
  */
 public class EmptySelectedFieldException extends InvalidGameStateException {
-    private static final String MESSAGE_FORMAT =
-            "The selected field '%s' is empty. Please select a field with an entity on it.";
+    private static final String MESSAGE_FORMAT = "The selected field '%s' is empty. Please select a field with an entity on it.";
 
     /**
      * Creates a new exception for an empty selected field.

@@ -1,7 +1,7 @@
 package edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions;
 
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
-;
+
 
 /**
  * This exception is thrown when a movement is not allowed.
@@ -10,12 +10,9 @@ import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
  * @see InvalidGameStateException
  */
 public final class MovementException extends InvalidGameStateException {
-    private static final String MESSAGE_TARGET_TOO_FAR =
-            "Cannot move from %s to %s. A move may cover at most %d field(s).";
-    private static final String MESSAGE_FARMER_KING_ONTO_ENEMY =
-            "A Farmer King cannot move onto the enemy-occupied field %s.";
-    private static final String MESSAGE_ONTO_OWN_FARMER_KING =
-            "Cannot move onto your own Farmer King on field %s.";
+    private static final String MESSAGE_TARGET_TOO_FAR = "Cannot move from %s to %s. A move may cover at most %d field(s).";
+    private static final String MESSAGE_FARMER_KING_ONTO_ENEMY = "A Farmer King cannot move onto the enemy-occupied field %s.";
+    private static final String MESSAGE_ONTO_OWN_FARMER_KING = "Cannot move onto your own Farmer King on field %s.";
 
     private MovementException(String message) {
         super(message);

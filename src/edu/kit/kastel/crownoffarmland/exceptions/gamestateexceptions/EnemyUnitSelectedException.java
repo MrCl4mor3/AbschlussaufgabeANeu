@@ -10,8 +10,7 @@ import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
  * @see InvalidGameStateException
  */
 public class EnemyUnitSelectedException extends InvalidGameStateException {
-    private static final String MESSAGE =
-            "An enemy unit is selected. Please select a friendly unit to perform this action.";
+    private static final String MESSAGE = "An enemy unit is selected. Please select a friendly unit to perform this action.";
 
     /**
      * Creates a new exception for an enemy unit being selected.
