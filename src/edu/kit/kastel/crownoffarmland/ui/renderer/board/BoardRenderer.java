@@ -21,6 +21,7 @@ public class BoardRenderer {
     private static final int INDEX_OFFSET = 1;
     private static final char SPACE = ' ';
     private static final char START_COLUMN_NAME = 'A';
+    private static final int CENTER_ALIGNMENT_DIVISOR = 2;
 
     private final BoardEntityTokenFormatter tokenFormatter;
     private final BoardSymbolSet symbolSet;
@@ -110,7 +111,7 @@ public class BoardRenderer {
     }
 
     private void appendColumnLabels(StringBuilder output, int boardSize) {
-        appendRepeated(output, SPACE, ROW_LABEL_WIDTH + INDEX_OFFSET + CELL_WIDTH / 2);
+        appendRepeated(output, SPACE, ROW_LABEL_WIDTH + INDEX_OFFSET + CELL_WIDTH / CENTER_ALIGNMENT_DIVISOR);
 
         for (int columnIndex = FIRST_INDEX; columnIndex < boardSize; columnIndex++) {
             if (columnIndex > FIRST_INDEX) {

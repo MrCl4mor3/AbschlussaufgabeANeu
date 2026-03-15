@@ -24,6 +24,7 @@ public class CommandHandler {
     private static final String COMMAND_DELIMITER_REPLACEMENT = " ";
     private static final String HELP_COMMAND = "Use one of the following commands: %s.";
     private static final String COMMAND_NOT_ALLOWED_AFTER_YIELD = "Cannot execute the command '%s', you must discard!%n";
+    private static final String COMMAND_LIST_SEPARATOR = ", ";
 
     private final Map<String, Command> commands;
     private final GameHandler gameHandler;
@@ -111,7 +112,7 @@ public class CommandHandler {
     }
 
     private String startHelpMessage() {
-        return String.format(HELP_COMMAND, String.join(", ", getCommandNames()));
+        return String.format(HELP_COMMAND, String.join(COMMAND_LIST_SEPARATOR, getCommandNames()));
     }
 
     private List<String> getCommandNames() {
