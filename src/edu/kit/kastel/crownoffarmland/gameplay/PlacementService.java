@@ -1,8 +1,9 @@
 package edu.kit.kastel.crownoffarmland.gameplay;
 
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
-import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.InvalidHandException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.InvalidHandIndexException;
 import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.NoSelectionException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.PlacementException;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.PlaceStepSnapshot;
 import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.MergeResult;
 import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.UnitMerger;
@@ -71,17 +72,17 @@ public final class PlacementService {
             throw new NoSelectionException();
         }
         if (turnState.hasPlacedThisTurn()) {
-            throw new InvalidGameStateException("You have already placed a unit this turn.");
+            throw PlacementException.alreadyPlacedThisTurn();
         }
 
         Position kingPosition = game.getKingPosition(game.getCurrentTeamID());
         if (!isAdjacentToKing(targetPosition, kingPosition)) {
-            throw new InvalidGameStateException("You can only place a unit adjacent to your King.");
+            throw PlacementException.notAdjacentToKing(targetPosition.toString(), kingPosition.toString());
         }
 
         BoardEntity occupant = game.boardView().getOccupant(targetPosition);
         if (occupant != null && occupant.getOwner() != game.getCurrentTeamID()) {
-            throw new InvalidGameStateException("You cannot place on an enemy occupied field.");
+            throw PlacementException.enemyOccupiedField(targetPosition.toString());
         }
     }
 
@@ -99,10 +100,10 @@ public final class PlacementService {
         for (int userIndex : userIndices) {
             int internalIndex = userIndex - HAND_INDEX_OFFSET;
             if (internalIndex < 0 || internalIndex >= handSize) {
-                throw new InvalidHandException(String.valueOf(userIndex));
+                throw new InvalidHandIndexException(String.valueOf(userIndex));
             }
             if (!seenIndices.add(internalIndex)) {
-                throw new InvalidGameStateException("Each hand index may only be used once per place command.");
+                throw PlacementException.duplicateHandIndex(userIndex);
             }
             internalIndices.add(internalIndex);
         }
@@ -155,7 +156,7 @@ public final class PlacementService {
         }
 
         if (occupant.isFarmerKing()) {
-            throw new InvalidGameStateException("You cannot place a unit on top of a Farmer King.");
+            throw PlacementException.ontoFarmerKing(targetPosition.toString());
         }
 
         Unit existingUnit = (Unit) occupant;

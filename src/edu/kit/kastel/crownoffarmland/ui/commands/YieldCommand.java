@@ -2,7 +2,7 @@ package edu.kit.kastel.crownoffarmland.ui.commands;
 
 import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidCommandArgumentException;
-import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.InvalidHandException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.InvalidHandIndexException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 import edu.kit.kastel.crownoffarmland.gameplay.YieldCheckResult;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EndTurnSnapshot;
@@ -67,7 +67,7 @@ public class YieldCommand extends Command {
             try {
                 handIndex = Integer.parseInt(commandArgs[0]);
             } catch (NumberFormatException e) {
-                throw new InvalidHandException(commandArgs[0]);
+                throw new InvalidHandIndexException(commandArgs[0]);
             }
             endTurnSnapshot = gameHandler.endTurnWithDiscard(handIndex);
         }

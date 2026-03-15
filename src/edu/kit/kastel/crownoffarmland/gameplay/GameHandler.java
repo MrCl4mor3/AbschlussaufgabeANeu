@@ -3,13 +3,13 @@ package edu.kit.kastel.crownoffarmland.gameplay;
 import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidPositionException;
-import edu.kit.kastel.crownoffarmland.exceptions.KingCannotBlockedException;
-import edu.kit.kastel.crownoffarmland.exceptions.UnitAlreadyRevealedException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.KingCannotBlockException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.UnitAlreadyRevealedException;
 import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.EmptySelectedFieldException;
 import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.EnemyUnitSelectedException;
-import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.InvalidHandException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.InvalidHandIndexException;
 import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.NoSelectionException;
-import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.UnitAlreadyActedException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.EntityAlreadyActedException;
 import edu.kit.kastel.crownoffarmland.gameplay.ai.AIDecisionService;
 import edu.kit.kastel.crownoffarmland.gameplay.ai.AITurnController;
 import edu.kit.kastel.crownoffarmland.gameplay.ai.WeightedRandomSelector;
@@ -193,12 +193,12 @@ public class GameHandler {
      *
      * @return the blocked entity snapshot
      * @throws InvalidGameStateException if no valid entity is selected
-     * @throws KingCannotBlockedException if the selected entity is a king
+     * @throws KingCannotBlockException if the selected entity is a king
      */
     public EntityOnPositionSnapshot blockSelected() throws InvalidGameStateException {
         BoardEntity entity = getSelectedEntity();
         if (entity.isFarmerKing()) {
-            throw new KingCannotBlockedException();
+            throw new KingCannotBlockException();
         }
 
         Unit unit = (Unit) entity;
@@ -223,10 +223,10 @@ public class GameHandler {
      *
      * @param target the target position
      * @return the move snapshot
-     * @throws InvalidGameStateException if the move is not allowed
+     * @throws CrownOfFarmlandException if the move is not allowed
      * @throws InvalidPositionException if the target position is invalid
      */
-    public MoveSnapshot moveUnit(Position target) throws InvalidGameStateException {
+    public MoveSnapshot moveUnit(Position target) throws CrownOfFarmlandException {
         if (!game.boardView().isValidPosition(target)) {
             throw new InvalidPositionException(target.toString());
         }
@@ -271,14 +271,14 @@ public class GameHandler {
      * @param index the one-based hand index of the discarded card
      * @return the end turn snapshot
      * @throws InvalidGameStateException if the discard is not allowed
-     * @throws InvalidHandException if the index is out of bounds
+     * @throws InvalidHandIndexException if the index is out of bounds
      */
     public EndTurnSnapshot endTurnWithDiscard(int index) throws InvalidGameStateException {
         int handSize = game.teamView(game.getCurrentTeamID()).getHandSize();
         int internalIndex = index - HAND_INDEX_OFFSET;
 
         if (internalIndex < 0 || internalIndex >= handSize) {
-            throw new InvalidHandException(String.valueOf(index));
+            throw new InvalidHandIndexException(String.valueOf(index));
         }
 
         Unit discardedCard = game.removeHandCardAt(getCurrentTeamID(), internalIndex);
@@ -329,7 +329,7 @@ public class GameHandler {
         }
 
         if (turnState.hasMoved(entity)) {
-            throw new UnitAlreadyActedException(entity.getName().toString());
+            throw new EntityAlreadyActedException(entity.getName().toString());
         }
 
         return entity;

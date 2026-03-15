@@ -3,8 +3,9 @@ package edu.kit.kastel.crownoffarmland.gameplay;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
 import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.EmptySelectedFieldException;
 import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.EnemyUnitSelectedException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.MovementException;
 import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.NoSelectionException;
-import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.UnitAlreadyActedException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.EntityAlreadyActedException;
 import edu.kit.kastel.crownoffarmland.gameplay.combat.DuelManager;
 import edu.kit.kastel.crownoffarmland.gameplay.combat.DuelResult;
 import edu.kit.kastel.crownoffarmland.gameplay.snapshots.EntitySnapshot;
@@ -96,16 +97,15 @@ public final class MovementService {
         }
 
         if (turnState.hasMoved(entity)) {
-            throw new UnitAlreadyActedException(entity.getName().toString());
+            throw new EntityAlreadyActedException(entity.getName().toString());
         }
 
         return entity;
     }
 
-    private void validateMove(Position source, Position target, BoardEntity selectedEntity)
-            throws InvalidGameStateException {
+    private void validateMove(Position source, Position target, BoardEntity selectedEntity) throws MovementException {
         if (!isAdjacentTo(source, target, MAX_MOVE_DISTANCE)) {
-            throw new InvalidGameStateException("Target position is too far away for a move.");
+            throw MovementException.targetTooFar(source.toString(), target.toString(), MAX_MOVE_DISTANCE);
         }
 
         BoardEntity targetEntity = game.boardView().getOccupant(target);
@@ -114,17 +114,16 @@ public final class MovementService {
         }
 
         if (selectedEntity.isFarmerKing() && !targetEntity.getOwner().equals(selectedEntity.getOwner())) {
-            throw new InvalidGameStateException("Cannot move a Farmer King onto a position occupied by an enemy unit.");
+            throw MovementException.farmerKingOntoEnemy(target.toString());
         }
 
         if (!selectedEntity.isFarmerKing() && targetEntity.getOwner().equals(selectedEntity.getOwner())
                 && targetEntity.isFarmerKing()) {
-            throw new InvalidGameStateException("Cannot move onto a position occupied by your own Farmer King.");
+            throw MovementException.ontoOwnFarmerKing(target.toString());
         }
     }
 
-    private MoveSnapshot resolveFarmerKingMove(Position source, Position target, BoardEntity selectedEntity,
-            boolean wasBlocked) {
+    private MoveSnapshot resolveFarmerKingMove(Position source, Position target, BoardEntity selectedEntity, boolean wasBlocked) {
         game.removeOccupant(source);
         game.setOccupant(target, selectedEntity);
         turnState.markMoved(selectedEntity);
@@ -133,8 +132,7 @@ public final class MovementService {
         return new SimpleMoveSnapshot(createEntitySnapshot(selectedEntity), target.toString(), wasBlocked);
     }
 
-    private MoveSnapshot resolveUnitMove(Position source, Position target, BoardEntity selectedEntity,
-            boolean wasBlocked) {
+    private MoveSnapshot resolveUnitMove(Position source, Position target, BoardEntity selectedEntity, boolean wasBlocked) {
         BoardEntity targetEntity = game.boardView().getOccupant(target);
 
         if (targetEntity == null) {
@@ -146,8 +144,7 @@ public final class MovementService {
         }
     }
 
-    private MoveSnapshot executeSimpleMove(Position source, Position target, BoardEntity selectedEntity,
-            boolean wasBlocked) {
+    private MoveSnapshot executeSimpleMove(Position source, Position target, BoardEntity selectedEntity, boolean wasBlocked) {
         game.removeOccupant(source);
         game.setOccupant(target, selectedEntity);
         turnState.markMoved(selectedEntity);
@@ -156,8 +153,7 @@ public final class MovementService {
         return new SimpleMoveSnapshot(createEntitySnapshot(selectedEntity), target.toString(), wasBlocked);
     }
 
-    private MoveSnapshot resolveMergeMove(Position source, Position target, Unit selectedUnit, Unit targetUnit,
-            boolean wasBlocked) {
+    private MoveSnapshot resolveMergeMove(Position source, Position target, Unit selectedUnit, Unit targetUnit, boolean wasBlocked) {
         MergeResult mergeResult = unitMerger.tryMerge(selectedUnit, targetUnit);
 
         turnState.setSelectedPos(target);
@@ -173,8 +169,7 @@ public final class MovementService {
                 mergeResult.isSuccessful(), targetUnit.getName().toString());
     }
 
-    private MoveSnapshot resolveDuelMove(Position source, Position target, Unit attacker, BoardEntity defender,
-            boolean wasBlocked) {
+    private MoveSnapshot resolveDuelMove(Position source, Position target, Unit attacker, BoardEntity defender, boolean wasBlocked) {
         EntitySnapshot targetEntitySnapshot = createEntitySnapshot(defender);
         EntitySnapshot sourceEntitySnapshot = createEntitySnapshot(attacker);
 
@@ -195,8 +190,7 @@ public final class MovementService {
                 wasBlocked, duelResult, loserName);
     }
 
-    private void updateGameStateAfterDuel(Position source, Position target, Unit attacker, BoardEntity defender,
-            DuelResult duelResult) {
+    private void updateGameStateAfterDuel(Position source, Position target, Unit attacker, BoardEntity defender, DuelResult duelResult) {
         if (duelResult.getDamageToAttackerTeam() > 0) {
             game.dealDamage(attacker.getOwner(), duelResult.getDamageToAttackerTeam());
         }

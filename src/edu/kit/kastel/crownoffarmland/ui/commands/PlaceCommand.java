@@ -2,7 +2,7 @@ package edu.kit.kastel.crownoffarmland.ui.commands;
 
 import edu.kit.kastel.crownoffarmland.exceptions.CrownOfFarmlandException;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidCommandArgumentException;
-import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.InvalidHandException;
+import edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions.InvalidHandIndexException;
 import edu.kit.kastel.crownoffarmland.gameplay.GameHandler;
 import edu.kit.kastel.crownoffarmland.ui.renderer.GameOutputPrinter;
 
@@ -37,7 +37,7 @@ public class PlaceCommand extends Command {
             try {
                 userIndices[i] = Integer.parseInt(commandArgs[i]);
             } catch (NumberFormatException e) {
-                throw new InvalidHandException(commandArgs[i]);
+                throw new InvalidHandIndexException(commandArgs[i]);
             }
         }
 

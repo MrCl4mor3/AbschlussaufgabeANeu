@@ -1,29 +1,30 @@
 package edu.kit.kastel.crownoffarmland.exceptions;
 
 /**
- * This exception is thrown when an invalid position is provided in the game.
+ * This exception is thrown when an invalid position is provided.
  *
  * @author ucgdi
- * @see InvalidGameStateException
+ * @see CrownOfFarmlandException
  */
-public class InvalidPositionException extends InvalidGameStateException {
-
-    private static final String ERROR_MESSAGE = "Invalid position: '%s'. The position must be within the bounds of the game board.";
-    private static final String ERROR_MESSAGE_EMPTY_POSITION = "The position cannot be empty. Please provide a valid position within the "
-            + "bounds of the game board.";
+public class InvalidPositionException extends CrownOfFarmlandException {
+    private static final String MESSAGE_INVALID_POSITION =
+            "Invalid position: '%s'. The position must be within the bounds of the game board.";
+    private static final String MESSAGE_EMPTY_POSITION =
+            "The position cannot be empty. Please provide a valid position within the bounds of the game board.";
 
     /**
-     * Creates a new InvalidPositionException with the given invalid position.
-     * @param invalidPosition The invalid position that caused the exception to be thrown.
+     * Creates a new exception for an invalid position.
+     *
+     * @param invalidPosition the invalid position
      */
     public InvalidPositionException(String invalidPosition) {
-        super(String.format(ERROR_MESSAGE, invalidPosition));
+        super(MESSAGE_INVALID_POSITION.formatted(invalidPosition));
     }
 
     /**
-     * Creates a new InvalidPositionException with a default error message indicating that the position cannot be empty.
+     * Creates a new exception for an empty position input.
      */
     public InvalidPositionException() {
-        super(ERROR_MESSAGE_EMPTY_POSITION);
+        super(MESSAGE_EMPTY_POSITION);
     }
 }

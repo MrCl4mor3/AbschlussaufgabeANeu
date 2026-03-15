@@ -77,10 +77,9 @@ public final class Position {
      * Parse a String input to a position object.
      * @param input the input String to parse.
      * @return a new Position
-     * @throws CrownOfFarmlandException if an invalide String was found
      * @throws InvalidPositionException if the input is null or cannot be parsed to a valid position
      */
-    public static Position fromString(String input) throws CrownOfFarmlandException {
+    public static Position fromString(String input) throws InvalidPositionException {
         if (input == null) {
             throw new InvalidPositionException();
         }

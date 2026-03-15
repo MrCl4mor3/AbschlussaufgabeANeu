@@ -3,20 +3,22 @@ package edu.kit.kastel.crownoffarmland.exceptions.gamestateexceptions;
 import edu.kit.kastel.crownoffarmland.exceptions.InvalidGameStateException;
 
 /**
- * This exception is thrown when the player tries to do an action that requires selecting a field, but the selected field is empty (i.e.,
- * it does not contain any entity).
+ * This exception is thrown when an action requires the selected field to contain
+ * an entity, but the selected field is empty.
  *
  * @author ucgdi
  * @see InvalidGameStateException
  */
-public class EmptySelectedFieldException extends  InvalidGameStateException {
-    private static final String MESSAGE_FORMAT = "The selected field '%s' is empty. Please select a field with an entity on it.";
+public class EmptySelectedFieldException extends InvalidGameStateException {
+    private static final String MESSAGE_FORMAT =
+            "The selected field '%s' is empty. Please select a field with an entity on it.";
 
     /**
-     * Creates a new EmptySelectedFieldException with the given field name.
-     * @param fieldName The name of the field that is empty.
+     * Creates a new exception for an empty selected field.
+     *
+     * @param fieldName the name of the empty field
      */
     public EmptySelectedFieldException(String fieldName) {
-        super(String.format(MESSAGE_FORMAT, fieldName));
+        super(MESSAGE_FORMAT.formatted(fieldName));
     }
 }
