@@ -1,50 +1,29 @@
 package edu.kit.kastel.crownoffarmland.gameplay.ai.decision;
+
 import edu.kit.kastel.crownoffarmland.gameplay.TurnState;
-import edu.kit.kastel.crownoffarmland.gameplay.ai.decision.model.ActionScore;
 import edu.kit.kastel.crownoffarmland.gameplay.ai.decision.model.UnitActionDecision;
-import edu.kit.kastel.crownoffarmland.gameplay.ai.decision.model.UnitActionType;
-import edu.kit.kastel.crownoffarmland.gameplay.ai.decision.model.UnitCandidate;
-import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.MergeResult;
 import edu.kit.kastel.crownoffarmland.gameplay.unitmerge.UnitMerger;
 import edu.kit.kastel.crownoffarmland.model.Game;
 import edu.kit.kastel.crownoffarmland.model.board.Position;
 import edu.kit.kastel.crownoffarmland.model.team.TeamID;
-import edu.kit.kastel.crownoffarmland.model.units.BoardEntity;
 import edu.kit.kastel.crownoffarmland.model.units.Unit;
+
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * Provides decision logic for AI actions.
  *
  * @author ucgdi
  */
 public final class AIDecisionService {
-    private static final int ROW_DELTA_INDEX = 0;
-    private static final int COLUMN_DELTA_INDEX = 1;
-    private static final int KING_ENEMY_WEIGHT_FACTOR = 2;
-    private static final int KING_FELLOW_PRESENT_FACTOR = 3;
-    private static final int KING_FELLOW_ON_FIELD_VALUE = 1;
-    private static final int KING_NO_FELLOW_ON_FIELD_VALUE = 0;
-    private static final int TIE_WEIGHT_VALUE = 1;
-    private static final int PLACEMENT_ENEMY_WEIGHT_FACTOR = 2;
-    private static final int PLACEMENT_TIE_WEIGHT = 1;
     private static final int HAND_INDEX_OFFSET = 1;
-    private static final int[][] ORTHOGONAL_DELTAS = {
-            {1, 0},
-            {0, 1},
-            {-1, 0},
-            {0, -1}
-    };
-    private static final int BLOCK_MIN_SCORE = 1;
-    private static final int STAY_MIN_SCORE = 0;
-    private static final int DIVISOR = 100;
-    private static final int HIDDEN_ENEMY_PENALTY = 500;
-    private static final int ADVANCE_STEPS_FACTOR = 10;
-    private static final int DUEL_FACTOR = 2;
-    private final UnitMerger unitMerger;
-    private final TurnState turnState;
+
     private final Game game;
     private final WeightedRandomSelector weightedRandomSelector;
+    private final KingMoveDecider kingMoveDecider;
+    private final PlacementDecider placementDecider;
+    private final UnitActionDecider unitActionDecider;
 
     /**
      * Creates a new AI decision service.
@@ -54,12 +33,16 @@ public final class AIDecisionService {
      * @param unitMerger the unit merger
      * @param weightedRandomSelector the weighted random selector
      */
-    public AIDecisionService(Game game, TurnState turnState, UnitMerger unitMerger,
-            WeightedRandomSelector weightedRandomSelector) {
+    public AIDecisionService(Game game, TurnState turnState, UnitMerger unitMerger, WeightedRandomSelector weightedRandomSelector) {
         this.game = game;
-        this.turnState = turnState;
-        this.unitMerger = unitMerger;
         this.weightedRandomSelector = weightedRandomSelector;
+
+        BoardAnalysisService boardAnalysisService = new BoardAnalysisService(game);
+        this.kingMoveDecider = new KingMoveDecider(game, boardAnalysisService, weightedRandomSelector);
+        this.placementDecider = new PlacementDecider(game, boardAnalysisService, weightedRandomSelector);
+        this.unitActionDecider = new UnitActionDecider(
+                game, turnState, unitMerger, boardAnalysisService, weightedRandomSelector
+        );
     }
 
     /**
@@ -68,78 +51,18 @@ public final class AIDecisionService {
      * @return the selected target position
      */
     public Position chooseKingMove() {
-        TeamID currentTeam = game.getCurrentTeamID();
-        Position kingPosition = game.getKingPosition(currentTeam);
-
-        List<Position> candidates = new ArrayList<>();
-        for (Position candidate : game.boardView().getOrthogonalNeighbors(kingPosition)) {
-            if (isValidKingTarget(candidate, currentTeam)) {
-                candidates.add(candidate);
-            }
-        }
-        candidates.add(kingPosition);
-
-        int bestScore = Integer.MIN_VALUE;
-        List<Position> bestPositions = new ArrayList<>();
-
-        for (Position candidate : candidates) {
-            int score = scoreKingTarget(candidate, kingPosition, currentTeam);
-
-            if (score > bestScore) {
-                bestScore = score;
-                bestPositions.clear();
-                bestPositions.add(candidate);
-            } else if (score == bestScore) {
-                bestPositions.add(candidate);
-            }
-        }
-
-        if (bestPositions.size() == 1) {
-            return bestPositions.getFirst();
-        }
-
-        List<Integer> tieWeights = createTieWeights(bestPositions.size(), TIE_WEIGHT_VALUE);
-        int selectedIndex = weightedRandomSelector.selectWeightedRandom(tieWeights);
-        return bestPositions.get(selectedIndex);
+        return kingMoveDecider.chooseKingMove();
     }
+
     /**
      * Chooses a position for placing a unit.
      *
      * @return the selected position, or {@code null} if none is available
      */
     public Position choosePlacementPosition() {
-        TeamID currentTeam = game.getCurrentTeamID();
-        Position kingPosition = game.getKingPosition(currentTeam);
-
-        List<Position> candidates = new ArrayList<>();
-        for (Position position : game.boardView().getSurroundingPositions(kingPosition)) {
-            BoardEntity occupant = game.boardView().getOccupant(position);
-            if (occupant == null || occupant.getOwner().equals(currentTeam)) {
-                candidates.add(position);
-            }
-        }
-        if (candidates.isEmpty()) {
-            return null;
-        }
-        int bestScore = Integer.MIN_VALUE;
-        List<Position> bestPositions = new ArrayList<>();
-        for (Position candidate : candidates) {
-            int score = scorePlacementPosition(candidate, currentTeam);
-            if (score > bestScore) {
-                bestScore = score;
-                bestPositions.clear();
-                bestPositions.add(candidate);
-            } else if (score == bestScore) {
-                bestPositions.add(candidate);
-            }
-        }
-        if (bestPositions.size() == 1) {
-            return bestPositions.getFirst();
-        }
-        List<Integer> tieWeights = createTieWeights(bestPositions.size(), PLACEMENT_TIE_WEIGHT);
-        int selectedIndex = weightedRandomSelector.selectWeightedRandom(tieWeights);
-        return bestPositions.get(selectedIndex);
+        return placementDecider.choosePlacementPosition();
     }
+
     /**
      * Chooses the hand card to place.
      *
@@ -156,37 +79,16 @@ public final class AIDecisionService {
         int selectedIndex = weightedRandomSelector.selectWeightedRandom(atkWeights);
         return selectedIndex + HAND_INDEX_OFFSET;
     }
+
     /**
      * Chooses the next action for a unit.
      *
      * @return the selected unit action, or {@code null} if no action is possible
      */
     public UnitActionDecision chooseNextUnitAction() {
-        TeamID currentTeam = game.getCurrentTeamID();
-        List<UnitCandidate> candidates = getMoveableUnitCandidates(currentTeam);
-
-        if (candidates.isEmpty()) {
-            return null;
-        }
-
-        UnitCandidate bestCandidate = candidates.getFirst();
-        for (UnitCandidate candidate : candidates) {
-            if (candidate.getTotalScore() > bestCandidate.getTotalScore()) {
-                bestCandidate = candidate;
-            }
-        }
-        if (!hasPositiveMovementOption(bestCandidate.getActionScores())) {
-            return new UnitActionDecision(bestCandidate.getSource(), UnitActionType.BLOCK, bestCandidate.getSource());
-        }
-        List<Integer> weights = new ArrayList<>();
-        for (ActionScore actionScore : bestCandidate.getActionScores()) {
-            weights.add(actionScore.getScore());
-        }
-
-        int selectedIndex = weightedRandomSelector.selectWeightedRandom(weights);
-        ActionScore selectedAction = bestCandidate.getActionScores().get(selectedIndex);
-        return new UnitActionDecision(bestCandidate.getSource(), selectedAction.getActionType(), selectedAction.getTarget());
+        return unitActionDecider.chooseNextUnitAction();
     }
+
     /**
      * Chooses the card to discard.
      *
@@ -203,191 +105,5 @@ public final class AIDecisionService {
 
         int selectedIndex = weightedRandomSelector.selectInverseWeightedRandom(discardWeights);
         return selectedIndex + HAND_INDEX_OFFSET;
-    }
-    private boolean isValidKingTarget(Position candidate, TeamID currentTeam) {
-        BoardEntity occupant = game.boardView().getOccupant(candidate);
-        return occupant == null || occupant.getOwner().equals(currentTeam);
-    }
-    private int scoreKingTarget(Position candidate, Position kingPosition, TeamID currentTeam) {
-        int distance = manhattanDistance(candidate, kingPosition);
-        int enemies = countAdjacentEntitiesFromTeam(candidate, game.getEnemyTeamID(), true);
-        int fellows = countAdjacentEntitiesFromTeam(candidate, currentTeam, false);
-        int fellowPresent = hasOwnUnitOnField(candidate, currentTeam)
-                ? KING_FELLOW_ON_FIELD_VALUE : KING_NO_FELLOW_ON_FIELD_VALUE;
-        return fellows - KING_ENEMY_WEIGHT_FACTOR * enemies - distance - KING_FELLOW_PRESENT_FACTOR * fellowPresent;
-    }
-    private int scorePlacementPosition(Position candidate, TeamID currentTeam) {
-        Position enemyKingPosition = game.getKingPosition(game.getEnemyTeamID());
-        int steps = manhattanDistance(candidate, enemyKingPosition);
-        int enemies = countOrthogonalEntitiesFromTeam(candidate, game.getEnemyTeamID());
-        int fellows = countOrthogonalEntitiesFromTeam(candidate, currentTeam);
-        return -steps + PLACEMENT_ENEMY_WEIGHT_FACTOR * enemies - fellows;
-    }
-    private List<UnitCandidate> getMoveableUnitCandidates(TeamID currentTeam) {
-        List<UnitCandidate> candidates = new ArrayList<>();
-
-        for (int row = 0; row < game.boardView().getBoardSize(); row++) {
-            for (int column = 0; column < game.boardView().getBoardSize(); column++) {
-                Position source = game.boardView().getPositionAt(row, column);
-                BoardEntity occupant = game.boardView().getOccupant(source);
-
-                if (occupant != null && occupant.getOwner().equals(currentTeam)
-                        && !occupant.isFarmerKing() && !turnState.hasMoved(occupant)) {
-                    Unit unit = (Unit) occupant;
-                    candidates.add(evaluateUnit(source, unit, currentTeam));
-                }
-            }
-        }
-        return candidates;
-    }
-    private UnitCandidate evaluateUnit(Position source, Unit unit, TeamID currentTeam) {
-        List<ActionScore> actionScores = evaluatePossibleActions(source, unit, currentTeam);
-        int totalScore = 0;
-        for (ActionScore actionScore : actionScores) {
-            totalScore += actionScore.getScore();
-        }
-
-        return new UnitCandidate(source, actionScores, totalScore);
-    }
-    private List<ActionScore> evaluatePossibleActions(Position source, Unit unit, TeamID team) {
-        List<ActionScore> actionScores = new ArrayList<>();
-
-        for (Position target : game.boardView().getOrthogonalNeighbors(source)) {
-            addDirectionalAction(actionScores, target, unit, team);
-        }
-
-        int blockScore = scoreBlockAction(source, unit, team);
-        int stayScore = scoreStayAction(source, unit, team);
-
-        actionScores.add(new ActionScore(UnitActionType.BLOCK, source, blockScore));
-        actionScores.add(new ActionScore(UnitActionType.STAY, source, stayScore));
-
-        return actionScores;
-    }
-    private void addDirectionalAction(List<ActionScore> actionScores, Position target, Unit unit, TeamID currentTeam) {
-        if (!game.boardView().isValidPosition(target)) {
-            return;
-        }
-
-        BoardEntity targetEntity = game.boardView().getOccupant(target);
-        if (targetEntity != null && targetEntity.isFarmerKing() && targetEntity.getOwner().equals(currentTeam)) {
-            return;
-        }
-
-        int score = scoreDirectionalAction(target, unit, currentTeam, targetEntity);
-        actionScores.add(new ActionScore(UnitActionType.MOVE, target, score));
-    }
-    private int scoreDirectionalAction(Position target, Unit unit, TeamID currentTeam, BoardEntity targetEntity) {
-        if (targetEntity == null) {
-            Position enemyKingPosition = game.getKingPosition(game.getEnemyTeamID());
-            int steps = manhattanDistance(target, enemyKingPosition);
-            int enemies = countOrthogonalEntitiesFromTeam(target, game.getEnemyTeamID());
-            return ADVANCE_STEPS_FACTOR * steps - enemies;
-        }
-
-        if (targetEntity.getOwner().equals(currentTeam)) {
-            Unit targetUnit = (Unit) targetEntity;
-            MergeResult mergeResult = unitMerger.tryMerge(unit, targetUnit);
-            if (mergeResult.isSuccessful()) {
-                return mergeResult.getUnit().getAtk() + mergeResult.getUnit().getDef()
-                        - unit.getAtk() - unit.getDef();
-            }
-            return -targetUnit.getAtk() - targetUnit.getDef();
-        }
-
-        if (targetEntity.isFarmerKing()) {
-            return unit.getAtk();
-        }
-
-        Unit targetUnit = (Unit) targetEntity;
-
-        if (!targetUnit.isRevealed()) {
-            return unit.getAtk() - HIDDEN_ENEMY_PENALTY;
-        }
-
-        if (targetUnit.isBlocked()) {
-            return unit.getAtk() - targetUnit.getDef();
-        }
-
-        return DUEL_FACTOR * (unit.getAtk() - targetUnit.getDef());
-    }
-    private int scoreBlockAction(Position source, Unit unit, TeamID currentTeam) {
-        int strongestEnemyAtk = getStrongestEnemyAtkInStraightLine(source, currentTeam.getNext());
-        return Math.max(BLOCK_MIN_SCORE, (unit.getDef() - strongestEnemyAtk) / DIVISOR);
-    }
-    private int scoreStayAction(Position source, Unit unit, TeamID currentTeam) {
-        int strongestEnemyAtk = getStrongestEnemyAtkInStraightLine(source, currentTeam.getNext());
-        return Math.max(STAY_MIN_SCORE, (unit.getAtk() - strongestEnemyAtk) / DIVISOR);
-    }
-    private int getStrongestEnemyAtkInStraightLine(Position source, TeamID enemyTeam) {
-        int strongestAtk = 0;
-
-        for (int[] delta : ORTHOGONAL_DELTAS) {
-            int atkOnRay = getStrongestEnemyAtkAlongRay(source, delta[ROW_DELTA_INDEX], delta[COLUMN_DELTA_INDEX], enemyTeam);
-            strongestAtk = Math.max(strongestAtk, atkOnRay);
-        }
-        return strongestAtk;
-    }
-    private int getStrongestEnemyAtkAlongRay(Position source, int rowDelta, int columnDelta, TeamID enemyTeam) {
-        int strongestAtk = 0;
-        Position current = new Position(source.getRow() + rowDelta, (char) (source.getColumn() + columnDelta));
-
-        while (game.boardView().isValidPosition(current)) {
-            BoardEntity occupant = game.boardView().getOccupant(current);
-            if (occupant != null && occupant.getOwner().equals(enemyTeam)
-                    && !occupant.isFarmerKing() && occupant.isBlocked()) {
-                Unit enemyUnit = (Unit) occupant;
-                strongestAtk = Math.max(strongestAtk, enemyUnit.getAtk());
-            }
-            current = new Position(current.getRow() + rowDelta, (char) (current.getColumn() + columnDelta));
-        }
-
-        return strongestAtk;
-    }
-    private boolean hasPositiveMovementOption(List<ActionScore> actionScores) {
-        for (ActionScore actionScore : actionScores) {
-            if (actionScore.getActionType() != UnitActionType.BLOCK && actionScore.getScore() > 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-    private int manhattanDistance(Position a, Position b) {
-        return Math.abs(a.getRow() - b.getRow()) + Math.abs(a.getColumn() - b.getColumn());
-    }
-    private int countAdjacentEntitiesFromTeam(Position center, TeamID team, boolean includeKing) {
-        int count = 0;
-
-        for (Position neighbor : game.boardView().getSurroundingPositions(center)) {
-            BoardEntity occupant = game.boardView().getOccupant(neighbor);
-            if (occupant != null && occupant.getOwner().equals(team)) {
-                if (includeKing || !occupant.isFarmerKing()) {
-                    count++;
-                }
-            }
-        }
-        return count;
-    }
-    private int countOrthogonalEntitiesFromTeam(Position center, TeamID team) {
-        int count = 0;
-
-        for (Position neighbor : game.boardView().getOrthogonalNeighbors(center)) {
-            BoardEntity occupant = game.boardView().getOccupant(neighbor);
-            if (occupant != null && occupant.getOwner().equals(team)) {
-                count++;
-            }
-        }
-        return count;
-    }
-    private boolean hasOwnUnitOnField(Position candidate, TeamID team) {
-        BoardEntity occupant = game.boardView().getOccupant(candidate);
-        return occupant != null && occupant.getOwner().equals(team) && !occupant.isFarmerKing();
-    }
-    private List<Integer> createTieWeights(int size, int score) {
-        List<Integer> weights = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            weights.add(score);
-        }
-        return weights;
     }
 }
