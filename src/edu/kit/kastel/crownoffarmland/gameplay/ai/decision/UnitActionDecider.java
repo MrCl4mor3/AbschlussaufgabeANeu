@@ -42,7 +42,8 @@ public final class UnitActionDecider extends AbstractAIDecider {
      * @param boardAnalysisService the board analysis service
      * @param weightedRandomSelector the weighted random selector
      */
-    public UnitActionDecider(Game game, TurnState turnState, UnitMerger unitMerger, BoardAnalysisService boardAnalysisService, WeightedRandomSelector weightedRandomSelector) {
+    public UnitActionDecider(Game game, TurnState turnState, UnitMerger unitMerger, BoardAnalysisService boardAnalysisService,
+            WeightedRandomSelector weightedRandomSelector) {
         super(game, boardAnalysisService, weightedRandomSelector);
         this.unitMerger = unitMerger;
         this.turnState = turnState;
